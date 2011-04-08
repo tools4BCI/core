@@ -1,0 +1,117 @@
+%   Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
+%
+%   This file is part of the mextobicore wrapper
+%
+%   The libndf library is free software: you can redistribute it and/or
+%   modify it under the terms of the version 3 of the GNU General Public
+%   License as published by the Free Software Foundation.
+%
+%   This program is distributed in the hope that it will be useful,
+%   but WITHOUT ANY WARRANTY; without even the implied warranty of
+%   MERCHANTABILITY or FITNESS FOR A PARTIDULAR PURPOSE.  See the
+%   GNU General Public License for more details.
+%
+%   You should have received a copy of the GNU General Public License
+%   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+$ #include <libtobicore/TCException.hpp>
+$ #include <libtobicore/TCBlock.hpp>
+$ #include <libtobicore/TCTimestamp.hpp>
+$ #include <cstring>
+$ #include <stdio.h>
+$ #include <string.h>
+
+@function tcblock_absolutetic(q)
+% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
+% This file is part of the mextobicore wrapper
+%
+% TCBLOCK_ABSOLUTETIC Tics the absolute
+%
+% TCBLOCK_ABSOLUTETIC(Q) tics the internal absolute absolute
+%
+% See also TCBLOCK_ABSOLUTETOC, TCBLOCK_ABSOLUTEGET
+	$ void absolutetic(TCBlock* q) {
+	$ 	q->absolute.Tic();
+	$ } 
+	# absolutetic(TCBlock* q);
+
+@function [toc] = tcblock_absolutetoc(q)
+% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
+% This file is part of the mextobicore wrapper
+%
+% TCBLOCK_ABSOLUTETOC Tocs the absolute
+%
+% [TOC] = TCBLOCK_ABSOLUTETOC(Q) tocs the internal absolute absolute,
+% returning the time difference in milliseconds.
+%
+% See also TCBLOCK_ABSOLUTETIC, TCBLOCK_ABSOLUTEGET
+	$ double absolutetoc(TCBlock* q) {
+	$ 	return q->absolute.Toc();
+	$ } 
+	# double toc = absolutetoc(TCBlock* q);
+
+@function [stoc] = tcblock_absoluteget(q)
+% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
+% This file is part of the mextobicore wrapper
+%
+% TCBLOCK_ABSOLUTEGET Returns the absolute as string
+%
+% [TOC] = TCBLOCK_ABSOLUTEGET(Q) returns the internal absolute absolute as a
+% string.
+%
+% See also TCBLOCK_ABSOLUTETIC, TCBLOCK_ABSOLUTETOC
+	$ void absoluteget(TCBlock* q, char* stoc) {
+	$	std::string cache;
+	$ 	q->absolute.Get(&cache);
+	$	strcpy(stoc, cache.c_str());
+	$ } 
+	stoc = '';
+	# absoluteget(TCBlock* q, inout cstring stoc[4096]);
+
+@function tcblock_relativetic(q)
+% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
+% This file is part of the mextobicore wrapper
+%
+% TCBLOCK_RELATIVETIC Tics the relative
+%
+% TCBLOCK_RELATIVETIC(Q) tics the internal relative relative absolute
+%
+% See also TCBLOCK_RELATIVETOC, TCBLOCK_RELATIVEGET
+	$ void relativetic(TCBlock* q) {
+	$ 	q->relative.Tic();
+	$ } 
+	# relativetic(TCBlock* q);
+
+@function [toc] = tcblock_relativetoc(q)
+% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
+% This file is part of the mextobicore wrapper
+%
+% TCBLOCK_RELATIVETOC Tocs the relative
+%
+% [TOC] = TCBLOCK_RELATIVETOC(Q) tocs the internal relative relative
+% absolute, returning the time difference in milliseconds.
+%
+% See also TCBLOCK_RELATIVETIC, TCBLOCK_RELATIVEGET
+	$ double relativetoc(TCBlock* q) {
+	$ 	return q->relative.Toc();
+	$ } 
+	# double toc = relativetoc(TCBlock* q);
+
+@function [stoc] = tcblock_relativeget(q)
+% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
+% This file is part of the mextobicore wrapper
+%
+% TCBLOCK_RELATIVEGET Returns the relative as string
+%
+% [TOC] = TCBLOCK_RELATIVEGET(Q) returns the internal relative relative as a
+% string.
+%
+% See also TCBLOCK_RELATIVETIC, TCBLOCK_RELATIVETOC
+	$ void relativeget(TCBlock* q, char* stoc) {
+	$	std::string cache;
+	$ 	q->relative.Get(&cache);
+	$	strcpy(stoc, cache.c_str());
+	$ } 
+	stoc = '';
+	# relativeget(TCBlock* q, inout cstring stoc[4096]);
+

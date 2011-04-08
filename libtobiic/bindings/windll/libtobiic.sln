@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libtobiic", "libtobiic\libtobiic.vcproj", "{5B61BFC1-1FEA-47E1-8B2A-3492BA37FC7D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libtobiic_example", "libtobiic_example.vcproj", "{AB2047B0-5225-412C-BB40-042A2BFBDCB7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5B61BFC1-1FEA-47E1-8B2A-3492BA37FC7D} = {5B61BFC1-1FEA-47E1-8B2A-3492BA37FC7D}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5B61BFC1-1FEA-47E1-8B2A-3492BA37FC7D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5B61BFC1-1FEA-47E1-8B2A-3492BA37FC7D}.Debug|Win32.Build.0 = Debug|Win32
+		{5B61BFC1-1FEA-47E1-8B2A-3492BA37FC7D}.Release|Win32.ActiveCfg = Release|Win32
+		{5B61BFC1-1FEA-47E1-8B2A-3492BA37FC7D}.Release|Win32.Build.0 = Release|Win32
+		{AB2047B0-5225-412C-BB40-042A2BFBDCB7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AB2047B0-5225-412C-BB40-042A2BFBDCB7}.Debug|Win32.Build.0 = Debug|Win32
+		{AB2047B0-5225-412C-BB40-042A2BFBDCB7}.Release|Win32.ActiveCfg = Release|Win32
+		{AB2047B0-5225-412C-BB40-042A2BFBDCB7}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

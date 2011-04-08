@@ -1,0 +1,16 @@
+2010-01-08  Michele Tavella <michele.tavella@epfl.ch>
+
+Library with TOBI hBCI wrappers, interfaces and exported LibHybrid
+functionalities.
+
+Important things you might want to give a look at:
+- examples/exampleicrapid.cpp 		Example file explaining how to use the
+ 									library.
+- src/libtobiic/ICTypes.hpp 		Interface C structures and flags 
+- bindings/windll 					VS2008 solution for building a Windows DLL
+
+
+2010-01-10  Michele Tavella <michele.tavella@epfl.ch>
+As version 0.0.1, all the documentation is in Doxygen:
+ make doxygen-doc 
+should build it.
