@@ -20,9 +20,9 @@
 #include <cstdio>
 #include <iostream>
 
-#include "ICClass.hpp"
-#include "ICClassifier.hpp"
-#include "ICSerializerRapid.hpp"
+#include <libtobiic/ICClass.hpp>
+#include <libtobiic/ICClassifier.hpp>
+#include <libtobiic/ICSerializerRapid.hpp>
 #include <libtobicore/TCException.hpp>
 
 int main(void) {

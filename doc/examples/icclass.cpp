@@ -20,8 +20,8 @@
 #include <cstdio>
 #include <iostream>
 
-#include "ICClass.hpp"
-#include "ICSetClass.hpp"
+#include <libtobiic/ICClass.hpp>
+#include <libtobiic/ICSetClass.hpp>
 #include <libtobicore/TCException.hpp>
 
 int main(void) {

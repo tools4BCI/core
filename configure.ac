@@ -34,13 +34,19 @@ AC_SUBST(LIBTOOL_DEPS)
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
 
-AC_SUBST([RELEASE],[lib_release])
+# Check for necessay libraries
+AC_LANG_PUSH([C++])
+AC_CHECK_HEADERS([rapidxml.hpp rapidxml_print.hpp], [], 
+	 AC_MSG_ERROR([The RapidXML headers must be installed.]), [])
+AC_LANG_POP([C++])
+
 AC_SUBST([CURRENT],[lib_current])
 AC_SUBST([REVISION],[lib_revision])
 AC_SUBST([AGE],[lib_age])
 AC_SUBST(AM_LDFLAGS)
 
 AC_CONFIG_FILES([Makefile doc/Makefile doc/examples/Makefile \
-		 src/libtobicore/Makefile src/libtobicore/tobicore.pc])
+		 src/libtobicore/Makefile src/libtobicore/tobicore.pc \
+		 src/libtobiic/Makefile src/libtobiic/tobiic.pc])
 AC_OUTPUT
 

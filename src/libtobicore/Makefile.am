@@ -17,4 +17,3 @@ libtobicore_la_LDFLAGS = -version-info $(CURRENT):$(REVISION):$(AGE)
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = tobicore.pc
-
