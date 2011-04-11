@@ -20,7 +20,7 @@
 #include <cstdio>
 #include <iostream>
 
-#include "IDAsClient.hpp"
+#include <libtobiid/IDAsClient.hpp>
 
 class Client : public IDAsClient {
 };

@@ -20,7 +20,7 @@
 #include <cstdio>
 #include <iostream>
 
-#include "IDMessage.hpp"
+#include <libtobiid/IDMessage.hpp>
 #include <libtobicore/TCException.hpp>
 
 int main(void) {

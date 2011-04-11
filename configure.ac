@@ -47,6 +47,7 @@ AC_SUBST(AM_LDFLAGS)
 
 AC_CONFIG_FILES([Makefile doc/Makefile doc/examples/Makefile \
 		 src/libtobicore/Makefile src/libtobicore/tobicore.pc \
-		 src/libtobiic/Makefile src/libtobiic/tobiic.pc])
+		 src/libtobiic/Makefile src/libtobiic/tobiic.pc	\
+		 src/libtobiid/Makefile src/libtobiid/tobiid.pc])
 AC_OUTPUT
 

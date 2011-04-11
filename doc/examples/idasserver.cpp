@@ -20,28 +20,11 @@
 #include <cstdio>
 #include <iostream>
 
-#include "IDMessage.hpp"
-#include "IDSerializerRapid.hpp"
+#include <libtobiid/IDAsServer.hpp>
 
+class Server : public IDAsServer {
+};
 
 int main(void) {
-	IDMessage message1(IDMessage::FamilyBiosig, 781);
-	message1.SetDescription("module1");
-	message1.Dump();
-	
-	IDMessage message2;
-	
-	std::string buffer1; IDSerializerRapid serializer1(&message1);
-	std::string buffer2; IDSerializerRapid serializer2(&message2);
-	message1.SetBlockIdx();
-	for(int i = 0; i < 5; i++) {
-		message1.IncBlockIdx();
-		serializer1.Serialize(&buffer1);
-		std::cout << i << ",S) " << buffer1 << std::endl;
-		serializer2.Deserialize(&buffer1);
-		serializer2.Serialize(&buffer2);
-		std::cout << i << ",D) " << buffer1 << std::endl;
-	}
-
 	return 0;
 }
