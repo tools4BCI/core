@@ -35,7 +35,14 @@ clean:
 	@rm -vf tcblock*.m
 	@rm -vf core
 
-install: 
-	@cp -vf *.mex* ${CNBITK_MATLAB}/mextobiid/
-	@cp -vf tcblock*.m ${CNBITK_MATLAB}/mextobiid/
-	@cp -vf example_*.m ${CNBITK_MATLAB}/mextobiid/
+local-install:
+	@mkdir -p ${CNBITK_MATLAB}/mex${PROJECT}/
+	@cp -vf *.mex* ${CNBITK_MATLAB}/mex${PROJECT}/
+	@cp -vf tcblock*.m ${CNBITK_MATLAB}/mex${PROJECT}/
+	@cp -vf example_*.m ${CNBITK_MATLAB}/mex${PROJECT}/
+
+install:
+	@mkdir -p /opt/cnbitkmat/mex${PROJECT}/
+	@cp -vf *.mex* /opt/cnbitkmat/mex${PROJECT}/
+	@cp -vf tcblock*.m /opt/cnbitkmat/mex${PROJECT}/
+	@cp -vf example_*.m /opt/cnbitkmat/mex${PROJECT}/

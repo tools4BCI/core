@@ -36,8 +36,16 @@ clean:
 	@rm -vf icserializerrapid_*.m
 	@rm -vf core
 
-install: 
-	@cp -vf *.mex* ${CNBITK_MATLAB}/mextobiic/
-	@cp -vf icmessage_*.m ${CNBITK_MATLAB}/mextobiic/
-	@cp -vf icserializerrapid_*.m ${CNBITK_MATLAB}/mextobiic/
-	@cp -vf example_*.m ${CNBITK_MATLAB}/mextobiic/
+local-install:
+	@mkdir -p ${CNBITK_MATLAB}/mex${PROJECT}/
+	@cp -vf *.mex* ${CNBITK_MATLAB}/mex${PROJECT}/
+	@cp -vf icmessage_*.m ${CNBITK_MATLAB}/mex${PROJECT}/
+	@cp -vf icserializerrapid_*.m ${CNBITK_MATLAB}/mex${PROJECT}/
+	@cp -vf example_*.m ${CNBITK_MATLAB}/mex${PROJECT}/
+
+install:
+	@mkdir -p /opt/cnbitkmat/mex${PROJECT}/
+	@cp -vf *.mex* /opt/cnbitkmat/mex${PROJECT}/
+	@cp -vf icmessage_*.m /opt/cnbitkmat/mex${PROJECT}/
+	@cp -vf icserializerrapid_*.m /opt/cnbitkmat/mex${PROJECT}/
+	@cp -vf example_*.m /opt/cnbitkmat/mex${PROJECT}/

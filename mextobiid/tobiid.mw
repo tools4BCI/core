@@ -164,8 +164,8 @@ $ #include <string.h>
 % IDMESSAGE_SERIALIZE Serializes an IDMessage using an IDSerializer
 %
 % SMESSAGE = IDMESSAGE_SERIALIZE(S) Serializes the IDMessage Q (set at creation
-% time) using the IDSerializer S.
-% Returns an empty string on error.
+% time) using the IDSerializer S. 
+ Returns an empty string on error.
 %
 % See also IDMESSAGE_NEW, IDSERIALIZERRAPID_NEW, IDMESSAGE_DESERIALIZE
 	$ void serialize(IDSerializerRapid* s, char* buffer) {

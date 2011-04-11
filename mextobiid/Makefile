@@ -37,9 +37,18 @@ clean:
 	@rm -vf idasclient*.m
 	@rm -vf core
 
-install: 
-	@cp -vf *.mex* ${CNBITK_MATLAB}/mextobiid/
-	@cp -vf idmessage_*.m ${CNBITK_MATLAB}/mextobiid/
-	@cp -vf idasclient*.m ${CNBITK_MATLAB}/mextobiid/
-	@cp -vf idserializerrapid_*.m ${CNBITK_MATLAB}/mextobiid/
-	@cp -vf example_*.m ${CNBITK_MATLAB}/mextobiid/
+local-install:
+	@mkdir -p ${CNBITK_MATLAB}/mex${PROJECT}/
+	@cp -vf *.mex* ${CNBITK_MATLAB}/mex${PROJECT}/
+	@cp -vf idmessage_*.m ${CNBITK_MATLAB}/mex${PROJECT}/
+	@cp -vf idasclient*.m ${CNBITK_MATLAB}/mex${PROJECT}/
+	@cp -vf idserializerrapid_*.m ${CNBITK_MATLAB}/mex${PROJECT}/
+	@cp -vf example_*.m ${CNBITK_MATLAB}/mex${PROJECT}/
+
+install:
+	@mkdir -p /opt/cnbitkmat/mex${PROJECT}/
+	@cp -vf *.mex* /opt/cnbitkmat/mex${PROJECT}/
+	@cp -vf idmessage_*.m /opt/cnbitkmat/mex${PROJECT}/
+	@cp -vf idasclient*.m /opt/cnbitkmat/mex${PROJECT}/
+	@cp -vf idserializerrapid_*.m /opt/cnbitkmat/mex${PROJECT}/
+	@cp -vf example_*.m /opt/cnbitkmat/mex${PROJECT}/
