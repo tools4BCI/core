@@ -74,6 +74,17 @@ class ICClassifier {
 		static const ICLtype LabelCustom = 1;
 		//! \brief Class name label
 		static const ICLtype LabelClass = 2;
+		
+		static std::string TxtLabelUndef;
+		static std::string TxtLabelBiosig;
+		static std::string TxtLabelCustom;
+		static std::string TxtLabelClass;
+
+		static std::string TxtValueUndef;
+		static std::string TxtValueProb;
+		static std::string TxtValueDist;
+		static std::string TxtValueCLbl;
+		static std::string TxtValueRCoe;
 
 	public:
 		ICSetClass classes;

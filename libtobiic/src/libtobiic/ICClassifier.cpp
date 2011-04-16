@@ -24,6 +24,16 @@
 #ifdef __BORLANDC__
 using namespace std;
 #endif
+		
+std::string ICClassifier::TxtLabelUndef("LabelUndef");
+std::string ICClassifier::TxtLabelBiosig("LabelBiosig");
+std::string ICClassifier::TxtLabelCustom("LabelCustom");
+std::string ICClassifier::TxtLabelClass("LabelClass");
+std::string ICClassifier::TxtValueUndef("ValueUndef");
+std::string ICClassifier::TxtValueProb("ValueProb");
+std::string ICClassifier::TxtValueDist("ValueDist");
+std::string ICClassifier::TxtValueCLbl("ValueCLbl");
+std::string ICClassifier::TxtValueRCoe("ValueRCoe");
 
 ICClassifier::ICClassifier(const std::string& name, const std::string& desc) { 
 		this->_name = name;
@@ -82,15 +92,15 @@ bool ICClassifier::SetLabelType(ICLtype ltype) {
 }
 
 bool ICClassifier::SetValueType(std::string vtype) {
-	if(vtype.compare("ValueUndef") == 0) 
+	if(vtype.compare(TxtValueUndef) == 0) 
 		this->_vtype = ICClassifier::ValueUndef;
-	else if(vtype.compare("ValueProb") == 0) 
+	else if(vtype.compare(TxtValueProb) == 0) 
 		this->_vtype = ICClassifier::ValueProb;
-	else if(vtype.compare("ValueDist") == 0) 
+	else if(vtype.compare(TxtValueDist) == 0) 
 		this->_vtype = ICClassifier::ValueDist;
-	else if(vtype.compare("ValueCLbl") == 0) 
+	else if(vtype.compare(TxtValueCLbl) == 0) 
 		this->_vtype = ICClassifier::ValueCLbl;
-	else if(vtype.compare("ValueRCoe") == 0) 
+	else if(vtype.compare(TxtValueRCoe) == 0) 
 		this->_vtype = ICClassifier::ValueRCoe;
 	else 
 		return false;
@@ -98,13 +108,13 @@ bool ICClassifier::SetValueType(std::string vtype) {
 }
 
 bool ICClassifier::SetLabelType(std::string ltype) {
-	if(ltype.compare("LabelUndef") == 0) 
+	if(ltype.compare(TxtLabelUndef) == 0) 
 		this->_ltype = ICClassifier::LabelUndef;
-	else if(ltype.compare("LabelBiosig") == 0) 
+	else if(ltype.compare(TxtLabelBiosig) == 0) 
 		this->_ltype = ICClassifier::LabelBiosig;
-	else if(ltype.compare("LabelCustom") == 0) 
+	else if(ltype.compare(TxtLabelCustom) == 0) 
 		this->_ltype = ICClassifier::LabelCustom;
-	else if(ltype.compare("LabelClass") == 0) 
+	else if(ltype.compare(TxtLabelClass) == 0) 
 		this->_ltype = ICClassifier::LabelClass;
 	else 
 		return false;
