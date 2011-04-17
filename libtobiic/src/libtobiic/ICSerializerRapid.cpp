@@ -45,7 +45,7 @@ ICSerializerRapid::~ICSerializerRapid(void) {
 std::string* ICSerializerRapid::Serialize(std::string* buffer) {
 	if(buffer == NULL)
 		return NULL;
-	if(ICSerializer::_message == NULL)
+	if(ICSerializer::message == NULL)
 		throw TCException("iC message not set, cannot serialize");
 
 	buffer->clear();
@@ -65,12 +65,12 @@ std::string* ICSerializerRapid::Serialize(std::string* buffer) {
 
 	// Convert frame number to char array
 	char cacheFidx[16];
-	TCTools::itoa(ICSerializer::_message->GetBlockIdx(), cacheFidx);
+	TCTools::itoa(ICSerializer::message->GetBlockIdx(), cacheFidx);
 
 	// Same thing with timestamp and reference
 	std::string timestamp, reference;
-	ICSerializer::_message->absolute.Get(&timestamp);
-	ICSerializer::_message->relative.Get(&reference);
+	ICSerializer::message->absolute.Get(&timestamp);
+	ICSerializer::message->relative.Get(&reference);
 
 	// Root node
 	xml_node<>* root = doc.allocate_node(node_element, ICMESSAGE_ROOTNODE);
@@ -87,7 +87,7 @@ std::string* ICSerializerRapid::Serialize(std::string* buffer) {
 	// Root node
 	ICClassifier* cptr = NULL;
 	ICClass* kptr = NULL;
-	ICClassifierConstIter cit = ICSerializer::_message->classifiers.Begin();
+	ICClassifierConstIter cit = ICSerializer::message->classifiers.Begin();
 	ICSetClassConstIter kit;
 
 	char* ptr_vtype = NULL;
@@ -96,7 +96,7 @@ std::string* ICSerializerRapid::Serialize(std::string* buffer) {
 	xml_node<>* knode = NULL;
 
 	// Loop over classifiers
-	while(cit != ICSerializer::_message->classifiers.End()) {
+	while(cit != ICSerializer::message->classifiers.End()) {
 		cptr = (*cit).second;
 		cnode = doc.allocate_node(node_element, ICMESSAGE_CLASSISIFERNODE);
 		cnode->append_attribute(doc.allocate_attribute(ICMESSAGE_NAMENODE,
@@ -169,7 +169,7 @@ std::string* ICSerializerRapid::Serialize(std::string* buffer) {
 }
 
 std::string* ICSerializerRapid::Deserialize(std::string* const buffer) {
-	bool initialize = ICSerializer::_message->classifiers.Empty();
+	bool initialize = ICSerializer::message->classifiers.Empty();
 
 	xml_document<> doc;
 	std::string cache;
@@ -195,13 +195,13 @@ std::string* ICSerializerRapid::Deserialize(std::string* const buffer) {
 	
 	/* Get frame number */
 	cache = rootnode->first_attribute(ICMESSAGE_FRAMENODE)->value();
-	ICSerializer::_message->SetBlockIdx(atol(cache.c_str()));
+	ICSerializer::message->SetBlockIdx(atol(cache.c_str()));
 
 	// Get timestamp
 	cache = rootnode->first_attribute(ICMESSAGE_TIMESTAMPNODE)->value();
-	ICSerializer::_message->absolute.Set(cache);
+	ICSerializer::message->absolute.Set(cache);
 	cache = rootnode->first_attribute(ICMESSAGE_REFERENCENODE)->value();
-	ICSerializer::_message->relative.Set(cache);
+	ICSerializer::message->relative.Set(cache);
 
 	/* Define classifier and class nodes */
 	xml_node<>* cnode = NULL;
@@ -229,13 +229,13 @@ std::string* ICSerializerRapid::Deserialize(std::string* const buffer) {
 			cltype = ICClassifier::LabelType(tltype);
 			
 			/* Create classifier */
-			if(ICSerializer::_message->classifiers.Has(cname) == true)
+			if(ICSerializer::message->classifiers.Has(cname) == true)
 				return NULL;
 
 			cptr = new ICClassifier(cname, cdesc, cvtype, cltype);
-			ICSerializer::_message->classifiers.Add(cptr);
+			ICSerializer::message->classifiers.Add(cptr);
 		} else 
-			cptr = ICSerializer::_message->classifiers.Get(cname);
+			cptr = ICSerializer::message->classifiers.Get(cname);
 		
 		/* Trasverse class nodes */
 		knode = cnode->first_node(ICMESSAGE_CLASSNODE);

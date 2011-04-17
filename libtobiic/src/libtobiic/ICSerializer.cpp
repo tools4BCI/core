@@ -24,19 +24,19 @@ using namespace std;
 #endif
 		
 ICSerializer::ICSerializer(void) {
-	this->_message = NULL;
+	this->message = NULL;
 }
 		
 ICSerializer::ICSerializer(ICMessage* const message) {
-	this->_message = message;
+	this->message = message;
 }
 
 ICSerializer::~ICSerializer(void) {
-	this->_message = NULL;
+	this->message = NULL;
 }
 		
 ICSerializer* ICSerializer::SetMessage(ICMessage* const message) {
-	this->_message = message;
+	this->message = message;
 	return this;
 }
 
@@ -52,7 +52,7 @@ void ICSerializer::DeserializeCp(const std::string& buffer) {
 }
 		
 char* ICSerializer::SerializeCh(char* const buffer, const unsigned int bsize) {
-	if(this->_message == NULL)
+	if(this->message == NULL)
 		return NULL;
 	
 	std::string cache;
@@ -66,7 +66,7 @@ char* ICSerializer::SerializeCh(char* const buffer, const unsigned int bsize) {
 }
 
 const char* ICSerializer::DeserializeCh(const char* buffer, unsigned int bsize) { 
-	if(this->_message == NULL)
+	if(this->message == NULL)
 		return NULL;
 
 	std::string cache(buffer);

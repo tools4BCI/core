@@ -39,8 +39,8 @@ class IDSerializer {
 		virtual char* SerializeCh(char* buffer, const unsigned int bsize);
 		virtual const char* DeserializeCh(const char* buffer, const unsigned int bsize);
 	
-	protected:
-		IDMessage* _message;
+	public:
+		IDMessage* message;
 };
 
 #endif

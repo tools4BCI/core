@@ -24,19 +24,19 @@ using namespace std;
 #endif
 		
 IDSerializer::IDSerializer(void) {
-	this->_message = NULL;
+	this->message = NULL;
 }
 		
 IDSerializer::IDSerializer(IDMessage* const message) {
-	this->_message = message;
+	this->message = message;
 }
 
 IDSerializer::~IDSerializer(void) {
-	this->_message = NULL;
+	this->message = NULL;
 }
 		
 IDSerializer* IDSerializer::SetMessage(IDMessage* const message) {
-	this->_message = message;
+	this->message = message;
 	return this;
 }
 
@@ -52,7 +52,7 @@ void IDSerializer::DeserializeCp(const std::string& buffer) {
 }
 		
 char* IDSerializer::SerializeCh(char* const buffer, const unsigned int bsize) {
-	if(this->_message == NULL)
+	if(this->message == NULL)
 		return NULL;
 	
 	std::string cache;
@@ -66,7 +66,7 @@ char* IDSerializer::SerializeCh(char* const buffer, const unsigned int bsize) {
 }
 
 const char* IDSerializer::DeserializeCh(const char* buffer, unsigned int bsize) { 
-	if(this->_message == NULL)
+	if(this->message == NULL)
 		return NULL;
 
 	std::string cache(buffer);

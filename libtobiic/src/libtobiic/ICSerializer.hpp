@@ -39,8 +39,8 @@ class ICSerializer {
 		virtual char* SerializeCh(char* buffer, const unsigned int bsize);
 		virtual const char* DeserializeCh(const char* buffer, const unsigned int bsize);
 	
-	protected:
-		ICMessage* _message;
+	public:
+		ICMessage* message;
 };
 
 #endif

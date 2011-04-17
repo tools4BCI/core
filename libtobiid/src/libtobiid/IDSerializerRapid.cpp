@@ -46,7 +46,7 @@ IDSerializerRapid::~IDSerializerRapid(void) {
 std::string* IDSerializerRapid::Serialize(std::string* buffer) {
 	if(buffer == NULL)
 		return NULL;
-	if(IDSerializer::_message == NULL)
+	if(IDSerializer::message == NULL)
 		throw TCException("iD message not set, cannot serialize");
 
 	buffer->clear();
@@ -65,20 +65,20 @@ std::string* IDSerializerRapid::Serialize(std::string* buffer) {
 	}
 	
 	char cacheFidx[16], cacheEvent[128];
-	TCTools::itoa(IDSerializer::_message->GetBlockIdx(), cacheFidx);
-	TCTools::itoa(IDSerializer::_message->GetEvent(), cacheEvent);
-	IDFvalue fvalue = IDSerializer::_message->GetFamily();
+	TCTools::itoa(IDSerializer::message->GetBlockIdx(), cacheFidx);
+	TCTools::itoa(IDSerializer::message->GetEvent(), cacheEvent);
+	IDFvalue fvalue = IDSerializer::message->GetFamily();
 	
 	std::string timestamp, reference;
-	IDSerializer::_message->absolute.Get(&timestamp);
-	IDSerializer::_message->relative.Get(&reference);
+	IDSerializer::message->absolute.Get(&timestamp);
+	IDSerializer::message->relative.Get(&reference);
 
 	// Root node
 	xml_node<>* root = doc.allocate_node(node_element, IDMESSAGE_ROOTNODE);
 	root->append_attribute(doc.allocate_attribute(IDMESSAGE_VERSIONNODE,
 				IDMESSAGE_VERSION));
 	root->append_attribute(doc.allocate_attribute(IDMESSAGE_DESCRIPTIONNODE,
-				IDSerializer::_message->_description.c_str()));
+				IDSerializer::message->_description.c_str()));
 	root->append_attribute(doc.allocate_attribute(IDMESSAGE_FRAMENODE, 
 				cacheFidx));
 	root->append_attribute(doc.allocate_attribute(IDMESSAGE_FAMILYNODE, 
@@ -123,28 +123,28 @@ std::string* IDSerializerRapid::Deserialize(std::string* const buffer) {
 	// Get frame number
 	cache.clear();
 	cache = rootnode->first_attribute(IDMESSAGE_FRAMENODE)->value();
-	IDSerializer::_message->SetBlockIdx(atol(cache.c_str()));
+	IDSerializer::message->SetBlockIdx(atol(cache.c_str()));
 	
 	// Get timestamp
 	cache.clear();
 	cache = rootnode->first_attribute(IDMESSAGE_TIMESTAMPNODE)->value();
-	IDSerializer::_message->absolute.Set(cache);
+	IDSerializer::message->absolute.Set(cache);
 	cache.clear();
 	cache = rootnode->first_attribute(IDMESSAGE_REFERENCENODE)->value();
-	IDSerializer::_message->relative.Set(cache);
+	IDSerializer::message->relative.Set(cache);
 	
 	cache = rootnode->first_attribute(IDMESSAGE_DESCRIPTIONNODE)->value();
-	IDSerializer::_message->SetDescription(cache);
+	IDSerializer::message->SetDescription(cache);
 
 	cache = rootnode->first_attribute(IDMESSAGE_FAMILYNODE)->value();
 	if(cache.compare(IDTYPES_FAMILY_BIOSIG) == 0) 
-		IDSerializer::_message->SetFamilyType(IDMessage::FamilyBiosig);
+		IDSerializer::message->SetFamilyType(IDMessage::FamilyBiosig);
 	else	
-		IDSerializer::_message->SetFamilyType(IDMessage::FamilyUndef);
+		IDSerializer::message->SetFamilyType(IDMessage::FamilyUndef);
 
 	cache.clear();
 	cache = rootnode->first_attribute(IDMESSAGE_EVENTNODE)->value();
-	IDSerializer::_message->SetEvent(atoi(cache.c_str()));
+	IDSerializer::message->SetEvent(atoi(cache.c_str()));
 	
 	return buffer;
 }
