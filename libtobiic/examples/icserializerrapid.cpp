@@ -51,7 +51,7 @@ int main(void) {
 	sender.classifiers.Add(&classifierERP);
 	
 	sender.SetBlockIdx(1234567890);
-	ICSerializerRapid rapid(&sender, false);
+	ICSerializerRapid rapid(&sender, true);
 
 	std::string buffer1;
 	rapid.Serialize(&buffer1);
@@ -65,6 +65,19 @@ int main(void) {
 	std::cout << "[1]>> " << buffer1 << std::endl;
 	std::cout << "[2]>> " << buffer2 << std::endl;
 	std::cout << "[3]>> " << buffer3 << std::endl;
+
+	/* We need to be careful:
+	 * - if we pass a string ("0x300"), it will be impossible to retrieve it as
+	 * an integer (although I could use sscanf)
+	 */
+	ICClass class_s("0x300", 0.10f);
+	std::cout << "[s,s] This will work >> " << class_s.GetLabel() << std::endl;
+	std::cout << "[s,i] This will fail >> " << class_s.GetLabelUInt() << std::endl;
+	
+	ICClass class_i(0x300, 0.10f);
+	std::cout << "[i,s] This will work >> " << class_i.GetLabel() << std::endl;
+	std::cout << "[i,s] This will work >> " << class_i.GetLabelUInt() << std::endl;
+
 
 	return 0;
 }

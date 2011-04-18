@@ -21,12 +21,20 @@
 #include <libtobicore/TCTools.hpp>
 #include <libtobicore/TCException.hpp>
 #include <string.h>
-	
+#include <stdio.h>
+#include <stdlib.h>
+#include <sstream>
+
 #ifdef __BORLANDC__
 using namespace std;
 #endif
 		
 ICClass::ICClass(ICLabel label, ICValue value) {
+	this->SetValue(value);
+	this->SetLabel(label);
+}
+
+ICClass::ICClass(unsigned int label, ICValue value) {
 	this->SetValue(value);
 	this->SetLabel(label);
 }
@@ -42,6 +50,10 @@ ICLabel ICClass::GetLabel(void) const {
 	return this->_label;
 }
 
+unsigned int ICClass::GetLabelUInt(void) const {
+	return atoi(this->_label.c_str());
+}
+
 ICClass* ICClass::SetValue(ICValue value) {
 	this->_value = value;
 	return this;
@@ -53,6 +65,13 @@ ICClass* ICClass::SetLabel(ICLabel label) {
 	
 	this->_label = label;
 	return this;
+}
+
+ICClass* ICClass::SetLabel(unsigned int label) {
+	std::stringstream stream;
+	stream << label;
+	
+	return this->SetLabel(stream.str());
 }
 
 const char* ICClass::GetChLabel(void) {

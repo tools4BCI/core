@@ -28,7 +28,11 @@
 /*! \brief Pair of ICLabel and ICValue 
  *
  * This class is used to store a single pair of ICLabel and ICValue.
- * It implements methods that will be used later serializers
+ * It implements methods that will be used later serializers.
+ * Class labels are represented as strings for the time being (not to loose too
+ * much time with the different types). Be sure you check the very bottom of the
+ * icserializerrapid.cpp example.
+ *
  * \sa ICSerializer, ICSerializerRapid
  */
 class ICClass {
@@ -38,9 +42,18 @@ class ICClass {
 		 *
 		 * \param label	Label type
 		 * \param value	Value type
+		 * \param asint Re-interpret input as integer
 		 * \sa			ICLabel, ICValue
 		 */
 		ICClass(ICLabel label, ICValue value = 0.00f); 
+		/*! \brief Constructor
+		 * Raises exceptions.
+		 *
+		 * \param label	Label type (as integer)
+		 * \param value	Value type
+		 * \sa			ICLabel, ICValue
+		 */
+		ICClass(unsigned int label, ICValue value = 0.00f); 
 		//! \brief Destructor
 		virtual ~ICClass();
 
@@ -53,6 +66,10 @@ class ICClass {
 		 * \return Label type
 		 */
 		virtual ICLabel GetLabel(void) const;
+		/*! \brief Returns label type
+		 * \return Label type as integer or (int)0 on failure
+		 */
+		virtual unsigned int GetLabelUInt(void) const;
 		/*! \brief Set the value type
 		 * \return A pointer to the ICClass instance
 		 */
@@ -63,6 +80,12 @@ class ICClass {
 		 * \return A pointer to the ICClass instance
 		 */
 		virtual ICClass* SetLabel(ICLabel label);
+		/*! \brief Set the label type
+		 * Raises exceptions.
+		 *
+		 * \return A pointer to the ICClass instance
+		 */
+		virtual ICClass* SetLabel(unsigned int label);
 		/*! \brief Get ICValue as char array
 		 * Raises exceptions.
 		 *
