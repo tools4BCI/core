@@ -18,6 +18,7 @@ libtobiid_la_SOURCES = IDTypes.hpp \
 			IDAsServer.hpp IDAsServer.cpp
 
 libtobiid_la_LDFLAGS = -version-info $(CURRENT):$(REVISION):$(AGE) 
+libtobiid_la_LIBADD = $(top_builddir)/src/libtobicore/libtobicore.la
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = tobiid.pc

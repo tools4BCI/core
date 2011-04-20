@@ -25,6 +25,7 @@ libtobiic_la_SOURCES = ICTypes.hpp \
 			ICSerializerRapid.cpp ICSerializerRapid.hpp
 
 libtobiic_la_LDFLAGS = -version-info $(CURRENT):$(REVISION):$(AGE)
+libtobiic_la_LIBADD = $(top_builddir)/src/libtobicore/libtobicore.la
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = tobiic.pc
