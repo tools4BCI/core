@@ -1,1 +1,0 @@
-swig -c++ -python pylibtobiic.i
