@@ -45,7 +45,7 @@ AC_SUBST([REVISION],[lib_revision])
 AC_SUBST([AGE],[lib_age])
 AC_SUBST(AM_LDFLAGS)
 
-AC_CONFIG_FILES([Makefile doc/Makefile doc/examples/Makefile \
+AC_CONFIG_FILES([Makefile doc/Makefile doc/examples/Makefile doc/doxygen.cfg\
 		 src/libtobicore/Makefile src/libtobicore/tobicore.pc \
 		 src/libtobiic/Makefile src/libtobiic/tobiic.pc	\
 		 src/libtobiid/Makefile src/libtobiid/tobiid.pc])
