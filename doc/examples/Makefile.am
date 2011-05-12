@@ -1,11 +1,13 @@
 AM_CPPFLAGS = -I$(top_srcdir)/src
 
-check_PROGRAMS = coretcblock \
+check_PROGRAMS = tcblock tclanguage \
 		 icclass icclassifier icserializerrapid icexample \
 		 idexample idserializerrapid idasclient idasserver
 
-coretcblock_SOURCES = coretcblock.cpp
-coretcblock_LDADD = $(top_builddir)/src/libtobicore/libtobicore.la
+tcblock_SOURCES = tcblock.cpp
+tcblock_LDADD = $(top_builddir)/src/libtobicore/libtobicore.la
+tclanguage_SOURCES = tclanguage.cpp
+tclanguage_LDADD = $(top_builddir)/src/libtobicore/libtobicore.la
 
 icclass_SOURCES = icclass.cpp
 icclass_LDADD = $(top_builddir)/src/libtobiic/libtobiic.la 
