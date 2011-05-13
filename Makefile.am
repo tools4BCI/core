@@ -1,5 +1,7 @@
 EXTRA_DIST = autogen.sh
 
 ACLOCAL_AMFLAGS=-I m4
-SUBDIRS = src/libtobicore src/libtobiic src/libtobiid doc
- 
+SUBDIRS = src/tobicore\
+		  src/tobiic\
+		  src/tobiid\
+		  doc

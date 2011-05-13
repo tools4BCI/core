@@ -2,7 +2,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/src
 
 lib_LTLIBRARIES = libtobiic.la
 
-libtobiic_includedir = $(includedir)/libtobiic
+libtobiic_includedir = $(includedir)/tobiic
 libtobiic_include_HEADERS = ICTypes.hpp \
 			ICClass.hpp \
 			ICClassifier.hpp \
@@ -25,7 +25,7 @@ libtobiic_la_SOURCES = ICTypes.hpp \
 			ICSerializerRapid.cpp ICSerializerRapid.hpp
 
 libtobiic_la_LDFLAGS = -version-info $(CURRENT):$(REVISION):$(AGE)
-libtobiic_la_LIBADD = $(top_builddir)/src/libtobicore/libtobicore.la
+libtobiic_la_LIBADD = $(top_builddir)/src/tobicore/libtobicore.la
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = tobiic.pc

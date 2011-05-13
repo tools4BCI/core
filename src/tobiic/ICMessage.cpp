@@ -18,7 +18,7 @@
 
 #include "ICMessage.hpp"
 #include "ICSerializerRapid.hpp"
-#include <libtobicore/TCException.hpp>
+#include <tobicore/TCException.hpp>
 #include <string.h>
 
 #ifdef __BORLANDC__

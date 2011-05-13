@@ -17,8 +17,8 @@
 */
 
 #include "ICSerializerRapid.hpp"
-#include <libtobicore/TCException.hpp>
-#include <libtobicore/TCTools.hpp>
+#include <tobicore/TCException.hpp>
+#include <tobicore/TCTools.hpp>
 #include <iostream>
 #include <rapidxml.hpp>
 #include <rapidxml_print.hpp>

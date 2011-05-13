@@ -17,7 +17,7 @@
 */
 
 #include "ICSetClassifier.hpp"
-#include <libtobicore/TCException.hpp>
+#include <tobicore/TCException.hpp>
 
 #ifdef __BORLANDC__
 using namespace std;

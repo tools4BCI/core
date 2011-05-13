@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libtobicore.la
 
-libtobicore_includedir=$(includedir)/libtobicore
+libtobicore_includedir=$(includedir)/tobicore
 libtobicore_include_HEADERS = TCBlock.hpp \
 				TCTimestamp.hpp \
 				TCTools.hpp \

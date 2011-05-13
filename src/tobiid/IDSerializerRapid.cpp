@@ -18,8 +18,8 @@
 
 #include "IDSerializerRapid.hpp"
 #include "IDTypes.hpp"
-#include <libtobicore/TCException.hpp>
-#include <libtobicore/TCTools.hpp>
+#include <tobicore/TCException.hpp>
+#include <tobicore/TCTools.hpp>
 #include <rapidxml.hpp>
 #include <rapidxml_print.hpp>
 #include <iostream>

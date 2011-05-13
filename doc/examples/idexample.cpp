@@ -19,8 +19,8 @@
 #include <cstdio>
 #include <iostream>
 
-#include <libtobiid/IDMessage.hpp>
-#include <libtobicore/TCException.hpp>
+#include <tobiid/IDMessage.hpp>
+#include <tobicore/TCException.hpp>
 
 int main(void) {
 	IDMessage message1(IDMessage::FamilyBiosig, 781);

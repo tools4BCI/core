@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <libtobicore/TCLanguage.hpp>
+#include <tobicore/TCLanguage.hpp>
 #include <iostream>
 
 using namespace std;

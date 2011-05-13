@@ -17,8 +17,8 @@
 */
 
 #include "ICClass.hpp"
-#include <libtobicore/TCTools.hpp>
-#include <libtobicore/TCException.hpp>
+#include <tobicore/TCTools.hpp>
+#include <tobicore/TCException.hpp>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

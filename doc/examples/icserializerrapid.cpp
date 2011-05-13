@@ -19,10 +19,10 @@
 #include <cstdio>
 #include <iostream>
 
-#include <libtobiic/ICClass.hpp>
-#include <libtobiic/ICClassifier.hpp>
-#include <libtobiic/ICSerializerRapid.hpp>
-#include <libtobicore/TCException.hpp>
+#include <tobiic/ICClass.hpp>
+#include <tobiic/ICClassifier.hpp>
+#include <tobiic/ICSerializerRapid.hpp>
+#include <tobicore/TCException.hpp>
 
 int main(void) {
 	ICClassifier classifierMI("cnbi_mi", "CNBI MI Classifier", 

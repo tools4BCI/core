@@ -19,9 +19,9 @@
 #include <cstdio>
 #include <iostream>
 
-#include <libtobiic/ICClass.hpp>
-#include <libtobiic/ICClassifier.hpp>
-#include <libtobicore/TCException.hpp>
+#include <tobiic/ICClass.hpp>
+#include <tobiic/ICClassifier.hpp>
+#include <tobicore/TCException.hpp>
 
 int main(void) {
 	ICClass class_0("0x300", 0.0f);

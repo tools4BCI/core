@@ -19,7 +19,7 @@
 #include <cstdio>
 #include <iostream>
 
-#include <libtobiid/IDAsServer.hpp>
+#include <tobiid/IDAsServer.hpp>
 
 class Server : public IDAsServer {
 };

@@ -22,8 +22,8 @@
 #include "IDTypes.hpp"
 #include "IDMessage.hpp"
 #include "IDSerializer.hpp"
-#include <libtobicore/TCException.hpp>
-#include <libtobicore/TCBlock.hpp>
+#include <tobicore/TCException.hpp>
+#include <tobicore/TCBlock.hpp>
 #include <vector>
 
 class IDAsClient : public TCBlock {

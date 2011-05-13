@@ -15,9 +15,9 @@
 %   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-$ #include <libtobicore/TCException.hpp>
-$ #include <libtobiic/ICMessage.hpp>
-$ #include <libtobiic/ICSerializerRapid.hpp>
+$ #include <tobicore/TCException.hpp>
+$ #include <tobiic/ICMessage.hpp>
+$ #include <tobiic/ICSerializerRapid.hpp>
 $ #include <cstring>
 
 @function [q] = icserializerrapid_new(m);

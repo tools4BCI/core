@@ -19,9 +19,9 @@
 #include <cstdio>
 #include <iostream>
 
-#include <libtobiic/ICClass.hpp>
-#include <libtobiic/ICSetClass.hpp>
-#include <libtobicore/TCException.hpp>
+#include <tobiic/ICClass.hpp>
+#include <tobiic/ICSetClass.hpp>
+#include <tobicore/TCException.hpp>
 
 int main(void) {
 	ICClass class_rh("0x301", 0.10f);

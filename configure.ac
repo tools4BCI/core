@@ -12,7 +12,7 @@ m4_define([lib_age],0)
 
 # Setup Automake
 AC_INIT(libtobicore,[lib_release.lib_current.lib_age.lib_revision],michele.tavella@epfl.ch)
-AC_CONFIG_SRCDIR([src/libtobicore/TCBlock.hpp])
+AC_CONFIG_SRCDIR([src/tobicore/TCBlock.hpp])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config/config.h])
@@ -45,9 +45,15 @@ AC_SUBST([REVISION],[lib_revision])
 AC_SUBST([AGE],[lib_age])
 AC_SUBST(AM_LDFLAGS)
 
-AC_CONFIG_FILES([Makefile doc/Makefile doc/examples/Makefile doc/doxygen.cfg\
-		 src/libtobicore/Makefile src/libtobicore/tobicore.pc \
-		 src/libtobiic/Makefile src/libtobiic/tobiic.pc	\
-		 src/libtobiid/Makefile src/libtobiid/tobiid.pc])
+AC_CONFIG_FILES([Makefile\
+				 doc/Makefile\
+				 doc/examples/Makefile\
+				 doc/doxygen.cfg\
+				 src/tobicore/Makefile\
+				 src/tobicore/tobicore.pc\
+				 src/tobiic/Makefile\
+				 src/tobiic/tobiic.pc\
+				 src/tobiid/Makefile\
+				 src/tobiid/tobiid.pc])
 AC_OUTPUT
 

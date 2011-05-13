@@ -23,7 +23,7 @@
 #include "ICClass.hpp"
 #include "ICClassifier.hpp"
 #include "ICSetClassifier.hpp"
-#include <libtobicore/TCBlock.hpp>
+#include <tobicore/TCBlock.hpp>
 #include <stdint.h>
 
 //class DLLEXPORT ICMessage {

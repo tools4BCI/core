@@ -17,7 +17,7 @@
 */
 
 #include "IDMessage.hpp"
-#include <libtobicore/TCException.hpp>
+#include <tobicore/TCException.hpp>
 #include <string.h>
 #include <stdio.h>
 

@@ -20,7 +20,7 @@
 #define IDMESSAGE_HPP
 
 #include "IDTypes.hpp"
-#include <libtobicore/TCBlock.hpp>
+#include <tobicore/TCBlock.hpp>
 
 //class DLLEXPORT IDMessage {
 class IDMessage : public TCBlock {

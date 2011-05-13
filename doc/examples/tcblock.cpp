@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <libtobicore/TCBlock.hpp>
+#include <tobicore/TCBlock.hpp>
 #include <iostream>
 
 using namespace std;

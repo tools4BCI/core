@@ -19,8 +19,8 @@
 #include <cstdio>
 #include <iostream>
 
-#include <libtobiid/IDMessage.hpp>
-#include <libtobiid/IDSerializerRapid.hpp>
+#include <tobiid/IDMessage.hpp>
+#include <tobiid/IDSerializerRapid.hpp>
 
 
 int main(void) {
