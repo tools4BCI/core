@@ -1,14 +1,14 @@
-%   Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
+%   Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+%   Michele Tavella <michele.tavella@epfl.ch>
 %
-%   This file is part of the mextobiid wrapper
-%
-%   The libndf library is free software: you can redistribute it and/or
-%   modify it under the terms of the version 3 of the GNU General Public
-%   License as published by the Free Software Foundation.
+%   This program is free software: you can redistribute it and/or modify
+%   it under the terms of the GNU General Public License as published by
+%   the Free Software Foundation, either version 3 of the License, or
+%   (at your option) any later version.
 %
 %   This program is distributed in the hope that it will be useful,
 %   but WITHOUT ANY WARRANTY; without even the implied warranty of
-%   MERCHANTABILITY or FITNESS FOR A PARTIDULAR PURPOSE.  See the
+%   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 %   GNU General Public License for more details.
 %
 %   You should have received a copy of the GNU General Public License
@@ -23,8 +23,8 @@ $ #include <stdio.h>
 $ #include <string.h>
 
 @function [c] = idasclient_new();
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDASCLIENT_NEW Allocates an IDAsClient object
 %
@@ -35,8 +35,8 @@ $ #include <string.h>
 	# IDAsClient* c = new IDAsClient();
 
 @function [c] = idasclient_delete(c);
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDASCLIENT_NEW deletes an IDAsClient object
 %
@@ -48,8 +48,8 @@ $ #include <string.h>
 	c = 0;
 
 @function [q] = idserializerrapid_new(m);
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDSERIALIZERRAPID_NEW Allocates an IDSerializerRapid object
 %
@@ -60,8 +60,8 @@ $ #include <string.h>
 	# IDSerializerRapid* q = new IDSerializerRapid(IDMessage* m);
 
 @function [m] = idserializerrapid_delete(m)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDSERIALIZERRAPID_DELETE Deletes an IDSerializerRapid object
 %
@@ -75,8 +75,8 @@ $ #include <string.h>
 	m = 0;
 
 @function [q] = idmessage_new();
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_NEW Allocates an IDMessage object
 %
@@ -86,8 +86,8 @@ $ #include <string.h>
 	# IDMessage* q = new IDMessage();
 
 @function [q] = idmessage_delete(q)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_DELETE Deletes an IDMessage object
 %
@@ -101,8 +101,8 @@ $ #include <string.h>
 	q = 0;
 
 @function [id, key] = idmessage_getfamilies(name)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_GETVALUES Returns the supported value types
 %
@@ -114,8 +114,8 @@ $ #include <string.h>
 	key = {'undef' 'biosig'};
 
 @function [bidx] = idmessage_getbidx(q)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_GETBIDX Gets the block number
 %
@@ -128,8 +128,8 @@ $ #include <string.h>
 	# int bidx = getbidx(IDMessage* q);
 
 @function [bidx] = idmessage_setbidx(q, value)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_SETBIDX Sets the block number
 %
@@ -143,8 +143,8 @@ $ #include <string.h>
 	# int bidx = setbidx(IDMessage* q, int value);
 
 @function [bidx] = idmessage_incbidx(q)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_INCBIDX Increments the block number
 %
@@ -158,8 +158,8 @@ $ #include <string.h>
 	# int bidx = incbidx(IDMessage* q);
 
 @function [smessage] = idmessage_serialize(s)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_SERIALIZE Serializes an IDMessage using an IDSerializer
 %
@@ -180,8 +180,8 @@ $ #include <string.h>
 	# serialize(IDSerializerRapid* s, inout cstring smessage[4096]);
 
 @function [status] = idmessage_deserialize(s, smessage)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_DESERIALIZE Deerializes an IDMessage using an IDSerializer
 %
@@ -203,8 +203,8 @@ $ #include <string.h>
 	# bool status = deserialize(IDSerializerRapid* s, cstring smessage[4096]);
 
 @function idmessage_dumpmessage(q)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_DUMPMESSAGE Prints an IDMessage
 %
@@ -222,8 +222,8 @@ $ #include <string.h>
 	# dumpd(IDMessage* q);
 
 @function [iscopied] = idmessage_copy(q, qother)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_COPY Copies one iD message to another
 %
@@ -244,8 +244,8 @@ $ #include <string.h>
 	# bool iscopied = copy(IDMessage* q, IDMessage* qother);
 
 @function idmessage_setdescription(q, description)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_SETDESCRIPTION Sets the description field of an IDMessage
 %
@@ -265,8 +265,8 @@ $ #include <string.h>
 	# setdescription(IDMessage* q, cstring description[4096]);
 
 @function [description] = idmessage_getdescription(q)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_GETDESCRIPTION Gets the description field of an IDMessage
 %
@@ -287,8 +287,8 @@ $ #include <string.h>
 	# getdescription(IDMessage* q, inout cstring description[4096]);
 
 @function [family] = idmessage_getfamily(q)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_GETFAMILY Returns the family name of an IDMessage
 %
@@ -309,8 +309,8 @@ $ #include <string.h>
 	# getfamily(IDMessage* q, inout cstring family[4096]);
 
 @function idmessage_setfamilytype(q, familytype)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_SETFAMILYTYPE Sets the family type of an IDMessage
 %
@@ -329,8 +329,8 @@ $ #include <string.h>
 	# setfamilytype(IDMessage* q, int familytype);
 
 @function [familytype] = idmessage_getfamilytype(q)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_GETFAMILYTYPE Returns the family type of an IDMessage
 %
@@ -350,8 +350,8 @@ $ #include <string.h>
 	# int familytype = getfamilytype(IDMessage* q);
 
 @function idmessage_setevent(q, event)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_SETEVENT Sets the event of an IDMessage
 %
@@ -370,8 +370,8 @@ $ #include <string.h>
 	# setevent(IDMessage* q, int event);
 
 @function [event] = idmessage_getevent(q)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_GETEVENT Gets the event of an IDMessage
 %
@@ -391,8 +391,8 @@ $ #include <string.h>
 	# int event = getevent(IDMessage* q);
 
 @function [ftype] = idmessage_familytype(fname)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_FAMILYTYPE Returns the family type for a given family name.
 %
@@ -407,8 +407,8 @@ $ #include <string.h>
 	# getftype(cstring fname, inout int* ftype);
 
 @function idasclient_dump(c)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDASCLIENT_DUMP Prints an IDMessage
 %
@@ -424,8 +424,8 @@ $ #include <string.h>
 	# dumpc(IDAsClient* c);
 
 @function [size] = idasclient_size(c)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDASCLIENT_SIZE Returns the size of the IDMessage queue in an IDAsClient
 % object
@@ -445,8 +445,8 @@ $ #include <string.h>
 	# int size = size(IDAsClient* c);
 
 @function idasclient_add(c, q)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDASCLIENT_ADD Adds an IDMessage to the queue of an IDAsClient
 %
@@ -471,8 +471,8 @@ $ #include <string.h>
 
 
 @function [status] = idasclient_getprev(c, q, type, event)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDASCLIENT_GETPREV Returns a queued message coming from a module that sits
 % previously in the BCI pipeline. 
@@ -521,8 +521,8 @@ $ #include <string.h>
 	# bool status = getprev(IDAsClient* c, IDMessage* q, int type, int event);
 
 @function [status] = idasclient_getnext(c, q, type, event)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDASCLIENT_GETNEXT Returns a queued message coming from a module that sits
 % next in the BCI pipeline. 
@@ -571,8 +571,8 @@ $ #include <string.h>
 	# bool status = getnext(IDAsClient* c, IDMessage* q, int type, int event);
 
 @function [status] = idasclient_getthis(c, q, type, event)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDASCLIENT_GETTHIS Returns a queued message coming from a module that sits
 % in the same position in the BCI pipeline. 
@@ -621,8 +621,8 @@ $ #include <string.h>
 	# bool status = getthis(IDAsClient* c, IDMessage* q, int type, int event);
 
 @function [bidx] = idasclient_getbidx(q)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDASCLIENT_GETBIDX Gets the block number
 %
@@ -635,8 +635,8 @@ $ #include <string.h>
 	# int bidx = cgetbidx(IDAsClient* q);
 
 @function [bidx] = idasclient_setbidx(q, value)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDASCLIENT_SETBIDX Sets the block number
 %
@@ -650,8 +650,8 @@ $ #include <string.h>
 	# int bidx = csetbidx(IDAsClient* q, int value);
 
 @function [bidx] = idasclient_incbidx(q)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDASCLIENT_INCBIDX Increments the block number
 %
@@ -665,8 +665,8 @@ $ #include <string.h>
 	# int bidx = cincbidx(IDAsClient* q);
 
 @function idmessage_absolutetic(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_ABSOLUTETIC Tics the absolute
 %
@@ -679,8 +679,8 @@ $ #include <string.h>
 	# absolutetic(IDMessage* q);
 
 @function [toc] = idmessage_absolutetoc(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_ABSOLUTETOC Tocs the absolute
 %
@@ -694,8 +694,8 @@ $ #include <string.h>
 	# double toc = absolutetoc(IDMessage* q);
 
 @function [stoc] = idmessage_absoluteget(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_ABSOLUTEGET Returns the absolute as string
 %
@@ -712,8 +712,8 @@ $ #include <string.h>
 	# absoluteget(IDMessage* q, inout cstring stoc[4096]);
 
 @function idmessage_relativetic(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_RELATIVETIC Tics the relative
 %
@@ -726,8 +726,8 @@ $ #include <string.h>
 	# relativetic(IDMessage* q);
 
 @function [toc] = idmessage_relativetoc(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_RELATIVETOC Tocs the relative
 %
@@ -741,8 +741,8 @@ $ #include <string.h>
 	# double toc = relativetoc(IDMessage* q);
 
 @function [stoc] = idmessage_relativeget(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiid wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDMESSAGE_RELATIVEGET Returns the relative as string
 %

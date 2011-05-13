@@ -1,10 +1,10 @@
-%   Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
+%   Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+%   Michele Tavella <michele.tavella@epfl.ch>
 %
-%   This file is part of the mexctobiic wrapper
-%
-%   The libndf library is free software: you can redistribute it and/or
-%   modify it under the terms of the version 3 of the GNU General Public
-%   License as published by the Free Software Foundation.
+%   This program is free software: you can redistribute it and/or modify
+%   it under the terms of the GNU General Public License as published by
+%   the Free Software Foundation, either version 3 of the License, or
+%   (at your option) any later version.
 %
 %   This program is distributed in the hope that it will be useful,
 %   but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,14 +14,15 @@
 %   You should have received a copy of the GNU General Public License
 %   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 $ #include <libtobicore/TCException.hpp>
 $ #include <libtobiic/ICMessage.hpp>
 $ #include <libtobiic/ICSerializerRapid.hpp>
 $ #include <cstring>
 
 @function [q] = icserializerrapid_new(m);
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICSERIALIZERRAPID_NEW Allocates an ICSerializerRapid object
 %
@@ -32,8 +33,8 @@ $ #include <cstring>
 	# ICSerializerRapid* q = new ICSerializerRapid(ICMessage* m);
 
 @function [m] = icserializerrapid_delete(m)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICSERIALIZERRAPID_DELETE Deletes an ICSerializerRapid object
 %
@@ -47,8 +48,8 @@ $ #include <cstring>
 	m = 0;
 
 @function [q] = icmessage_new();
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_NEW Allocates an ICMessage object
 %
@@ -58,8 +59,8 @@ $ #include <cstring>
 	# ICMessage* q = new ICMessage();
 
 @function [q] = icmessage_delete(q)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_DELETE Deletes an ICMessage object
 %
@@ -73,8 +74,8 @@ $ #include <cstring>
 	q = 0;
 
 @function [status] = icmessage_addclassifier(q, name, desc, vtype, ltype)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_ADDCLASSIFIER Adds an ICClassifier to an ICMessage
 %
@@ -103,8 +104,8 @@ $ #include <cstring>
 	# bool status = addc(ICMessage* q, std::string* sname, std::string* sdesc, int* vtype, int* ltype);
 
 @function [isempty] = icmessage_dumpmessage(q)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_DUMPMESSAGE Prints an ICMessage
 %
@@ -124,8 +125,8 @@ $ #include <cstring>
 	# bool isempty = dumpc(ICMessage* q);
 
 @function [status] = icmessage_addclass(q, name, label, value)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_ADDCLASS Adds an ICClass to an ICClassifier
 %
@@ -154,8 +155,8 @@ $ #include <cstring>
 	# bool status = addk(ICMessage* q, std::string* sname, std::string* slabel, float* value);
 
 @function [retval] = icmessage_getvalue(q, name, label)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_GETVALUE Returns the value of a specific ICClass
 %
@@ -180,8 +181,8 @@ $ #include <cstring>
 	# getv(ICMessage* q, std::string* sname, std::string* slabel, inout float* retval);
 
 @function [status] = icmessage_setvalue(q, name, label, value)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_SETVALUE Sets the value of a specific ICClass
 %
@@ -207,8 +208,8 @@ $ #include <cstring>
 	# bool status = setv(ICMessage* q, std::string* sname, std::string* slabel, float* value);
 
 @function [smessage] = icmessage_serialize(s)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_SERIALIZE Serializes an ICMessage using an ICSerializer
 %
@@ -230,8 +231,8 @@ $ #include <cstring>
 	# serialize(ICSerializerRapid* s, inout cstring smessage[4096]);
 
 @function [status] = icmessage_deserialize(s, smessage)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_DESERIALIZE Deerializes an ICMessage using an ICSerializer
 %
@@ -253,8 +254,8 @@ $ #include <cstring>
 	# bool status = deserialize(ICSerializerRapid* s, cstring smessage[4096]);
 
 @function [vtype] = icmessage_getvaluetype(name)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_GETVALUETYPE Returns the numerical id of a value type
 %
@@ -270,8 +271,8 @@ $ #include <cstring>
 	# getvtype(cstring name, inout int* vtype);
 
 @function [ltype] = icmessage_getlabeltype(name)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_GETLABELTYPE Returns the numerical id of a label type
 %
@@ -287,8 +288,8 @@ $ #include <cstring>
 	# getltype(cstring name, inout int* ltype);
 
 @function [id, key] = icmessage_getvalues()
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_GETVALUES Returns the supported value types
 %
@@ -300,8 +301,8 @@ $ #include <cstring>
 	key = {'undef' 'prob' 'dist' 'clbl' 'rcoe'};
 
 @function [id, key] = icmessage_getlabels()
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_GETLABELS Returns the supported label types
 %
@@ -313,8 +314,8 @@ $ #include <cstring>
 	key = {'undef' 'biosig' 'class' 'custom'};
 
 @function [bidx] = icmessage_getbidx(q)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_GETBIDX Gets the block number
 %
@@ -327,8 +328,8 @@ $ #include <cstring>
 	# int bidx = getbidx(ICMessage* q);
 
 @function [bidx] = icmessage_setbidx(q, value)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_SETBIDX Sets the block number
 %
@@ -342,8 +343,8 @@ $ #include <cstring>
 	# int bidx = setbidx(ICMessage* q, int value);
 
 @function [bidx] = icmessage_incbidx(q)
-% Copyright (C) 2010 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mexctobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_INCBIDX Increments the block number
 %
@@ -357,8 +358,8 @@ $ #include <cstring>
 	# int bidx = incbidx(ICMessage* q);
 
 @function icmessage_absolutetic(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_ABSOLUTETIC Tics the absolute
 %
@@ -371,8 +372,8 @@ $ #include <cstring>
 	# absolutetic(ICMessage* q);
 
 @function [toc] = icmessage_absolutetoc(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>%
 %
 % ICMESSAGE_ABSOLUTETOC Tocs the absolute
 %
@@ -386,8 +387,8 @@ $ #include <cstring>
 	# double toc = absolutetoc(ICMessage* q);
 
 @function [stoc] = icmessage_absoluteget(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_ABSOLUTEGET Returns the absolute as string
 %
@@ -404,8 +405,8 @@ $ #include <cstring>
 	# absoluteget(ICMessage* q, inout cstring stoc[4096]);
 
 @function icmessage_relativetic(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_RELATIVETIC Tics the relative
 %
@@ -418,8 +419,8 @@ $ #include <cstring>
 	# relativetic(ICMessage* q);
 
 @function [toc] = icmessage_relativetoc(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_RELATIVETOC Tocs the relative
 %
@@ -433,8 +434,8 @@ $ #include <cstring>
 	# double toc = relativetoc(ICMessage* q);
 
 @function [stoc] = icmessage_relativeget(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobiic wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % ICMESSAGE_RELATIVEGET Returns the relative as string
 %

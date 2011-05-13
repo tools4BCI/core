@@ -1,14 +1,14 @@
-%   Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
+%   Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+%   Michele Tavella <michele.tavella@epfl.ch>
 %
-%   This file is part of the mextobicore wrapper
-%
-%   The libndf library is free software: you can redistribute it and/or
-%   modify it under the terms of the version 3 of the GNU General Public
-%   License as published by the Free Software Foundation.
+%   This program is free software: you can redistribute it and/or modify
+%   it under the terms of the GNU General Public License as published by
+%   the Free Software Foundation, either version 3 of the License, or
+%   (at your option) any later version.
 %
 %   This program is distributed in the hope that it will be useful,
 %   but WITHOUT ANY WARRANTY; without even the implied warranty of
-%   MERCHANTABILITY or FITNESS FOR A PARTIDULAR PURPOSE.  See the
+%   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 %   GNU General Public License for more details.
 %
 %   You should have received a copy of the GNU General Public License
@@ -22,8 +22,8 @@ $ #include <stdio.h>
 $ #include <string.h>
 
 @function tcblock_absolutetic(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobicore wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % TCBLOCK_ABSOLUTETIC Tics the absolute
 %
@@ -36,8 +36,8 @@ $ #include <string.h>
 	# absolutetic(TCBlock* q);
 
 @function [toc] = tcblock_absolutetoc(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobicore wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % TCBLOCK_ABSOLUTETOC Tocs the absolute
 %
@@ -51,8 +51,8 @@ $ #include <string.h>
 	# double toc = absolutetoc(TCBlock* q);
 
 @function [stoc] = tcblock_absoluteget(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobicore wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % TCBLOCK_ABSOLUTEGET Returns the absolute as string
 %
@@ -69,8 +69,8 @@ $ #include <string.h>
 	# absoluteget(TCBlock* q, inout cstring stoc[4096]);
 
 @function tcblock_relativetic(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobicore wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % TCBLOCK_RELATIVETIC Tics the relative
 %
@@ -83,8 +83,8 @@ $ #include <string.h>
 	# relativetic(TCBlock* q);
 
 @function [toc] = tcblock_relativetoc(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobicore wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % TCBLOCK_RELATIVETOC Tocs the relative
 %
@@ -98,8 +98,8 @@ $ #include <string.h>
 	# double toc = relativetoc(TCBlock* q);
 
 @function [stoc] = tcblock_relativeget(q)
-% Copyright (C) 2011 Michele Tavella <michele.tavella@epfl.ch>
-% This file is part of the mextobicore wrapper
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
 %
 % TCBLOCK_RELATIVEGET Returns the relative as string
 %
