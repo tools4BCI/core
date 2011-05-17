@@ -37,11 +37,11 @@ clean:
 	@rm -vf core
 
 local-install:
-	@mkdir -p ${CNBITK_MATLAB}/mex${PROJECT}/
-	@cp -vf *.mex* ${CNBITK_MATLAB}/mex${PROJECT}/
-	@cp -vf icmessage_*.m ${CNBITK_MATLAB}/mex${PROJECT}/
-	@cp -vf icserializerrapid_*.m ${CNBITK_MATLAB}/mex${PROJECT}/
-	@cp -vf example_*.m ${CNBITK_MATLAB}/mex${PROJECT}/
+	@mkdir -p ${CNBITKMAT_ROOT}/mex${PROJECT}/
+	@cp -vf *.mex* ${CNBITKMAT_ROOT}/mex${PROJECT}/
+	@cp -vf icmessage_*.m ${CNBITKMAT_ROOT}/mex${PROJECT}/
+	@cp -vf icserializerrapid_*.m ${CNBITKMAT_ROOT}/mex${PROJECT}/
+	@cp -vf example_*.m ${CNBITKMAT_ROOT}/mex${PROJECT}/
 
 install:
 	@mkdir -p /opt/cnbitkmat/mex${PROJECT}/

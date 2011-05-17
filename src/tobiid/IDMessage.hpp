@@ -35,7 +35,8 @@ class IDMessage : public TCBlock {
 		virtual std::string GetDescription(void) const;
 		virtual void SetDescription(const std::string& description);
 		virtual IDFvalue GetFamily(void) const;
-		virtual void SetFamilyType(const IDFtype type);
+		virtual bool SetFamilyType(const IDFtype type);
+		virtual bool SetFamilyType(const std::string& type);
 		virtual IDFtype GetFamilyType(void) const;
 		virtual void SetEvent(const IDevent event);
 		virtual IDevent GetEvent(void) const;
@@ -47,7 +48,13 @@ class IDMessage : public TCBlock {
 	public:
 		static const IDFtype FamilyUndef = -1;
 		static const IDFtype FamilyBiosig = 0;
+		static const IDFtype FamilyCustom = 1;
+
 		static const IDevent EventNull = -1;
+		
+		static std::string TxtFamilyUndef;
+		static std::string TxtFamilyBiosig;
+		static std::string TxtFamilyCustom;
 	private:
 		IDFtype _familyType;
 		IDevent _event;

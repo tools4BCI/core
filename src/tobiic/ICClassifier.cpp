@@ -91,15 +91,15 @@ bool ICClassifier::SetLabelType(ICLtype ltype) {
 }
 
 bool ICClassifier::SetValueType(std::string vtype) {
-	if(vtype.compare(TxtValueUndef) == 0) 
+	if(vtype.compare(ICClassifier::TxtValueUndef) == 0) 
 		this->_vtype = ICClassifier::ValueUndef;
-	else if(vtype.compare(TxtValueProb) == 0) 
+	else if(vtype.compare(ICClassifier::TxtValueProb) == 0) 
 		this->_vtype = ICClassifier::ValueProb;
-	else if(vtype.compare(TxtValueDist) == 0) 
+	else if(vtype.compare(ICClassifier::TxtValueDist) == 0) 
 		this->_vtype = ICClassifier::ValueDist;
-	else if(vtype.compare(TxtValueCLbl) == 0) 
+	else if(vtype.compare(ICClassifier::TxtValueCLbl) == 0) 
 		this->_vtype = ICClassifier::ValueCLbl;
-	else if(vtype.compare(TxtValueRCoe) == 0) 
+	else if(vtype.compare(ICClassifier::TxtValueRCoe) == 0) 
 		this->_vtype = ICClassifier::ValueRCoe;
 	else 
 		return false;

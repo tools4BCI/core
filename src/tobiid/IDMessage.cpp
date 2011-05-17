@@ -25,8 +25,15 @@
 using namespace std;
 #endif
 
+std::string IDMessage::TxtFamilyUndef("FamilyUndef");
+std::string IDMessage::TxtFamilyBiosig("FamilyBiosig");
+std::string IDMessage::TxtFamilyCustom("FamilyCustom");
+
 IDMessage::IDMessage(void) {
 	this->Init();
+}
+
+IDMessage::~IDMessage(void) {
 }
 
 IDMessage::IDMessage(IDMessage* const other) {
@@ -54,9 +61,6 @@ void IDMessage::Init(void) {
 	this->_event = IDMessage::EventNull;
 }
 
-IDMessage::~IDMessage(void) {
-}
-
 std::string IDMessage::GetDescription(void) const {
 	return this->_description;
 }
@@ -71,6 +75,9 @@ IDFvalue IDMessage::GetFamily(void) const {
 		case IDMessage::FamilyBiosig:
 			fvalue.assign(IDTYPES_FAMILY_BIOSIG);
 			break;
+		case IDMessage::FamilyCustom:
+			fvalue.assign(IDTYPES_FAMILY_CUSTOM);
+			break;
 		case IDMessage::FamilyUndef:
 		default:
 			fvalue.assign(IDTYPES_FAMILY_UNDEF);
@@ -79,8 +86,23 @@ IDFvalue IDMessage::GetFamily(void) const {
 	return fvalue;
 }
 
-void IDMessage::SetFamilyType(const IDFtype type) {
+bool IDMessage::SetFamilyType(const IDFtype type) {
+	if(type < IDMessage::FamilyUndef || type > IDMessage::FamilyCustom)
+		return false;
 	this->_familyType = type;
+	return true;
+}
+		
+bool IDMessage::SetFamilyType(const std::string& type) {
+	if(type.compare(IDMessage::TxtFamilyUndef) == 0) 
+		this->_familyType = IDMessage::FamilyUndef;
+	else if(type.compare(IDMessage::TxtFamilyBiosig) == 0) 
+		this->_familyType = IDMessage::FamilyBiosig;
+	else if(type.compare(IDMessage::TxtFamilyCustom) == 0) 
+		this->_familyType = IDMessage::FamilyCustom;
+	else
+		return false;
+	return true;
 }
 
 IDFtype IDMessage::GetFamilyType(void) const {
