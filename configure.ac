@@ -1,8 +1,10 @@
+m4_define([lib_release],0)
 m4_define([lib_current],2)
 m4_define([lib_revision],0)
 m4_define([lib_age],0)
 
-AC_INIT(libtobicore,[lib_release.lib_current.lib_age.lib_revision],michele.tavella@epfl.ch)
+AC_INIT(tobicore,[lib_release.lib_current.lib_age.lib_revision],
+		michele.tavella@epfl.ch)
 AC_CONFIG_SRCDIR([src/tobicore/TCBlock.hpp])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
@@ -27,6 +29,7 @@ AC_CHECK_HEADERS([rapidxml.hpp rapidxml_print.hpp], [],
 	 AC_MSG_ERROR([The RapidXML headers must be installed.]), [])
 AC_LANG_POP([C++])
 
+AC_SUBST([RELEASE],[lib_release])
 AC_SUBST([CURRENT],[lib_current])
 AC_SUBST([REVISION],[lib_revision])
 AC_SUBST([AGE],[lib_age])
