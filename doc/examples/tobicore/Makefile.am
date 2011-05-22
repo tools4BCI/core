@@ -1,8 +1,15 @@
 AM_CPPFLAGS = -I$(top_srcdir)/src
 
-check_PROGRAMS = tcblock tclanguage \
-		 icclass icclassifier icserializerrapid icexample \
-		 idexample idserializerrapid idasclient idasserver
+check_PROGRAMS = tcblock \
+				 tclanguage \
+				 icclass \
+				 icclassifier \
+				 icserializerrapid \
+				 icexample \
+				 idexample \
+				 idserializerrapid \
+				 idasclient \
+				 idasserver
 
 tcblock_SOURCES = tcblock.cpp
 tcblock_LDADD = $(top_builddir)/src/tobicore/libtobicore.la
