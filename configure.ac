@@ -47,5 +47,11 @@ AC_CONFIG_FILES([Makefile\
 				 src/tobiic/Makefile\
 				 src/tobiic/tobiic.pc\
 				 src/tobiid/Makefile\
-				 src/tobiid/tobiid.pc])
+				 src/tobiid/tobiid.pc\
+				 mex/mextobicore/tobicore.mw\
+				 mex/mextobicore/Makefile\
+				 mex/mextobiic/tobiic.mw\
+				 mex/mextobiic/Makefile\
+				 mex/mextobiid/tobiid.mw\
+				 mex/mextobiid/Makefile])
 AC_OUTPUT
