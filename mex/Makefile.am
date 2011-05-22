@@ -1,0 +1,3 @@
+SUBDIRS = mextobicore \
+		  mextobiic \
+		  mextobiid
