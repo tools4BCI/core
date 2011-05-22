@@ -7,7 +7,7 @@ mexld = -l$(interface) -ltobicore
 
 all: mex
 
-cc:
+cc: $(mexmw)
 	mwrap -mex $(interface) -c $(mexcc) -mb $(mexmw) 
 
 mex: cc
