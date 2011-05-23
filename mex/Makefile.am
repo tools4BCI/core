@@ -1,3 +1,4 @@
-SUBDIRS = mextobicore \
+SUBDIRS = tobicoremat \
+		  mextobicore \
 		  mextobiic \
 		  mextobiid
