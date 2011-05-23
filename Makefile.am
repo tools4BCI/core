@@ -5,4 +5,8 @@ SUBDIRS = src/tobicore\
 		  src/tobiic\
 		  src/tobiid\
 		  mex\
+		  mex/tobicoremat\
+		  mex/mextobicore\
+		  mex/mextobiic\
+		  mex/mextobiid\
 		  doc
