@@ -37,10 +37,6 @@ AC_SUBST(AM_LDFLAGS)
 
 AC_CONFIG_FILES([Makefile\
 				 doc/Makefile\
-				 doc/examples/Makefile\
-				 doc/examples/tobicore/Makefile\
-				 doc/examples/tobiic/Makefile\
-				 doc/examples/tobiid/Makefile\
 				 doc/doxygen.cfg\
 				 src/tobicore/Makefile\
 				 src/tobicore/tobicore.pc\
