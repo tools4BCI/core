@@ -40,10 +40,13 @@ AC_CONFIG_FILES([Makefile\
 				 doc/doxygen.cfg\
 				 src/tobicore/Makefile\
 				 src/tobicore/tobicore.pc\
+				 doc/examples/tobicore/Makefile\
 				 src/tobiic/Makefile\
 				 src/tobiic/tobiic.pc\
+				 doc/examples/tobiic/Makefile\
 				 src/tobiid/Makefile\
 				 src/tobiid/tobiid.pc\
+				 doc/examples/tobiid/Makefile\
 				 mex/Makefile\
 				 mex/tobicoremat/Makefile\
 				 mex/mextobicore/Makefile\
