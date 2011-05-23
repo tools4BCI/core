@@ -1,0 +1,3 @@
+SUBDIRS = tobicore \
+		  tobiic \
+		  tobiid 
