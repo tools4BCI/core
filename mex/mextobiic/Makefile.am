@@ -1,8 +1,6 @@
-EXTRA_DIST = tobiic.mw.in
-
 interface = tobiic
 mexcc = $(interface).cc
-mexmw = $(interface).mw
+mexmw = $(top_srcdir)/mex/mex$(interface)/$(interface).mw
 mexld = -l$(interface) -ltobicore
 mexpath = ${prefix}/opt/cnbitkmat/mex$(interface)/
 
