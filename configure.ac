@@ -29,6 +29,18 @@ AC_CHECK_HEADERS([rapidxml.hpp rapidxml_print.hpp], [],
 	 AC_MSG_ERROR([The RapidXML headers must be installed.]), [])
 AC_LANG_POP([C++])
 
+case $host in
+	*-linux*)
+		platform=linux
+		;;
+	*win32* | *mingw32* | *cygwin* | *windows*)
+		platform=win32
+		;;
+esac
+AM_CONDITIONAL([LINUX], [test "$platform" = "linux"])
+AM_CONDITIONAL([WIN32], [test "$platform" = "win32"])
+
+
 AC_SUBST([RELEASE],[lib_release])
 AC_SUBST([CURRENT],[lib_current])
 AC_SUBST([REVISION],[lib_revision])
