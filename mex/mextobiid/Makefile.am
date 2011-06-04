@@ -7,6 +7,7 @@ if WIN32
 mexwin = $(top_srcdir)/mex/mex$(interface)/make.m
 verwin = $(RELEASE).$(CURRENT).$(REVISION).$(AGE)
 tarwin = mex$(interface)-$(verwin).tar.bz2
+docwin = $(top_srcdir)/doc/examples/mex$(interface)
 endif 
 
 cc: $(mexmw)
@@ -19,7 +20,7 @@ else
 	cp $(mexwin) .
 	matlab -nodesktop -wait -r make
 	rm make.m
-	tar -cjf ../mex$(interface)-$(RELEASE).$(CURRENT).$(REVISION).$(AGE).tar.bz2 *.m *.mex*
+	tar -cjf $(top_builddir)/$(tarwin) $(docwin) *.m *.mex*
 endif
 
 clean-local:
