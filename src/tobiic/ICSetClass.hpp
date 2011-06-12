@@ -59,6 +59,15 @@ class ICSetClass {
 		 * It raises an exception if no class with the same ICLabel is present
 		 * in ICMapClass or if the argument is NULL.
 		 *
+		 * \arg lclass class label
+		 * \return Pointer to ICClass 
+		 */
+		virtual ICClass* Remove(unsigned int lclass);
+		/*! \brief Removes an ICClass from ICMapClass
+		 *
+		 * It raises an exception if no class with the same ICLabel is present
+		 * in ICMapClass or if the argument is NULL.
+		 *
 		 * It raises an exception (TODO) if not found
 		 * \return Pointer to ICClass 
 		 */
@@ -76,12 +85,24 @@ class ICSetClass {
 		 *
 		 * \return Pointer to ICClass 
 		 */
+		virtual ICClass* Get(unsigned int lclass) const;
+		/*! \brief Returns a pointer to ICClass instance
+		 *
+		 * It raises an exception if no class with the same ICLabel is present.
+		 *
+		 * \return Pointer to ICClass 
+		 */
 		virtual ICClass* Get(ICClass* pclass) const;
 		/*! \brief Checks if ICLabel is present
 		 *
 		 * \return True if present, false otherwise
 		 */
 		virtual bool Has(ICLabel lclass) const;
+		/*! \brief Checks if ICLabel is present
+		 *
+		 * \return True if present, false otherwise
+		 */
+		virtual bool Has(unsigned int lclass) const;
 		/*! \brief Checks if ICClass is present
 		 *
 		 * \return True if present, false otherwise

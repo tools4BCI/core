@@ -18,6 +18,7 @@
 
 #include "ICSetClass.hpp"
 #include <tobicore/TCException.hpp>
+#include <tobicore/TCTools.hpp>
 
 #ifdef __BORLANDC__
 using namespace std;
@@ -52,6 +53,10 @@ ICClass* ICSetClass::Remove(ICLabel lclass) {
 	return retval;
 }
 
+ICClass* ICSetClass::Remove(unsigned int lclass) {
+	return this->Remove(TCTools::itos(lclass));
+}
+
 ICClass* ICSetClass::Remove(ICClass* pclass) {
 	if(pclass == NULL)
 		throw TCException("pclass is NULL", __PRETTY_FUNCTION__);
@@ -68,6 +73,10 @@ ICClass* ICSetClass::Get(ICLabel lclass) const {
 	return retval;
 }
 
+ICClass* ICSetClass::Get(unsigned int lclass) const {
+	return this->Get(TCTools::itos(lclass));
+}
+
 ICClass* ICSetClass::Get(ICClass* pclass) const {
 	return this->Get(pclass->GetLabel());
 }
@@ -75,6 +84,10 @@ ICClass* ICSetClass::Get(ICClass* pclass) const {
 bool ICSetClass::Has(ICLabel name) const {
     ICSetClassConstIter  it = this->_map.find(name);
 	return(it != this->_map.end());
+}
+
+bool ICSetClass::Has(unsigned int name) const {
+	return this->Has(TCTools::itos(name));
 }
 
 bool ICSetClass::Has(ICClass* klass) const {

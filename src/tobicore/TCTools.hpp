@@ -19,6 +19,8 @@
 #ifndef TCTOOLS_HPP
 #define TCTOOLS_HPP
 
+#include <string>
+
 /*! \brief TC Tools class.
  *
  * It exposes some static methods to perform data conversion.
@@ -28,6 +30,7 @@ class TCTools {
 		static char* itoa(int value, char* result, int base = 10);
 		static int ftoa(float value, char* result);
 		static float atof(const char* value);
+		static std::string itos(int value);
 };
 
 #endif

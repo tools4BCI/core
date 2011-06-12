@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cstdio>
+#include <sstream>
 
 #ifdef __BORLANDC__
 using namespace std;
@@ -62,4 +63,10 @@ float TCTools::atof(const char* value) {
 		throw TCException("Field number exceeded", __PRETTY_FUNCTION__);
 
 	return retval;
+}
+
+std::string TCTools::itos(int value) {
+	std::stringstream out;
+	out << value;
+	return out.str();
 }
