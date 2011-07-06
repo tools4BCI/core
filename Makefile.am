@@ -1,5 +1,3 @@
-EXTRA_DIST = autogen.sh
-
 ACLOCAL_AMFLAGS=-I m4
 SUBDIRS = src/tobicore\
 		  src/tobiic\
@@ -8,10 +6,10 @@ SUBDIRS = src/tobicore\
 		  doc
 
 
-EXTRA_DIST += debian/changelog \
+EXTRA_DIST = debian/changelog \
 			 debian/compat \
 			 debian/control\
-			 debian/copyright 
+			 debian/copyright \
 			 debian/rules \
 			 debian/libtobicore.install \
 			 debian/libtobicore-dev.install
