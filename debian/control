@@ -1,0 +1,24 @@
+Source: tobicore
+Section: libs
+Priority: extra
+Maintainer: Michele Tavella <michele.tavella@epfl.ch>
+Build-Depends: debhelper (>= 7), autotools-dev
+Standards-Version: 3.8.3
+Homepage: http://cnbisrv02.epfl.ch
+
+Package: libtobicore
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Homepage: http://cnbisrv02.epfl.ch
+Description: TOBI libs
+ 
+Package: tobicore-dev
+Section: libdevel
+Architecture: any
+Depends: libtobicore (= ${binary:Version}), ${misc:Depends}
+Homepage: http://cnbisrv02.epfl.ch
+Description: TOBI libs
+ .
+ This package contains the files needed to compile and link programs which
+ use tobicore.
