@@ -33,10 +33,10 @@ AC_SUBST(LIBTOOL_DEPS)
 
 AC_HEADER_STDBOOL
 
-AC_LANG_PUSH([C++])
-AC_CHECK_HEADERS([rapidxml.hpp rapidxml_print.hpp], [], 
-	 AC_MSG_ERROR([The RapidXML headers must be installed.]), [])
-AC_LANG_POP([C++])
+#AC_LANG_PUSH([C++])
+#AC_CHECK_HEADERS([rapidxml.hpp rapidxml_print.hpp], [], 
+#	 AC_MSG_ERROR([The RapidXML headers must be installed.]), [])
+#AC_LANG_POP([C++])
 
 case $host in
 	*-linux*)
