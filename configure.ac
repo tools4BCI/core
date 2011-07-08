@@ -1,7 +1,7 @@
 m4_define([lib_release],0)
 m4_define([lib_current],2)
 m4_define([lib_revision],4)
-m4_define([lib_age],0)
+m4_define([lib_age],2)
 
 AC_INIT(tobicore,[lib_release.lib_current.lib_age.lib_revision],
 		michele.tavella@epfl.ch)
