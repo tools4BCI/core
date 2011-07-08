@@ -1,7 +1,8 @@
 interface = tobicore
 mexcc = $(interface).cc
 mexmw = $(top_srcdir)/mex/mex$(interface)/$(interface).mw
-mexld = -l$(interface)
+mexld = -L$(abs_top_builddir)/src/$(interface)/.libs/ -l$(interface)
+mexinc = -I$(top_srcdir)/src/
 mexpath = ${pkgdatadir}/tobicoremat/mex$(interface)/
 if WIN32
 mexwin = $(top_srcdir)/mex/mex$(interface)/make.m
@@ -10,12 +11,14 @@ tarwin = mex$(interface)-$(verwin).tar.bz2
 docwin = $(top_srcdir)/doc/examples/mex$(interface)
 endif
 
+all: mex
+
 cc: $(mexmw)
 	mwrap -mex $(interface) -c $(mexcc) -mb $(mexmw) 
 
 mex: cc
+	mex -largeArrayDims $(mexinc) $(mexcc) $(mexld)
 if LINUX
-	mex -largeArrayDims $(mexld) $(mexcc)
 else
 	cp $(mexwin) .
 	matlab -nodesktop -wait -r make
@@ -28,7 +31,7 @@ clean-local:
 	rm -rf *.m
 	rm -rf *.mex*
 
-install-data-local: mex
+install-data-local:
 	mkdir -p ${mexpath}
 	cp *.m ${mexpath}
 	cp *.mex* ${mexpath}
