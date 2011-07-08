@@ -4,13 +4,15 @@ mexmw = $(top_srcdir)/mex/mex$(interface)/$(interface).mw
 mexld = -L$(abs_top_builddir)/src/$(interface)/.libs/ -l$(interface) \
 		-L$(abs_top_builddir)/src/tobicore/.libs/ -ltobicore
 mexinc = -I$(top_srcdir)/src/
-mexpath = ${pkgdatadir}/tobicoremat/mex$(interface)/
+mexpath = ${DESTDIR}${pkgdatadir}/tobicoremat/mex$(interface)/
 if WIN32
 mexwin = $(top_srcdir)/mex/mex$(interface)/make.m
 verwin = $(RELEASE).$(CURRENT).$(REVISION).$(AGE)
 tarwin = mex$(interface)-$(verwin).tar.bz2
 docwin = $(top_srcdir)/doc/examples/mex$(interface)
 endif
+
+EXTRA_DIST = ${mexmw}
 
 all: mex
 

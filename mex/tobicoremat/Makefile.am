@@ -1,6 +1,8 @@
 toolbox = tobicoremat
-matpath = ${pkgdatadir}/$(toolbox)/
+matpath = ${DESTDIR}${pkgdatadir}/$(toolbox)/
 matfiles = ${top_srcdir}/mex/$(toolbox)/*.m
+	
+EXTRA_DIST = ${matfiles}
 
 install-data-local:
 	mkdir -p ${matpath}
