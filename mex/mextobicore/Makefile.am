@@ -13,10 +13,10 @@ endif
 
 all: mex
 
-cc: $(mexmw)
+$(interface).cc:
 	mwrap -mex $(interface) -c $(mexcc) -mb $(mexmw) 
 
-mex: cc
+mex: $(interface).cc
 	mex -largeArrayDims $(mexinc) $(mexcc) $(mexld)
 if LINUX
 else
