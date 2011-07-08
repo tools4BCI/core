@@ -1,5 +1,4 @@
 toolbox = tobicoremat
-#$(DESTDIR)/
 matpath = ${pkgdatadir}/$(toolbox)/
 matfiles = ${top_srcdir}/mex/$(toolbox)/*.m
 
