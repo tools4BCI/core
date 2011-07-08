@@ -1,5 +1,5 @@
 # 2011-07-08  Michele Tavella <michele.tavella@epfl.ch>
-#   If the library source code has changed at all since the last update,
+# - If the library source code has changed at all since the last update,
 #   then increment revision.
 # - If any interfaces have been added, removed, or changed since the last
 #   update, increment current, and set revision to 0.
@@ -8,8 +8,8 @@
 # - If any interfaces have been removed since the last public release, then
 #   set age to 0.
 
-m4_define([lib_current],2)
-m4_define([lib_revision],5)
+m4_define([lib_current],3)
+m4_define([lib_revision],0)
 m4_define([lib_age],0)
 
 AC_INIT(tobicore,[lib_current.lib_revision.lib_age],
