@@ -13,7 +13,7 @@ endif
 
 all: mex
 
-$(interface).cc:
+$(interface).cc: $(mexmw)
 	mwrap -mex $(interface) -c $(mexcc) -mb $(mexmw) 
 
 mex: $(interface).cc
