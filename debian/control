@@ -11,7 +11,7 @@ Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Homepage: http://www.mtvl.org/cnbitk
-Description: TOBI libs
+Description: TOBI Interfaces libraries
  TOBI iC and iD interfaces, as well as the TOBI Core layer.
  
 Package: libtobicore-dev
@@ -19,7 +19,7 @@ Section: libdevel
 Architecture: any
 Depends: libtobicore (= ${binary:Version}), ${misc:Depends}
 Homepage: http://www.mtvl.org/cnbitk
-Description: TOBI interfaces
+Description: TOBI Interfaces libraries
  TOBI iC and iD interfaces, as well as the TOBI Core layer.
  .
  This package contains the files needed to compile and link programs which
@@ -30,7 +30,7 @@ Section: libdevel
 Architecture: any
 Depends: libtobicore (= ${binary:Version}), ${misc:Depends}
 Homepage: http://www.mtvl.org/cnbitk
-Description: TOBI libs
+Description: TOBI Interfaces libraries
  TOBI iC and iD interfaces, as well as the TOBI Core layer.
  .
  This package contains the Matlab MEX interfaces for tobicore.
