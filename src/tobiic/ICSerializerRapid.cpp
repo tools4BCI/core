@@ -20,8 +20,8 @@
 #include <tobicore/TCException.hpp>
 #include <tobicore/TCTools.hpp>
 #include <iostream>
-#include <rapidxml.hpp>
-#include <rapidxml_print.hpp>
+#include <tobicore/rapidxml.hpp>
+#include <tobicore/rapidxml_print.hpp>
 #include <stdlib.h>
 #include <string.h>
 #include <vector>

@@ -1,4 +1,6 @@
-/usr/include/*
+/usr/include/tobicore/*
+/usr/include/tobiic/*
+/usr/include/tobiid/*
 /usr/lib/libtobicore.so
 /usr/lib/libtobiic.so
 /usr/lib/libtobiid.so

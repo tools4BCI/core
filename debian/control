@@ -7,14 +7,23 @@ Standards-Version: 3.8.3
 Homepage: http://www.mtvl.org/cnbitk
 
 Package: libtobicore
-Provides: libtobicore
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Homepage: http://www.mtvl.org/cnbitk
 Description: TOBI libs
  
-Package: tobicore-dev
+Package: libtobicore-dev
+Section: libdevel
+Architecture: any
+Depends: libtobicore (= ${binary:Version}), ${misc:Depends}
+Homepage: http://www.mtvl.org/cnbitk
+Description: TOBI libs
+ .
+ This package contains the files needed to compile and link programs which
+ use tobicore.
+
+Package: libtobicore-mex
 Section: libdevel
 Architecture: any
 Depends: libtobicore (= ${binary:Version}), ${misc:Depends}

@@ -20,8 +20,8 @@
 #include "IDTypes.hpp"
 #include <tobicore/TCException.hpp>
 #include <tobicore/TCTools.hpp>
-#include <rapidxml.hpp>
-#include <rapidxml_print.hpp>
+#include <tobicore/rapidxml.hpp>
+#include <tobicore/rapidxml_print.hpp>
 #include <iostream>
 #include <stdlib.h>
 #include <string.h>

@@ -9,7 +9,11 @@ libtobicore_include_HEADERS = TCBlock.hpp \
 							  TCException.hpp \
 							  TCSerializer.hpp \
 							  TCLanguage.hpp \
-							  TCTypes.hpp
+							  TCTypes.hpp \
+							  rapidxml.hpp \
+							  rapidxml_iterators.hpp \
+							  rapidxml_print.hpp \
+							  rapidxml_utils.hpp 
 
 libtobicore_la_SOURCES = TCBlock.cpp \
 						 TCBlock.hpp \
@@ -29,3 +33,4 @@ libtobicore_la_LDFLAGS = -version-info $(CURRENT):$(REVISION):$(AGE)
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = tobicore.pc
+
