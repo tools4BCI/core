@@ -10,10 +10,11 @@ libtobicore_include_HEADERS = TCBlock.hpp \
 							  TCSerializer.hpp \
 							  TCLanguage.hpp \
 							  TCTypes.hpp \
+							  TCTime.hpp \
 							  rapidxml.hpp \
 							  rapidxml_iterators.hpp \
 							  rapidxml_print.hpp \
-							  rapidxml_utils.hpp 
+							  rapidxml_utils.hpp
 
 libtobicore_la_SOURCES = TCBlock.cpp \
 						 TCBlock.hpp \
@@ -27,7 +28,9 @@ libtobicore_la_SOURCES = TCBlock.cpp \
 						 TCSerializer.hpp \
 						 TCLanguage.cpp \
 						 TCLanguage.hpp \
-						 TCTypes.hpp
+						 TCTypes.hpp \
+						 TCTime.cpp \
+						 TCTime.hpp
 
 libtobicore_la_LDFLAGS = -version-info $(CURRENT):$(REVISION):$(AGE)
 

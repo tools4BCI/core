@@ -18,7 +18,7 @@
 
 #ifndef TCTIMESTAMP_HPP 
 #define TCTIMESTAMP_HPP 
-#include <sys/time.h>
+#include "TCTime.hpp"
 #include <string>
 
 typedef struct timeval TCTimeval;
