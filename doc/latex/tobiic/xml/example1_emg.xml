@@ -1,0 +1,6 @@
+<tobiic version="0.1.1.0" frame="1">
+	<classifier name="emg" description="EMG classifier" vtype="prob" ltype="biosig">
+		<class label="0x300">0.392227</class>
+		<class label="0x301">0.607773</class>
+	</classifier>
+</tobiic>
