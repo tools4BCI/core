@@ -1,3 +1,9 @@
+tobicore (4.0.0) lucid; urgency=low
+
+  * Added frame support in TCLanguage::Status()
+
+ -- Michele Tavella <michele.tavella@epfl.ch>  Wed, 20 Jul 2011 11:25:01 +0200
+
 tobicore (3.1.0) lucid; urgency=low
 
   * Expecting MEX interfaces to be installed in /usr/share/
