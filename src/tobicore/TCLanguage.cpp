@@ -25,14 +25,15 @@
 #include <sstream>
 #include <string.h>
 
-std::string TCLanguage::Status(const int component, const int status) {
+std::string TCLanguage::Status(const int component, const int status, 
+		const int fidx) {
 	std::ostringstream stream;
 	stream << "<" << TCSTATUS_ROOTNODE << " " << 
 		TCSTATUS_VERSIONNODE << "=\"" << TCSTATUS_VERSION << "\" " << 
 		TCSTATUS_COMPONENTNODE << "=\"" << component << "\" " <<
-		TCSTATUS_STATUSNODE << "=\"" << status << "\""  << "/>";
+		TCSTATUS_STATUSNODE << "=\"" << status << "\" "  <<
+		TCSTATUS_FRAMENODE << "=\"" << fidx << "\""  << "/>";
 	return stream.str();
-			
 }
 
 bool TCLanguage::CheckVersion(const std::string& message) {
@@ -42,11 +43,11 @@ bool TCLanguage::CheckVersion(const std::string& message) {
 }
 
 bool TCLanguage::IsStatus(const std::string& message, int* component, 
-		int* status) {
+		int* status, int* fidx) {
 
 	int ret = sscanf(message.c_str(), 
-			"<tcstatus %*s component=\"%d\" status=\"%d\"/>",
-			component, status);
+			"<tcstatus %*s component=\"%d\" status=\"%d\" frame=\"%d\"/>",
+			component, status, fidx);
 	return(ret == 2);
 }
 

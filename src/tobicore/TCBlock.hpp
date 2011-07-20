@@ -30,7 +30,7 @@ class TCBlock {
 		/*! \brief Sets frame index value
 		 *
 		 */
-		virtual int SetBlockIdx(int fidx = 0);
+		virtual int SetBlockIdx(int fidx = TCBlock::BlockIdxUnset);
 		/*! \brief Gets frame index value
 		 */
 		virtual int GetBlockIdx(void) const;

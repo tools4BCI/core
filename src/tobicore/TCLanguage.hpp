@@ -19,13 +19,16 @@
 #ifndef TCLANGUAGE_HPP 
 #define TCLANGUAGE_HPP 
 
+#include "TCBlock.hpp"
 #include <string>
 
 class TCLanguage {
 	public:
-		std::string Status(const int component, const int status);
+		std::string Status(const int component, const int status, 
+				const int fidx  = TCBlock::BlockIdxUnset);
 		bool CheckVersion(const std::string& message);
-		bool IsStatus(const std::string& message, int* component, int* status);
+		bool IsStatus(const std::string& message, int* component, int* status,
+				int* fidx);
 		
 		std::string GetComponent(int component);
 		std::string GetStatus(int component);
@@ -39,6 +42,7 @@ class TCLanguage {
 		const static int Ready = 1;
 		const static int Quit  = 2;
 		const static int ErrorGeneric = -1;
+		const static int ErrorNotSupported = -2;
 };
 
 #endif

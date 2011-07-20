@@ -30,10 +30,11 @@ int main(void) {
 	
 	cout << "CheckVersion: " << language.CheckVersion(status) << endl;
 	
-	int c, s;
-	cout << "IsStatus: " << language.IsStatus(status, &c, &s) << endl;
+	int c, s, f;
+	cout << "IsStatus: " << language.IsStatus(status, &c, &s, &f) << endl;
 	cout << " Component=" << c << endl;
 	cout << " Status=" << s << endl;
+	cout << " Frame=" << f << endl;
 	
 	return 0;
 }
