@@ -1,3 +1,9 @@
+tobicore (4.1.0) lucid; urgency=low
+
+  * Fixed bug in TCLanguage::IsStatus: was always returning false
+
+ -- Michele Tavella <michele.tavella@epfl.ch>  Fri, 22 Jul 2011 17:46:12 +0200
+
 tobicore (4.0.0) lucid; urgency=low
 
   * Added frame support in TCLanguage::Status()

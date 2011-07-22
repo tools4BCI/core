@@ -48,7 +48,7 @@ bool TCLanguage::IsStatus(const std::string& message, int* component,
 	int ret = sscanf(message.c_str(), 
 			"<tcstatus %*s component=\"%d\" status=\"%d\" frame=\"%d\"/>",
 			component, status, fidx);
-	return(ret == 2);
+	return(ret == 3);
 }
 
 #endif
