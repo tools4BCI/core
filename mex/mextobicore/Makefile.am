@@ -19,9 +19,8 @@ $(interface).cc: $(mexmw)
 	mwrap -mex $(interface) -c $(mexcc) -mb $(mexmw) 
 
 mex: $(interface).cc
-	echo ${abs_top_srcdir}
-	mex -largeArrayDims $(mexinc) $(mexcc) $(mexld)
 if LINUX
+	mex -largeArrayDims $(mexinc) $(mexcc) $(mexld)
 else
 	cp $(mexwin) .
 	matlab -nodesktop -wait -r make
