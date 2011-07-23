@@ -53,15 +53,17 @@ AC_CHECK_PROG([DOXYGEN], [doxygen], [doxygen] [no])
 AC_CHECK_PROG([MWRAP], [mwrap], [mwrap], [no])
 AC_CHECK_PROG([MEX], [mex], [mex], [no])
 
-if test "$MWRAP" = no ; then 
-	AC_MSG_ERROR(Cannot find mwrap.) 
+if test "$platform" = linux ; then 
+	if test "$MWRAP" = no ; then 
+		AC_MSG_ERROR(Cannot find mwrap.) 
+	fi
+	if test "$MEX" = no ; then 
+		AC_MSG_ERROR(Cannot find mex.) 
+	fi
+	#if test "$DOXYGEN" = no ; then 
+	#	AC_MSG_ERROR(Cannot find doxygen.) 
+	#fi
 fi
-if test "$MEX" = no ; then 
-	AC_MSG_ERROR(Cannot find mex.) 
-fi
-#if test "$DOXYGEN" = no ; then 
-#	AC_MSG_ERROR(Cannot find doxygen.) 
-#fi
 
 AC_SUBST([RELEASE],[lib_release])
 AC_SUBST([CURRENT],[lib_current])
@@ -69,21 +71,22 @@ AC_SUBST([REVISION],[lib_revision])
 AC_SUBST([AGE],[lib_age])
 AC_SUBST(AM_LDFLAGS)
 
-AC_CONFIG_FILES([Makefile\
-				 doc/Makefile\
-				 doc/doxygen.cfg\
-				 src/tobicore/Makefile\
-				 src/tobicore/tobicore.pc\
-				 doc/examples/tobicore/Makefile\
-				 src/tobiic/Makefile\
-				 src/tobiic/tobiic.pc\
-				 doc/examples/tobiic/Makefile\
-				 src/tobiid/Makefile\
-				 src/tobiid/tobiid.pc\
-				 doc/examples/tobiid/Makefile\
-				 mex/Makefile\
-				 mex/tobicoremat/Makefile\
-				 mex/mextobicore/Makefile\
-				 mex/mextobiic/Makefile\
-				 mex/mextobiid/Makefile])
+AC_CONFIG_FILES([
+ Makefile
+ doc/Makefile
+ doc/doxygen.cfg
+ src/tobicore/Makefile
+ src/tobicore/tobicore.pc
+ doc/examples/tobicore/Makefile
+ src/tobiic/Makefile
+ src/tobiic/tobiic.pc
+ doc/examples/tobiic/Makefile
+ src/tobiid/Makefile
+ src/tobiid/tobiid.pc
+ doc/examples/tobiid/Makefile
+ mex/Makefile
+ mex/tobicoremat/Makefile
+ mex/mextobicore/Makefile
+ mex/mextobiic/Makefile
+ mex/mextobiid/Makefile])
 AC_OUTPUT
