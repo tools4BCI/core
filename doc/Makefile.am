@@ -1,7 +1,8 @@
 EXTRA_DIST = doxygen.cfg.in
 SUBDIRS = examples/tobicore \
 		  examples/tobiic \
-		  examples/tobiid
+		  examples/tobiid \
+		  examples/tobiplatform
 
 html: html/index.html
 
