@@ -1,0 +1,24 @@
+AM_CPPFLAGS = $(CPPFLAGS) -I$(top_srcdir)/src
+lib_LTLIBRARIES = libtobiplatform.la
+
+libtobiplatform_includedir = $(includedir)/tobiplatform
+
+libtobiplatform_include_HEADERS = TPClient.hpp \
+							TPClientTCP.hpp \
+							TPServer.hpp \
+							TPServerTCP.hpp
+
+libtobiplatform_la_SOURCES = TPClient.cpp \
+					   TPClient.hpp \
+					   TPClientTCP.cpp \
+					   TPClientTCP.hpp \
+					   TPServer.cpp \
+					   TPServer.hpp \
+					   TPServerTCP.cpp \
+					   TPServerTCP.hpp
+
+libtobiplatform_la_LDFLAGS = $(AM_CFLAGS) -version-info $(CURRENT):$(REVISION):$(AGE) 
+libtobiplatform_la_LIBADD = $(top_builddir)/src/tobiplatform/libtobiplatform.la
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = tobiplatform.pc
