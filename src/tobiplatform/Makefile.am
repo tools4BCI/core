@@ -4,8 +4,7 @@ lib_LTLIBRARIES = libtobiplatform.la
 libtobiplatform_includedir = $(includedir)/tobiplatform
 
 libtobiplatform_include_HEADERS = TPSocket.hpp \
-								  TPClient.hpp \
-								  TPServer.hpp
+								  TPClient.hpp
 
 libtobiplatform_la_SOURCES = CcMutex.cpp \
 							 CcMutex.hpp \
@@ -13,8 +12,6 @@ libtobiplatform_la_SOURCES = CcMutex.cpp \
 							 CcStreamer.hpp \
 							 TPClient.cpp \
 							 TPClient.hpp \
-							 TPServer.cpp \
-							 TPServer.hpp \
 							 TPSocket.cpp \
 							 TPSocket.hpp
 
