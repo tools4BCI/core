@@ -116,6 +116,8 @@ bool TPSocket::Open(bool asserver) {
 	if(asserver == true)
 		this->_results.ai_flags = AI_PASSIVE;
 	this->_results.ai_family = AF_UNSPEC;
+
+	this->Init();
 	return true;
 }
 
@@ -168,6 +170,7 @@ bool TPSocket::Listen(void) {
 int TPSocket::Accept(TPSocket* endpoint) {
 	if(endpoint->_type != this->_type) 
 		return -3;
+	endpoint->Init();
 
 	unsigned int addrlen = sizeof(endpoint->_address);
 	endpoint->_fd = accept(this->_fd, (struct sockaddr*)&this->_endpoint,
@@ -176,6 +179,37 @@ int TPSocket::Accept(TPSocket* endpoint) {
 	this->GetLocal();
 	this->GetRemote();
 	return endpoint->_fd;
+}
+		
+bool TPSocket::Connect(const std::string& ip, const std::string& port) {
+	struct addrinfo *ai;
+	int conopt = 0;
+
+	if(getaddrinfo(ip.c_str(), port.c_str(), &(this->_results), &ai) != 0)
+		return false;
+	
+	for(this->_info = ai; this->_info != NULL; this->_info = this->_info->ai_next) {
+		this->_fd = socket(this->_info->ai_family,
+				this->_info->ai_socktype, this->_info->ai_protocol);
+		if(this->_fd == -1) 
+			continue;
+
+		if(this->_type == TPSocket::UDP) {
+			conopt = connect(this->_fd, this->_info->ai_addr,
+					this->_info->ai_addrlen);
+			if(conopt == -1) {
+				this->Close();
+				continue;
+			}
+		}
+		break;
+	}
+
+	this->GetMaxBSize();
+	this->GetLocal();
+	this->GetRemote();
+
+	return true;
 }
 		
 ssize_t TPSocket::Send(const std::string& message) {
@@ -205,6 +239,7 @@ ssize_t TPSocket::Recv(std::string* message) {
 					(struct sockaddr *)&this->_endpoint, (socklen_t*)&addr_len);
 			break;
 	}
+
 	if(bytes > 0)
 		message->assign((const char*)this->_buffer, (size_t)bytes);
 

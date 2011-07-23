@@ -23,12 +23,15 @@
 #include <unistd.h>
 
 int main(void) {
+	std::string message;
 	TPSocket socket(TPSocket::TCP), endpoint(TPSocket::TCP);
 	socket.Open(true);
 	socket.Bind("8000");
 	socket.Listen();
 	socket.Accept(&endpoint);
-	endpoint.Send("My dear client, I am going down.\n");
+	endpoint.Send("My dear client, send me something to die.\n");
+	endpoint.Recv(&message);
+	std::cout << "Received: " << message << std::endl;
 	endpoint.Close();
 	socket.Close();
 	return 0;
