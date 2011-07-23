@@ -19,6 +19,11 @@
 
 #ifndef TCTIME_HPP
 #define TCTIME_HPP
+#include <sys/time.h>
+
+#ifdef __MINGW32__
+#undef _WIN32
+#endif  //__MINGW32__
 
 #ifndef _WIN32
 #include <sys/time.h>
@@ -26,8 +31,8 @@
 #include <windows.h>
 
 struct timeval {
-	long tv_sec;  /* Seconds */
-	long tv_usec; /* Microseconds */
+	long tv_sec; 
+	long tv_usec;
 };
 struct timezone {
 	int tz_minuteswest;
@@ -37,5 +42,4 @@ int gettimeofday (struct timeval *tv, struct timezone *tz);
 void timerclear(struct timeval *tvp);
 bool timerisset(struct timeval *tvp);
 #endif //_WIN32
-
-#endif //TOBI_TIME_H
+#endif //TCTIME_HPP
