@@ -40,12 +40,11 @@ class TPHost {
 		short unsigned int port;
 };
 
-
 /*! \brief TCP/UDP socket
  */
 class TPSocket {
 	public:
-		TPSocket(int type = TPSocket::TCP, size_t bsize = 2048);
+		TPSocket(int type = TPSocket::TCP, size_t bsize = 4096);
 		virtual ~TPSocket(void);
 		bool Open(bool asserver);
 		bool Close(void);

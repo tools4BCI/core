@@ -193,8 +193,22 @@ ssize_t TPSocket::Send(const std::string& message) {
 	return bytes;
 }
 		
-ssize_t Recv(std::string* message) {
-	return 0;
+ssize_t TPSocket::Recv(std::string* message) {
+	ssize_t bytes = -1;
+	switch(this->_type) {
+		case TPSocket::TCP:
+			bytes = recv(this->_fd, this->_buffer, this->_bsize, 0);
+			break;
+		case TPSocket::UDP:
+			int addr_len = sizeof(this->_endpoint);
+			bytes = recvfrom(this->_fd, this->_buffer, this->_bsize, 0,
+					(struct sockaddr *)&this->_endpoint, (socklen_t*)&addr_len);
+			break;
+	}
+	if(bytes > 0)
+		message->assign((const char*)this->_buffer, (size_t)bytes);
+
+	return bytes;
 }
 
 #endif
