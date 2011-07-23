@@ -21,6 +21,7 @@
 
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <string>
 
 /*! \brief libtransport host 
  * This structure holds whatever identifies an host
@@ -42,15 +43,25 @@ class TPHost {
  */
 class TPSocket {
 	public:
-		TPSocket(size_t bsize);
+		TPSocket(int type = TPSocket::TCP, size_t bsize = 2048);
 		virtual ~TPSocket(void);
+		bool Open(bool asserver);
+		bool Close(void);
+		bool Bind(const std::string& port);
+		bool Listen(void);
+
 	protected:
 		void Init(void);
+		void Free(void);
+		bool GetLocal(void);
 
 	public:
 		//! Host informations associated to the current socket
 		TPHost local;
 		TPHost remote;
+		const static int TCP = 0;
+		const static int UDP = 1;
+
 	protected:
 		//! File descriptor
 		int _fd;
@@ -68,6 +79,9 @@ class TPSocket {
 		struct addrinfo* _info;
 		//! Maximum size of message
 		size_t _bsizemax;
+	private:
+		//! Socket type
+		int _type;
 };
 
 #endif
