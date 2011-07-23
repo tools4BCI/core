@@ -21,8 +21,7 @@
 #ifndef CCSTREAMER_HPP
 #define CCSTREAMER_HPP
 
-#include "CcObject.hpp"
-#include "CcSemaphore.hpp"
+#include "CcMutex.hpp"
 #include <string>
 
 typedef unsigned int CcStreamerDirection;
@@ -33,7 +32,7 @@ typedef unsigned int CcStreamerDirection;
  * It allows to verify whether a certain message is present and to extract it
  * automatically. 
  */
-class CcStreamer : public CcObject {
+class CcStreamer {
 	public:
 		CcStreamer(void);
 		virtual ~CcStreamer(void);
@@ -54,7 +53,7 @@ class CcStreamer : public CcObject {
 
 	private:
 		std::string _stream;
-		CcSemaphore _mtxstream;
+		CcMutex _mtxstream;
 
 	public:
 		static const CcStreamerDirection Forward = 0;

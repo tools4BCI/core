@@ -21,7 +21,6 @@
 #ifndef CCMUTEX_HPP
 #define CCMUTEX_HPP
 
-#include "CcObject.hpp"
 #include <pthread.h>
 
 /*! \brief pthread mutex
@@ -29,7 +28,7 @@
  * It simply wraps a pthread mutex.
  *
  */
-class CcMutex : public CcObject {
+class CcMutex {
 	public:
 		CcMutex(void);
 		~CcMutex(void);

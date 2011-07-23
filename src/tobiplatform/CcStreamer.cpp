@@ -22,6 +22,7 @@
 #define CCSTREAMER_CPP
 
 #include "CcStreamer.hpp"
+#include <iostream>
 
 CcStreamer::CcStreamer(void) {
 }
@@ -30,28 +31,28 @@ CcStreamer::~CcStreamer(void) {
 }
 
 void CcStreamer::Append(std::string buffer) {
-	this->_mtxstream.Wait();
+	this->_mtxstream.Lock();
 	this->_stream.append(buffer);
-	this->_mtxstream.Post();
+	this->_mtxstream.Release();
 }
 		
 void CcStreamer::Append(const char* buffer, size_t bsize) {
-	this->_mtxstream.Wait();
+	this->_mtxstream.Lock();
 	this->_stream.append(buffer, bsize);
-	this->_mtxstream.Post();
+	this->_mtxstream.Release();
 }
 
 bool CcStreamer::Extract(std::string *buffer, std::string hdr, std::string trl, 
 		CcStreamerDirection direction) {
-	this->_mtxstream.Wait();
+	this->_mtxstream.Lock();
 	
 	if(this->_stream.empty()) {
-		this->_mtxstream.Post();
+		this->_mtxstream.Release();
 		return false;
 	}
 	
 	if(this->ImplHas(hdr, trl, direction) == false) {
-		this->_mtxstream.Post();
+		this->_mtxstream.Release();
 		return false;
 	}
 	
@@ -69,12 +70,12 @@ bool CcStreamer::Extract(std::string *buffer, std::string hdr, std::string trl,
 	delta = trl.size();
 
 	if(p_hdr == std::string::npos || p_trl == std::string::npos) {
-		this->_mtxstream.Post();
+		this->_mtxstream.Release();
 		return false;
 	}
 	
 	if(p_hdr >= p_trl) {
-		this->_mtxstream.Post();
+		this->_mtxstream.Release();
 		return false;
 	}
 
@@ -84,7 +85,7 @@ bool CcStreamer::Extract(std::string *buffer, std::string hdr, std::string trl,
 	 */
 	*buffer = this->_stream.substr(p_hdr, p_trl - p_hdr + delta);
 	this->_stream.erase(p_hdr, p_trl - p_hdr + delta);
-	this->_mtxstream.Post();
+	this->_mtxstream.Release();
 
 	return true;
 }
@@ -92,16 +93,16 @@ bool CcStreamer::Extract(std::string *buffer, std::string hdr, std::string trl,
 bool CcStreamer::Has(std::string hdr, std::string trl, 
 		CcStreamerDirection direction) {
 	bool result = false;
-	this->_mtxstream.Wait();
+	this->_mtxstream.Lock();
 	result = this->ImplHas(hdr, trl, direction);
-	this->_mtxstream.Post();
+	this->_mtxstream.Release();
 	return result;
 }
 		
 int CcStreamer::Count(std::string hdr) {
 	int count = 0;
 	
-	this->_mtxstream.Wait();
+	this->_mtxstream.Lock();
 	if(!this->_stream.empty()) {
 		std::string::size_type pos(0);
 
@@ -113,30 +114,30 @@ int CcStreamer::Count(std::string hdr) {
 			}
 		}
 	}
-	this->_mtxstream.Post();
+	this->_mtxstream.Release();
 	
 	return count;
 }
 
 void CcStreamer::Dump(void) {
-	this->_mtxstream.Wait();
+	this->_mtxstream.Lock();
 	std::cout << "[CcStreamer::Dump] " << this->_stream  << std::endl;
-	this->_mtxstream.Post();
+	this->_mtxstream.Release();
 }
 
 int CcStreamer::Size(void) {
 	int size = 0;
-	this->_mtxstream.Wait();
+	this->_mtxstream.Lock();
 	size = this->_stream.size();
-	this->_mtxstream.Post();
+	this->_mtxstream.Release();
 
 	return size;
 }
 
 void CcStreamer::Clear(void) {
-	this->_mtxstream.Wait();
+	this->_mtxstream.Lock();
 	this->_stream.clear();
-	this->_mtxstream.Post();
+	this->_mtxstream.Release();
 }
 
 bool CcStreamer::ImplHas(std::string hdr, std::string trl, 
