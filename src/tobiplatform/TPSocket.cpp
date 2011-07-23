@@ -14,6 +14,8 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	
+	TPSocket.hpp/.cpp is adapted from libtransport
 */
 
 #ifndef TPSOCKET_CPP 
@@ -171,13 +173,28 @@ int TPSocket::Accept(TPSocket* endpoint) {
 	endpoint->_fd = accept(this->_fd, (struct sockaddr*)&this->_endpoint,
 			&addrlen);
 
-	// Fill local and remote host structures
 	this->GetLocal();
 	this->GetRemote();
-	//tr_gethost_remote(endpoint, &(endpoint->remote));
-	//tr_getmaxbsize(endpoint);
-	
 	return endpoint->_fd;
+}
+		
+ssize_t TPSocket::Send(const std::string& message) {
+	ssize_t bytes = -1;
+	switch(this->_type) {
+		case TPSocket::TCP:
+			bytes = send(this->_fd, message.c_str(), message.size(),
+					MSG_NOSIGNAL);
+			break;
+		case TPSocket::UDP:
+			return sendto(this->_fd, message.c_str(), message.size(), 0, 
+					this->_info->ai_addr, this->_info->ai_addrlen);
+			break;
+	}
+	return bytes;
+}
+		
+ssize_t Recv(std::string* message) {
+	return 0;
 }
 
 #endif
