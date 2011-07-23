@@ -2,6 +2,7 @@ ACLOCAL_AMFLAGS=-I m4
 SUBDIRS = src/tobicore\
 		  src/tobiic\
 		  src/tobiid\
+		  src/tobiplatform\
 		  mex\
 		  doc
 

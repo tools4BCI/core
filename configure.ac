@@ -84,6 +84,9 @@ AC_CONFIG_FILES([
  src/tobiid/Makefile
  src/tobiid/tobiid.pc
  doc/examples/tobiid/Makefile
+ src/tobiplatform/Makefile
+ src/tobiplatform/tobiplatform.pc
+ doc/examples/tobiplatform/Makefile
  mex/Makefile
  mex/tobicoremat/Makefile
  mex/mextobicore/Makefile
