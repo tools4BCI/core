@@ -16,11 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <tobiplatform/TPSocket.hpp>
-
 #include <cstdio>
 #include <iostream>
 #include <unistd.h>
+#include <tobiplatform/TPSocket.hpp>
 
 int main(void) {
 	std::string message;

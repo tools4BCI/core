@@ -18,7 +18,17 @@
 
 #include <cstdio>
 #include <iostream>
+#include <unistd.h>
+#include <tobiplatform/TPSocket.hpp>
 
 int main(void) {
+	std::string message;
+	TPSocket socket(TPSocket::TCP);
+	socket.Open(false);
+	socket.Connect("127.0.0.1", "8000");
+	socket.Send("My dear server, here you go.\n");
+	socket.Recv(&message);
+	std::cout << "Received: " << message << std::endl;
+	socket.Close();
 	return 0;
 }

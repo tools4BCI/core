@@ -194,7 +194,7 @@ bool TPSocket::Connect(const std::string& ip, const std::string& port) {
 		if(this->_fd == -1) 
 			continue;
 
-		if(this->_type == TPSocket::UDP) {
+		if(this->_type == TPSocket::TCP) {
 			conopt = connect(this->_fd, this->_info->ai_addr,
 					this->_info->ai_addrlen);
 			if(conopt == -1) {
