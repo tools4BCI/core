@@ -20,6 +20,7 @@
 
 #include <cstdio>
 #include <iostream>
+#include <unistd.h>
 
 int main(void) {
 	TPSocket socket(TPSocket::TCP), endpoint(TPSocket::TCP);
@@ -27,7 +28,8 @@ int main(void) {
 	socket.Bind("8000");
 	socket.Listen();
 	socket.Accept(&endpoint);
+	endpoint.Send("My dear client, I am going down.\n");
+	endpoint.Close();
 	socket.Close();
-	
 	return 0;
 }
