@@ -6,7 +6,7 @@ mexinc = -I$(top_srcdir)/src/
 mexpath = ${DESTDIR}${pkgdatadir}/tobicoremat/mex$(interface)/
 if WIN32
 mexwin = $(top_srcdir)/mex/mex$(interface)/make.m
-verwin = $(CURRENT).$(REVISION).$(AGE)
+verwin = win32-$(CURRENT).$(REVISION).$(AGE)
 tarwin = mex$(interface)-$(verwin).tar.bz2
 docwin = $(top_srcdir)/doc/examples/mex$(interface)
 endif
