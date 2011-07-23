@@ -49,11 +49,14 @@ class TPSocket {
 		bool Close(void);
 		bool Bind(const std::string& port);
 		bool Listen(void);
+		int Accept(TPSocket* endpoint);
 
 	protected:
 		void Init(void);
 		void Free(void);
 		bool GetLocal(void);
+		bool GetRemote(void);
+		void GetMaxBSize(void);
 
 	public:
 		//! Host informations associated to the current socket

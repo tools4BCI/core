@@ -16,9 +16,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <tobiplatform/TPSocket.hpp>
+
 #include <cstdio>
 #include <iostream>
 
 int main(void) {
+	TPSocket socket(TPSocket::TCP), endpoint(TPSocket::TCP);
+	socket.Open(true);
+	socket.Bind("8000");
+	socket.Listen();
+	socket.Accept(&endpoint);
+	socket.Close();
+	
 	return 0;
 }

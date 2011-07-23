@@ -33,10 +33,11 @@ AC_SUBST(LIBTOOL_DEPS)
 
 AC_HEADER_STDBOOL
 
-#AC_LANG_PUSH([C++])
-#AC_CHECK_HEADERS([rapidxml.hpp rapidxml_print.hpp], [], 
-#	 AC_MSG_ERROR([The RapidXML headers must be installed.]), [])
-#AC_LANG_POP([C++])
+save_LIBS="$LIBS"
+AC_SEARCH_LIBS([pthread_create], [pthread],
+        AC_SUBST([PTHREAD_LIBS], "$LIBS"), 
+		AC_MSG_ERROR([The pthread library must be installed.]))
+LIBS="$save_LIBS"
 
 case $host in
 	*-linux*)

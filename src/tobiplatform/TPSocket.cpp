@@ -42,6 +42,7 @@ TPSocket::~TPSocket(void) {
 void TPSocket::Init(void) {
 	this->_fd = 0;
 	this->_mc = 0;
+	this->_bsizemax = 0;
 	
 	this->Free();
 	this->_buffer = malloc(this->_bsize);
@@ -75,6 +76,28 @@ bool TPSocket::GetLocal(void) {
 			&(addr_ptr->sin_addr.s_addr), this->local.address, (socklen_t)addrlen);
 
 	return(status != NULL);
+}
+
+bool TPSocket::GetRemote(void) {
+	const char* status = NULL;
+	struct sockaddr addr;
+	int addrlen = sizeof(addr);
+	
+	getpeername(this->_fd, 
+			(struct sockaddr*)&addr, (socklen_t*)&addrlen);
+	struct sockaddr_in *addr_ptr = (struct sockaddr_in*)&addr;
+	
+	this->remote.port = ntohs(addr_ptr->sin_port);
+	status = inet_ntop(AF_INET, &(addr_ptr->sin_addr.s_addr),
+			this->remote.address, (socklen_t)addrlen);
+
+	return(status != NULL);
+}
+		
+void TPSocket::GetMaxBSize(void) {
+	socklen_t optlen = sizeof(this->_bsizemax);
+	if(getsockopt(this->_fd, SOL_SOCKET, SO_SNDBUF, &this->_bsizemax, &optlen) < 0)
+		this->_bsizemax = 0;
 }
 
 bool TPSocket::Open(bool asserver) {
@@ -138,6 +161,23 @@ bool TPSocket::Bind(const std::string& port) {
 
 bool TPSocket::Listen(void) {
 	return(listen(this->_fd, this->_mc) == 0);
+}
+		
+int TPSocket::Accept(TPSocket* endpoint) {
+	if(endpoint->_type != this->_type) 
+		return -3;
+
+	unsigned int addrlen = sizeof(endpoint->_address);
+	endpoint->_fd = accept(this->_fd, (struct sockaddr*)&this->_endpoint,
+			&addrlen);
+
+	// Fill local and remote host structures
+	this->GetLocal();
+	this->GetRemote();
+	//tr_gethost_remote(endpoint, &(endpoint->remote));
+	//tr_getmaxbsize(endpoint);
+	
+	return endpoint->_fd;
 }
 
 #endif
