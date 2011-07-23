@@ -8,7 +8,11 @@ libtobiplatform_include_HEADERS = TPClient.hpp \
 								  TPServer.hpp \
 								  TPServerTCP.hpp
 
-libtobiplatform_la_SOURCES = TPClient.cpp \
+libtobiplatform_la_SOURCES = CcMutex.cpp \
+							 CcMutex.hpp \
+							 CcStreamer.cpp \
+							 CcStreamer.hpp \
+							 TPClient.cpp \
 							 TPClient.hpp \
 							 TPClientTCP.cpp \
 							 TPClientTCP.hpp \

@@ -14,17 +14,33 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    CcMutex.hpp/.cpp is part of libcnbicore
 */
 
-#ifndef TPSERVER_CPP 
-#define TPSERVER_CPP 
+#ifndef CCMUTEX_HPP
+#define CCMUTEX_HPP
 
-#include "TPServer.hpp" 
+#include "CcObject.hpp"
+#include <pthread.h>
 
-TPServer::TPServer(void) {
-}
+/*! \brief pthread mutex
+ *
+ * It simply wraps a pthread mutex.
+ *
+ */
+class CcMutex : public CcObject {
+	public:
+		CcMutex(void);
+		~CcMutex(void);
 
-TPServer::~TPServer(void) {
-}
+		void Lock(void);
+		void Release(void);
+		bool TryLock(void);
+
+	protected:
+		pthread_mutex_t _mutex;
+
+};
 
 #endif
