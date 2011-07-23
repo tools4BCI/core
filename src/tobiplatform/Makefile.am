@@ -22,7 +22,7 @@ libtobiplatform_la_SOURCES = CcMutex.cpp \
 							 TPServerTCP.cpp \
 							 TPServerTCP.hpp \
 							 TPSocket.cpp \
-							 TPSocket.hpp \
+							 TPSocket.hpp
 
 libtobiplatform_la_LDFLAGS = $(AM_CFLAGS) -version-info $(CURRENT):$(REVISION):$(AGE) 
 libtobiplatform_la_LIBADD = $(top_builddir)/src/tobicore/libtobicore.la \
