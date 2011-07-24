@@ -32,7 +32,7 @@ libtobicore_la_SOURCES = TCBlock.cpp \
 						 TCTime.cpp \
 						 TCTime.hpp
 
-libtobicore_la_LDFLAGS = -version-info $(CURRENT):$(REVISION):$(AGE)
+libtobicore_la_LDFLAGS = -version-info $(CURRENT):$(REVISION):$(AGE) -no-undefined
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = tobicore.pc

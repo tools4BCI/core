@@ -22,8 +22,7 @@ libtobiid_la_SOURCES = IDTypes.hpp \
 					   IDAsServer.hpp \
 					   IDAsServer.cpp
 
-libtobiid_la_LDFLAGS = $(AM_CFLAGS) \
-					   -version-info $(CURRENT):$(REVISION):$(AGE) 
+libtobiid_la_LDFLAGS = $(AM_CFLAGS) -version-info $(CURRENT):$(REVISION):$(AGE) -no-undefined
 
 libtobiid_la_LIBADD = $(top_builddir)/src/tobicore/libtobicore.la
 

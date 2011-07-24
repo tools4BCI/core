@@ -12,7 +12,7 @@ libtobiplatform_la_SOURCES = CcMutex.cpp \
 							 TPSocket.cpp \
 							 TPSocket.hpp
 
-libtobiplatform_la_LDFLAGS = $(AM_CFLAGS) -version-info $(CURRENT):$(REVISION):$(AGE) 
+libtobiplatform_la_LDFLAGS = $(AM_CFLAGS) -version-info $(CURRENT):$(REVISION):$(AGE) -no-undefined
 libtobiplatform_la_LIBADD = $(top_builddir)/src/tobicore/libtobicore.la \
 							$(top_builddir)/src/tobiic/libtobiic.la \
 							$(top_builddir)/src/tobiid/libtobiid.la \

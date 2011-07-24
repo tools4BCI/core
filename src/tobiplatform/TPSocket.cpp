@@ -173,8 +173,13 @@ int TPSocket::Accept(TPSocket* endpoint) {
 	endpoint->Init();
 
 	unsigned int addrlen = sizeof(endpoint->_address);
+
+	/*
 	endpoint->_fd = accept(this->_fd, (struct sockaddr*)&this->_endpoint,
 			&addrlen);
+	*/
+	endpoint->_fd = accept(this->_fd, (struct sockaddr*)&this->_endpoint,
+			(socklen_t*)&addrlen);
 
 	this->GetLocal();
 	this->GetRemote();
