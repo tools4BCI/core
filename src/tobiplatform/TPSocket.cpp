@@ -125,13 +125,13 @@ bool TPSocket::Close(void) {
 	return(close(this->_fd) == 0);
 }
 		
-bool TPSocket::Bind(const std::string& port) {
+bool TPSocket::Bind(const std::string& ip, const std::string& port) {
 	int retopt = 0;
 	int bndret = 0;
 	struct addrinfo *ai; 
 	int opt = 1;
 
-	if(getaddrinfo(NULL, port.c_str(), &(this->_results), &ai) != 0)
+	if(getaddrinfo(ip.c_str(), port.c_str(), &(this->_results), &ai) != 0)
 		return -1;
 
 	for(this->_info = ai; this->_info != NULL; 

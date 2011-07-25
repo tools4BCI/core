@@ -25,7 +25,7 @@ int main(void) {
 	std::string message;
 	TPSocket socket(TPSocket::TCP), endpoint(TPSocket::TCP);
 	socket.Open(true);
-	socket.Bind("8000");
+	socket.Bind("0.0.0.0", "8000");
 	socket.Listen();
 	socket.Accept(&endpoint);
 	endpoint.Send("My dear client, send me something to die.\n");
