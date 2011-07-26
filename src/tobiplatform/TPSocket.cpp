@@ -25,11 +25,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#ifdef _WIN32
+#include <stdio.h>
+#endif
 
 TPHost::TPHost(void) {
 	memset(this->address, 0, TPHost::AddressSize);
 	this->port = 0;
 }
+
+#ifdef _WIN32
+bool TPSocket::_wsaInitialized = false;
+#endif
 
 TPSocket::TPSocket(int type, size_t bsize) {
 	this->_type = type;
@@ -55,6 +62,12 @@ void TPSocket::Init(void) {
 	memset(&(this->_endpoint), 0, sizeof(this->_endpoint));
 
 	this->_bsizemax = 0;
+#ifdef _WIN32
+	/* Stays here for the time being, later on I will handle 
+	 * the (doggie)initialization better.
+	 */
+	TPSocket::InitializeWSA();
+#endif
 }
 		
 void TPSocket::Free(void) {
@@ -65,6 +78,7 @@ void TPSocket::Free(void) {
 }
 
 bool TPSocket::GetLocal(void) {
+#ifndef _WIN32
 	const char* status = NULL;
 	struct sockaddr addr;
 	int addrlen = sizeof(addr);
@@ -76,11 +90,14 @@ bool TPSocket::GetLocal(void) {
 	this->local.port = ntohs(addr_ptr->sin_port);
 	status = inet_ntop(AF_INET, 
 			&(addr_ptr->sin_addr.s_addr), this->local.address, (socklen_t)addrlen);
-
 	return(status != NULL);
+#else
+	return false;
+#endif
 }
 
 bool TPSocket::GetRemote(void) {
+#ifndef _WIN32
 	const char* status = NULL;
 	struct sockaddr addr;
 	int addrlen = sizeof(addr);
@@ -92,14 +109,20 @@ bool TPSocket::GetRemote(void) {
 	this->remote.port = ntohs(addr_ptr->sin_port);
 	status = inet_ntop(AF_INET, &(addr_ptr->sin_addr.s_addr),
 			this->remote.address, (socklen_t)addrlen);
-
 	return(status != NULL);
+#else
+	return false;
+#endif
 }
 		
 void TPSocket::GetMaxBSize(void) {
 	socklen_t optlen = sizeof(this->_bsizemax);
+#ifndef _WIN32
 	if(getsockopt(this->_fd, SOL_SOCKET, SO_SNDBUF, &this->_bsizemax, &optlen) < 0)
 		this->_bsizemax = 0;
+#else	
+	this->_bsizemax = 0;
+#endif
 }
 
 bool TPSocket::Open(bool asserver) {
@@ -142,13 +165,14 @@ bool TPSocket::Bind(const std::string& ip, const std::string& port) {
 		if(this->_fd == -1) 
 			continue;
 
+#ifndef _WIN32
 		if(this->_type == TPSocket::TCP) {
 			retopt = setsockopt(this->_fd, 
 					SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(int));
 			if(retopt == -1) 
 				return false;
 		}
-
+#endif
 		bndret = bind(this->_fd, this->_info->ai_addr, this->_info->ai_addrlen);
 		if(bndret == -1) {
 			close(this->_fd);
@@ -221,8 +245,12 @@ ssize_t TPSocket::Send(const std::string& message) {
 	ssize_t bytes = -1;
 	switch(this->_type) {
 		case TPSocket::TCP:
+#ifndef _WIN32
 			bytes = send(this->_fd, message.c_str(), message.size(),
 					MSG_NOSIGNAL);
+#else
+			bytes = send(this->_fd, message.c_str(), message.size(), 0);
+#endif
 			break;
 		case TPSocket::UDP:
 			return sendto(this->_fd, message.c_str(), message.size(), 0, 
@@ -236,12 +264,22 @@ ssize_t TPSocket::Recv(std::string* message) {
 	ssize_t bytes = -1;
 	switch(this->_type) {
 		case TPSocket::TCP:
+#ifndef _WIN32
 			bytes = recv(this->_fd, this->_buffer, this->_bsize, 0);
+#else
+			bytes = recv(this->_fd, (char*)this->_buffer, this->_bsize, 0);
+			printf("RECV: %d\n", bytes);
+#endif
 			break;
 		case TPSocket::UDP:
 			int addr_len = sizeof(this->_endpoint);
+#ifndef _WIN32
 			bytes = recvfrom(this->_fd, this->_buffer, this->_bsize, 0,
 					(struct sockaddr *)&this->_endpoint, (socklen_t*)&addr_len);
+#else
+			bytes = recvfrom(this->_fd, (char*)this->_buffer, this->_bsize, 0,
+					(struct sockaddr *)&this->_endpoint, (socklen_t*)&addr_len);
+#endif
 			break;
 	}
 
@@ -250,5 +288,16 @@ ssize_t TPSocket::Recv(std::string* message) {
 
 	return bytes;
 }
+
+#ifdef _WIN32
+bool TPSocket::InitializeWSA(void) {
+	if(TPSocket::_wsaInitialized == true) 
+		return true;
+
+	WSADATA wsaData;
+	TPSocket::_wsaInitialized = (WSAStartup(MAKEWORD(2,2), &wsaData) != 0);
+	return TPSocket::_wsaInitialized;
+}
+#endif
 
 #endif
