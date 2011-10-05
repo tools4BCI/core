@@ -40,7 +40,7 @@ bool TPiC::Recv(std::string* message) {
 }
 */
 
-bool TPiC::Configure(const std::string &ip, const std::string& port, int mode) {
+int TPiC::Configure(const std::string &ip, const std::string& port, int mode) {
 	switch(mode) {
 		case TPiC::AsServer:
 			return this->ConfAsServer(ip, port);
@@ -49,13 +49,13 @@ bool TPiC::Configure(const std::string &ip, const std::string& port, int mode) {
 			return this->ConfAsClient(ip, port);
 			break;
 	}
-	return false;
+	return TPiC::ErrorGeneric;
 }
 
 
-bool TPiC::ConfAsServer(const std::string &ip, const std::string& port) {
+int TPiC::ConfAsServer(const std::string &ip, const std::string& port) {
 	if(this->_socket != NULL)
-		return false;
+		return TPiC::ErrorBound;
 
 	bool status = true;
 	this->_socket = new TPSocket(TPSocket::TCP);
@@ -63,25 +63,30 @@ bool TPiC::ConfAsServer(const std::string &ip, const std::string& port) {
 	status &= this->_socket->Bind(ip, port);
 	status &= this->_socket->Listen();
 	
+	if(status == false)
+		return TPiC::ErrorSocket;
+
 	this->_endpoint = new TPSocket(TPSocket::TCP);
 	status &= this->_socket->Accept(this->_endpoint);
 	
 	this->com = this->_endpoint;
-
-	return status;
+	return TPiC::Successful;
 }
 
-bool TPiC::ConfAsClient(const std::string &ip, const std::string& port) {
+int TPiC::ConfAsClient(const std::string &ip, const std::string& port) {
 	if(this->_socket != NULL)
-		return false;
+		return TPiC::ErrorBound;
 	
+	bool status = true;
 	this->_socket = new TPSocket(TPSocket::TCP);
-	this->_socket->Open(false);
-	this->_socket->Connect(ip, port);
+	status &= this->_socket->Open(false);
+	status &= this->_socket->Connect(ip, port);
+	
+	if(status == false)
+		return TPiC::ErrorSocket;
 	
 	this->com = this->_socket;
-
-	return false;
+	return TPiC::Successful;
 }
 
 #endif

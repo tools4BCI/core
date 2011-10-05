@@ -29,15 +29,21 @@ class TPiC {
 		virtual ~TPiC(void);
 		bool Send(void);
 		bool Recv(void);
-		bool Configure(const std::string &ip, const std::string& port,
+		int Configure(const std::string &ip, const std::string& port,
 				int mode = TPiC::AsServer);
 	private:
-		bool ConfAsServer(const std::string &ip, const std::string& port);
-		bool ConfAsClient(const std::string &ip, const std::string& port);
+		int ConfAsServer(const std::string &ip, const std::string& port);
+		int ConfAsClient(const std::string &ip, const std::string& port);
 
 	public:
 		const static int AsServer = 0;
 		const static int AsClient = 1;
+		const static int Successful = 0;
+		const static int ErrorSocket = 1;
+		const static int ErrorAccept = 1;
+		const static int ErrorBound = 2;
+		const static int ErrorGeneric = 3;
+
 	private:
 		TPSocket* _socket;
 		TPSocket* _endpoint;
