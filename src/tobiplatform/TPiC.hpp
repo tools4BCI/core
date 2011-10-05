@@ -40,9 +40,9 @@ class TPiC {
 		const static int AsClient = 1;
 		const static int Successful = 0;
 		const static int ErrorSocket = 1;
-		const static int ErrorAccept = 1;
-		const static int ErrorBound = 2;
-		const static int ErrorGeneric = 3;
+		const static int ErrorEndpoint = 2;
+		const static int ErrorBound = 3;
+		const static int ErrorGeneric = 4;
 
 	private:
 		TPSocket* _socket;

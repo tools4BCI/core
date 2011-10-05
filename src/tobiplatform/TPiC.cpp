@@ -62,12 +62,13 @@ int TPiC::ConfAsServer(const std::string &ip, const std::string& port) {
 	status &= this->_socket->Open(true);
 	status &= this->_socket->Bind(ip, port);
 	status &= this->_socket->Listen();
-	
 	if(status == false)
 		return TPiC::ErrorSocket;
 
 	this->_endpoint = new TPSocket(TPSocket::TCP);
-	status &= this->_socket->Accept(this->_endpoint);
+	status = this->_socket->Accept(this->_endpoint);
+	if(status == false)
+		return TPiC::ErrorEndpoint;
 	
 	this->com = this->_endpoint;
 	return TPiC::Successful;
@@ -81,7 +82,6 @@ int TPiC::ConfAsClient(const std::string &ip, const std::string& port) {
 	this->_socket = new TPSocket(TPSocket::TCP);
 	status &= this->_socket->Open(false);
 	status &= this->_socket->Connect(ip, port);
-	
 	if(status == false)
 		return TPiC::ErrorSocket;
 	
