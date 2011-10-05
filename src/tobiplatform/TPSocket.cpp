@@ -75,7 +75,8 @@ bool TPSocket::GetLocal(void) {
 
 	this->local.port = ntohs(addr_ptr->sin_port);
 	status = inet_ntop(AF_INET, 
-			&(addr_ptr->sin_addr.s_addr), this->local.address, (socklen_t)addrlen);
+			&(addr_ptr->sin_addr.s_addr), this->local.address, 
+			(socklen_t)addrlen);
 
 	return(status != NULL);
 }
@@ -98,7 +99,8 @@ bool TPSocket::GetRemote(void) {
 		
 void TPSocket::GetMaxBSize(void) {
 	socklen_t optlen = sizeof(this->_bsizemax);
-	if(getsockopt(this->_fd, SOL_SOCKET, SO_SNDBUF, &this->_bsizemax, &optlen) < 0)
+	if(getsockopt(this->_fd, SOL_SOCKET, SO_SNDBUF, &this->_bsizemax, 
+				&optlen) < 0)
 		this->_bsizemax = 0;
 }
 

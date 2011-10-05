@@ -28,6 +28,7 @@ int main(void) {
 	socket.Bind("8000");
 	socket.Listen();
 	socket.Accept(&endpoint);
+	std::cout << "Accepted " << socket.remote.address << std::endl;
 	endpoint.Send("My dear client, send me something to die.\n");
 	endpoint.Recv(&message);
 	std::cout << "Received: " << message << std::endl;
