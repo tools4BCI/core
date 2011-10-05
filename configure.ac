@@ -8,8 +8,8 @@
 # - If any interfaces have been removed since the last public release, then
 #   set age to 0.
 
-m4_define([lib_current],4)
-m4_define([lib_revision],1)
+m4_define([lib_current],5)
+m4_define([lib_revision],0)
 m4_define([lib_age],0)
 
 AC_INIT(tobicore,[lib_current.lib_revision.lib_age],
@@ -61,9 +61,9 @@ if test "$platform" = linux ; then
 	if test "$MEX" = no ; then 
 		AC_MSG_ERROR(Cannot find mex.) 
 	fi
-	#if test "$DOXYGEN" = no ; then 
-	#	AC_MSG_ERROR(Cannot find doxygen.) 
-	#fi
+	if test "$DOXYGEN" = no ; then 
+		AC_MSG_ERROR(Cannot find doxygen.) 
+	fi
 fi
 
 AC_SUBST([RELEASE],[lib_release])

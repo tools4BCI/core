@@ -21,8 +21,15 @@
 #ifndef TPSOCKET_HPP 
 #define TPSOCKET_HPP 
 
+#ifdef _WIN32
+#define UNICODE
+#define _WIN32_WINNT 0x0501
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#else
 #include <arpa/inet.h>
 #include <netdb.h>
+#endif
 #include <string>
 
 /*! \brief libtransport host 
@@ -48,12 +55,15 @@ class TPSocket {
 		virtual ~TPSocket(void);
 		bool Open(bool asserver);
 		bool Close(void);
-		bool Bind(const std::string& port);
+		bool Bind(const std::string &ip, const std::string& port);
 		bool Listen(void);
 		int Accept(TPSocket* endpoint);
 		bool Connect(const std::string& ip, const std::string& port);
 		ssize_t Send(const std::string& message);
 		ssize_t Recv(std::string* message);
+#ifdef _WIN32
+		static bool InitializeWSA(void);
+#endif
 
 	protected:
 		void Init(void);
@@ -89,6 +99,9 @@ class TPSocket {
 	private:
 		//! Socket type
 		int _type;
+#ifdef _WIN32
+		static bool _wsaInitialized;
+#endif
 };
 
 #endif
