@@ -43,6 +43,7 @@ TPSocket::TPSocket(int type, size_t bsize) {
 	this->_bsize = bsize;
 	this->_mc = 256;
 	this->_buffer = NULL;
+	this->_fd = -1;
 }
 
 TPSocket::~TPSocket(void) {
@@ -186,7 +187,7 @@ bool TPSocket::Bind(const std::string& ip, const std::string& port) {
 	
 	this->GetLocal();
 
-	return bndret;
+	return(bndret == 0);
 }
 
 bool TPSocket::Listen(void) {
@@ -211,7 +212,7 @@ int TPSocket::Accept(TPSocket* endpoint) {
 	this->GetRemote();
 	return endpoint->_fd;
 }
-		
+
 bool TPSocket::Connect(const std::string& ip, const std::string& port) {
 	struct addrinfo *ai;
 	int conopt = 0;
@@ -239,8 +240,8 @@ bool TPSocket::Connect(const std::string& ip, const std::string& port) {
 	this->GetMaxBSize();
 	this->GetLocal();
 	this->GetRemote();
-
-	return true;
+	
+	return(conopt == 0);
 }
 		
 ssize_t TPSocket::Send(const std::string& message) {
@@ -270,7 +271,6 @@ ssize_t TPSocket::Recv(std::string* message) {
 			bytes = recv(this->_fd, this->_buffer, this->_bsize, 0);
 #else
 			bytes = recv(this->_fd, (char*)this->_buffer, this->_bsize, 0);
-			printf("RECV: %d\n", bytes);
 #endif
 			break;
 		case TPSocket::UDP:
@@ -301,5 +301,11 @@ bool TPSocket::InitializeWSA(void) {
 	return TPSocket::_wsaInitialized;
 }
 #endif
+		
+bool TPSocket::IsConnected(void) {
+	std::string empty;
+	empty.push_back('\0');
+	return(this->Send(empty) > (ssize_t)0);
+}
 
 #endif

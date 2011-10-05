@@ -40,7 +40,7 @@ bool TPiC::Recv(std::string* message) {
 }
 */
 
-int TPiC::Configure(const std::string &ip, const std::string& port, int mode) {
+int TPiC::Plug(const std::string &ip, const std::string& port, int mode) {
 	switch(mode) {
 		case TPiC::AsServer:
 			return this->ConfAsServer(ip, port);
@@ -50,6 +50,9 @@ int TPiC::Configure(const std::string &ip, const std::string& port, int mode) {
 			break;
 	}
 	return TPiC::ErrorGeneric;
+}
+		
+void TPiC::Unplug(void) {
 }
 
 
@@ -85,6 +88,10 @@ int TPiC::ConfAsClient(const std::string &ip, const std::string& port) {
 	if(status == false)
 		return TPiC::ErrorSocket;
 	
+	this->_socket->IsConnected();
+	if(this->_socket->IsConnected() == false)
+		return TPiC::ErrorSocket;
+
 	this->com = this->_socket;
 	return TPiC::Successful;
 }

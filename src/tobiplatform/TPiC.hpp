@@ -29,8 +29,9 @@ class TPiC {
 		virtual ~TPiC(void);
 		bool Send(void);
 		bool Recv(void);
-		int Configure(const std::string &ip, const std::string& port,
+		int Plug(const std::string &ip, const std::string& port,
 				int mode = TPiC::AsServer);
+		void Unplug(void);
 	private:
 		int ConfAsServer(const std::string &ip, const std::string& port);
 		int ConfAsClient(const std::string &ip, const std::string& port);
@@ -47,7 +48,8 @@ class TPiC {
 	private:
 		TPSocket* _socket;
 		TPSocket* _endpoint;
-	protected:
+	//protected:
+	public:
 		TPSocket* com;
 };
 

@@ -22,7 +22,20 @@
 #include <tobiplatform/TPiC.hpp>
 
 int main(void) {
-	TPiC client, server;
+	TPiC client;
+	std::string buffer;
+
+	if(client.Plug("127.0.0.1", "8001", TPiC::AsServer) != TPiC::Successful) {
+	//if(client.Plug("127.0.0.1", "8001", TPiC::AsClient) != TPiC::Successful) {
+		std::cout << "Cannot configure iC client" << std::endl;
+		return false;
+	}
+
+
+	client.com->Send("Hello world");
+	client.com->Recv(&buffer);
+	std::cout << "Buffer: " << buffer << std::endl;
+
 
 	return 0;
 }
