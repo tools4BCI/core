@@ -16,7 +16,8 @@ libtobiplatform_la_LDFLAGS = $(AM_CFLAGS) -version-info $(CURRENT):$(REVISION):$
 libtobiplatform_la_LIBADD = $(top_builddir)/src/tobicore/libtobicore.la \
 							$(top_builddir)/src/tobiic/libtobiic.la \
 							$(top_builddir)/src/tobiid/libtobiid.la \
-							$(PTHREAD_LIBS) -lws2_32
+							$(PTHREAD_LIBS) $(WIN32_LIBS)
+#-lws2_32
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = tobiplatform.pc
