@@ -24,7 +24,7 @@
 TPiC::TPiC(void) {
 	this->_socket = NULL;
 	this->_endpoint = NULL;
-	this->_com = NULL;
+	this->com = NULL;
 }
 
 TPiC::~TPiC(void) {
@@ -66,7 +66,7 @@ bool TPiC::ConfAsServer(const std::string &ip, const std::string& port) {
 	this->_endpoint = new TPSocket(TPSocket::TCP);
 	status &= this->_socket->Accept(this->_endpoint);
 	
-	this->_com = this->_endpoint;
+	this->com = this->_endpoint;
 
 	return status;
 }
@@ -79,7 +79,7 @@ bool TPiC::ConfAsClient(const std::string &ip, const std::string& port) {
 	this->_socket->Open(false);
 	this->_socket->Connect(ip, port);
 	
-	this->_com = this->_socket;
+	this->com = this->_socket;
 
 	return false;
 }

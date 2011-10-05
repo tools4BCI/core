@@ -41,7 +41,8 @@ class TPiC {
 	private:
 		TPSocket* _socket;
 		TPSocket* _endpoint;
-		TPSocket* _com;
+	protected:
+		TPSocket* com;
 };
 
 #endif
