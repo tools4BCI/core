@@ -10,7 +10,11 @@ libtobiplatform_la_SOURCES = TPMutex.cpp \
 							 TPStreamer.cpp \
 							 TPStreamer.hpp \
 							 TPSocket.cpp \
-							 TPSocket.hpp
+							 TPSocket.hpp \
+							 TPiC.cpp \
+							 TPiC.hpp \
+							 TPiD.cpp \
+							 TPiD.hpp
 
 libtobiplatform_la_LDFLAGS = $(AM_CFLAGS) -version-info $(CURRENT):$(REVISION):$(AGE) -no-undefined
 libtobiplatform_la_LIBADD = $(top_builddir)/src/tobicore/libtobicore.la \
