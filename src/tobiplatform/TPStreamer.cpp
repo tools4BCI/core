@@ -15,35 +15,35 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-    CcStreamer.hpp/.cpp is part of libcnbicore
+    TPStreamer.hpp/.cpp is part of libcnbicore
 */
 
-#ifndef CCSTREAMER_CPP
-#define CCSTREAMER_CPP
+#ifndef TPSTREAMER_CPP
+#define TPSTREAMER_CPP
 
-#include "CcStreamer.hpp"
+#include "TPStreamer.hpp"
 #include <iostream>
 
-CcStreamer::CcStreamer(void) {
+TPStreamer::TPStreamer(void) {
 }
 
-CcStreamer::~CcStreamer(void) {
+TPStreamer::~TPStreamer(void) {
 }
 
-void CcStreamer::Append(std::string buffer) {
+void TPStreamer::Append(std::string buffer) {
 	this->_mtxstream.Lock();
 	this->_stream.append(buffer);
 	this->_mtxstream.Release();
 }
 		
-void CcStreamer::Append(const char* buffer, size_t bsize) {
+void TPStreamer::Append(const char* buffer, size_t bsize) {
 	this->_mtxstream.Lock();
 	this->_stream.append(buffer, bsize);
 	this->_mtxstream.Release();
 }
 
-bool CcStreamer::Extract(std::string *buffer, std::string hdr, std::string trl, 
-		CcStreamerDirection direction) {
+bool TPStreamer::Extract(std::string *buffer, std::string hdr, std::string trl, 
+		TPStreamerDirection direction) {
 	this->_mtxstream.Lock();
 	
 	if(this->_stream.empty()) {
@@ -60,7 +60,7 @@ bool CcStreamer::Extract(std::string *buffer, std::string hdr, std::string trl,
 
 	std::string::size_type p_hdr, p_trl, delta;
 
-	if(direction == CcStreamer::Forward) {
+	if(direction == TPStreamer::Forward) {
 		p_hdr = this->_stream.find(hdr);
 		p_trl = this->_stream.find(trl);
 	} else {
@@ -90,8 +90,8 @@ bool CcStreamer::Extract(std::string *buffer, std::string hdr, std::string trl,
 	return true;
 }
 		
-bool CcStreamer::Has(std::string hdr, std::string trl, 
-		CcStreamerDirection direction) {
+bool TPStreamer::Has(std::string hdr, std::string trl, 
+		TPStreamerDirection direction) {
 	bool result = false;
 	this->_mtxstream.Lock();
 	result = this->ImplHas(hdr, trl, direction);
@@ -99,7 +99,7 @@ bool CcStreamer::Has(std::string hdr, std::string trl,
 	return result;
 }
 		
-int CcStreamer::Count(std::string hdr) {
+int TPStreamer::Count(std::string hdr) {
 	int count = 0;
 	
 	this->_mtxstream.Lock();
@@ -119,13 +119,13 @@ int CcStreamer::Count(std::string hdr) {
 	return count;
 }
 
-void CcStreamer::Dump(void) {
+void TPStreamer::Dump(void) {
 	this->_mtxstream.Lock();
-	std::cout << "[CcStreamer::Dump] " << this->_stream  << std::endl;
+	std::cout << "[TPStreamer::Dump] " << this->_stream  << std::endl;
 	this->_mtxstream.Release();
 }
 
-int CcStreamer::Size(void) {
+int TPStreamer::Size(void) {
 	int size = 0;
 	this->_mtxstream.Lock();
 	size = this->_stream.size();
@@ -134,21 +134,21 @@ int CcStreamer::Size(void) {
 	return size;
 }
 
-void CcStreamer::Clear(void) {
+void TPStreamer::Clear(void) {
 	this->_mtxstream.Lock();
 	this->_stream.clear();
 	this->_mtxstream.Release();
 }
 
-bool CcStreamer::ImplHas(std::string hdr, std::string trl, 
-		CcStreamerDirection direction) {
+bool TPStreamer::ImplHas(std::string hdr, std::string trl, 
+		TPStreamerDirection direction) {
 	
 	if(this->_stream.empty())
 		return false;
 
 	std::string::size_type p_hdr, p_trl;
 
-	if(direction == CcStreamer::Forward) {
+	if(direction == TPStreamer::Forward) {
 		p_hdr = this->_stream.find(hdr);
 		p_trl = this->_stream.find(trl);
 	} else {

@@ -15,31 +15,31 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-    CcMutex.hpp/.cpp is part of libcnbicore
+    TPMutex.hpp/.cpp is part of libcnbicore
 */
 
-#ifndef CCMUTEX_CPP
-#define CCMUTEX_CPP
+#ifndef TPMUTEX_CPP
+#define TPMUTEX_CPP
 
-#include "CcMutex.hpp"
+#include "TPMutex.hpp"
 
-CcMutex::CcMutex(void) {
+TPMutex::TPMutex(void) {
 	pthread_mutex_init(&this->_mutex, NULL);
 }
 
-CcMutex::~CcMutex(void) {
+TPMutex::~TPMutex(void) {
 	pthread_mutex_destroy(&this->_mutex);
 }
 		
-void CcMutex::Lock(void) {
+void TPMutex::Lock(void) {
 	pthread_mutex_lock(&this->_mutex);
 }
 
-void CcMutex::Release(void) {
+void TPMutex::Release(void) {
 	pthread_mutex_unlock(&this->_mutex);
 }
 
-bool CcMutex::TryLock(void) {
+bool TPMutex::TryLock(void) {
 	if(pthread_mutex_trylock(&this->_mutex) == 0)
 		return true;
 	else

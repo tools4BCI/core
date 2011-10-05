@@ -5,10 +5,10 @@ libtobiplatform_includedir = $(includedir)/tobiplatform
 
 libtobiplatform_include_HEADERS = TPSocket.hpp
 
-libtobiplatform_la_SOURCES = CcMutex.cpp \
-							 CcMutex.hpp \
-							 CcStreamer.cpp \
-							 CcStreamer.hpp \
+libtobiplatform_la_SOURCES = TPMutex.cpp \
+							 TPMutex.hpp \
+							 TPStreamer.cpp \
+							 TPStreamer.hpp \
 							 TPSocket.cpp \
 							 TPSocket.hpp
 

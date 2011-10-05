@@ -15,11 +15,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-    CcMutex.hpp/.cpp is part of libcnbicore
+    TPMutex.hpp/.cpp is part of libcnbicore
 */
 
-#ifndef CCMUTEX_HPP
-#define CCMUTEX_HPP
+#ifndef TPMUTEX_HPP
+#define TPMUTEX_HPP
 
 #include <pthread.h>
 
@@ -28,10 +28,10 @@
  * It simply wraps a pthread mutex.
  *
  */
-class CcMutex {
+class TPMutex {
 	public:
-		CcMutex(void);
-		~CcMutex(void);
+		TPMutex(void);
+		~TPMutex(void);
 
 		void Lock(void);
 		void Release(void);
