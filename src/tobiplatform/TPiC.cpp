@@ -96,4 +96,10 @@ int TPiC::ConfAsClient(const std::string &ip, const std::string& port) {
 	return TPiC::Successful;
 }
 
+bool TPiC::IsPlugged(void) {
+	if(this->com == NULL)
+		return false;
+	return this->com->IsConnected();
+}
+
 #endif

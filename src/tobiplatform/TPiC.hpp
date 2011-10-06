@@ -32,6 +32,7 @@ class TPiC {
 		int Plug(const std::string &ip, const std::string& port,
 				int mode = TPiC::AsServer);
 		void Unplug(void);
+		bool IsPlugged(void);
 	private:
 		int ConfAsServer(const std::string &ip, const std::string& port);
 		int ConfAsClient(const std::string &ip, const std::string& port);
