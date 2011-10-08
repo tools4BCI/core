@@ -5,18 +5,23 @@ libtobiplatform_includedir = $(includedir)/tobiplatform
 
 libtobiplatform_include_HEADERS = TPSocket.hpp
 
-libtobiplatform_la_SOURCES = CcMutex.cpp \
-							 CcMutex.hpp \
-							 CcStreamer.cpp \
-							 CcStreamer.hpp \
+libtobiplatform_la_SOURCES = TPMutex.cpp \
+							 TPMutex.hpp \
+							 TPStreamer.cpp \
+							 TPStreamer.hpp \
 							 TPSocket.cpp \
-							 TPSocket.hpp
+							 TPSocket.hpp \
+							 TPiC.cpp \
+							 TPiC.hpp \
+							 TPiD.cpp \
+							 TPiD.hpp
 
 libtobiplatform_la_LDFLAGS = $(AM_CFLAGS) -version-info $(CURRENT):$(REVISION):$(AGE) -no-undefined
 libtobiplatform_la_LIBADD = $(top_builddir)/src/tobicore/libtobicore.la \
 							$(top_builddir)/src/tobiic/libtobiic.la \
 							$(top_builddir)/src/tobiid/libtobiid.la \
-							$(PTHREAD_LIBS)
+							$(PTHREAD_LIBS) $(WIN32_LIBS)
+#-lws2_32
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = tobiplatform.pc

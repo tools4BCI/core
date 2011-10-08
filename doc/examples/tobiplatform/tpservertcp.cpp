@@ -24,10 +24,28 @@
 int main(void) {
 	std::string message;
 	TPSocket socket(TPSocket::TCP), endpoint(TPSocket::TCP);
-	socket.Open(true);
-	socket.Bind("0.0.0.0", "8000");
-	socket.Listen();
-	socket.Accept(&endpoint);
+	
+	if(socket.Open(true) == false) {
+		std::cout << "Error: cannot open" << std::endl;
+		return 1;
+	}
+
+	if(socket.Bind("0.0.0.0", "8000") == false) {
+		std::cout << "Error: cannot bind" << std::endl;
+		return 1;
+	}
+
+	if(socket.Listen() == false) {
+		std::cout << "Error: cannot listen" << std::endl;
+		return 1;
+	} 
+
+	if(socket.Accept(&endpoint) == false) {
+		std::cout << "Error: cannot accept" << std::endl;
+		return 1;
+	}
+
+	std::cout << "Endpoint connected: " << socket.remote.address << std::endl;
 	endpoint.Send("My dear client, send me something to die.\n");
 	endpoint.Recv(&message);
 	std::cout << "Received: " << message << std::endl;

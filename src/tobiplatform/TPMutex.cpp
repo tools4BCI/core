@@ -14,21 +14,36 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+    TPMutex.hpp/.cpp is part of libcnbicore
 */
 
-#include <cstdio>
-#include <iostream>
-#include <unistd.h>
-#include <tobiplatform/TPSocket.hpp>
+#ifndef TPMUTEX_CPP
+#define TPMUTEX_CPP
 
-int main(void) {
-	std::string message;
-	TPSocket socket(TPSocket::TCP);
-	socket.Open(false);
-	socket.Connect("127.0.0.1", "8001");
-	socket.Send("My dear server, here you go.\n");
-	socket.Recv(&message);
-	std::cout << "Received: " << message << std::endl;
-	socket.Close();
-	return 0;
+#include "TPMutex.hpp"
+
+TPMutex::TPMutex(void) {
+	pthread_mutex_init(&this->_mutex, NULL);
 }
+
+TPMutex::~TPMutex(void) {
+	pthread_mutex_destroy(&this->_mutex);
+}
+		
+void TPMutex::Lock(void) {
+	pthread_mutex_lock(&this->_mutex);
+}
+
+void TPMutex::Release(void) {
+	pthread_mutex_unlock(&this->_mutex);
+}
+
+bool TPMutex::TryLock(void) {
+	if(pthread_mutex_trylock(&this->_mutex) == 0)
+		return true;
+	else
+		return false;
+}
+
+#endif

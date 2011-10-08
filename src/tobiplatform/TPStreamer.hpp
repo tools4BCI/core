@@ -15,16 +15,16 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
         
-    CcStreamer.hpp/.cpp is part of libcnbicore
+    TPStreamer.hpp/.cpp is part of libcnbicore
 */
 
-#ifndef CCSTREAMER_HPP
-#define CCSTREAMER_HPP
+#ifndef TPSTREAMER_HPP
+#define TPSTREAMER_HPP
 
-#include "CcMutex.hpp"
+#include "TPMutex.hpp"
 #include <string>
 
-typedef unsigned int CcStreamerDirection;
+typedef unsigned int TPStreamerDirection;
 
 /*! \brief Data streams handler
  *
@@ -32,32 +32,32 @@ typedef unsigned int CcStreamerDirection;
  * It allows to verify whether a certain message is present and to extract it
  * automatically. 
  */
-class CcStreamer {
+class TPStreamer {
 	public:
-		CcStreamer(void);
-		virtual ~CcStreamer(void);
+		TPStreamer(void);
+		virtual ~TPStreamer(void);
 
 		virtual void Append(std::string buffer);
 		virtual void Append(const char* buffer, size_t bsize);
 		virtual bool Extract(std::string* buffer, std::string hdr, 
-				std::string trl, CcStreamerDirection direction = CcStreamer::Forward);
+				std::string trl, TPStreamerDirection direction = TPStreamer::Forward);
 		virtual bool Has(std::string hdr, std::string trl, 
-				CcStreamerDirection direction = CcStreamer::Forward);
+				TPStreamerDirection direction = TPStreamer::Forward);
 		virtual int Count(std::string hdr);
 		virtual void Dump(void);
 		virtual int Size(void);
 		virtual void Clear(void);
 	private:
 		virtual bool ImplHas(std::string hdr, std::string trl, 
-				CcStreamerDirection direction);
+				TPStreamerDirection direction);
 
 	private:
 		std::string _stream;
-		CcMutex _mtxstream;
+		TPMutex _mtxstream;
 
 	public:
-		static const CcStreamerDirection Forward = 0;
-		static const CcStreamerDirection Reverse = 1;
+		static const TPStreamerDirection Forward = 0;
+		static const TPStreamerDirection Reverse = 1;
 };
 
 #endif

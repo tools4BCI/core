@@ -19,16 +19,25 @@
 #include <cstdio>
 #include <iostream>
 #include <unistd.h>
-#include <tobiplatform/TPSocket.hpp>
+#include <tobiplatform/TPiC.hpp>
 
 int main(void) {
-	std::string message;
-	TPSocket socket(TPSocket::TCP);
-	socket.Open(false);
-	socket.Connect("127.0.0.1", "8001");
-	socket.Send("My dear server, here you go.\n");
-	socket.Recv(&message);
-	std::cout << "Received: " << message << std::endl;
-	socket.Close();
+	TPiC client;
+	std::string buffer;
+
+	//if(client.Plug("127.0.0.1", "8001", TPiC::AsServer) != TPiC::Successful) {
+	if(client.Plug("127.0.0.1", "8001", TPiC::AsClient) != TPiC::Successful) {
+		std::cout << "Cannot configure iC client" << std::endl;
+		return false;
+	}
+
+
+	while(true) {
+		if(client.com->Send("Hello world") < 0)
+			break;
+		client.com->Recv(&buffer);
+		std::cout << "Buffer: " << buffer << std::endl;
+	}
+
 	return 0;
 }

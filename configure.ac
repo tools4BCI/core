@@ -47,12 +47,17 @@ case $host in
 		platform=win32
 		;;
 esac
+
 AM_CONDITIONAL([LINUX], [test "$platform" = "linux"])
 AM_CONDITIONAL([WIN32], [test "$platform" = "win32"])
 
 AC_CHECK_PROG([DOXYGEN], [doxygen], [doxygen] [no])
 AC_CHECK_PROG([MWRAP], [mwrap], [mwrap], [no])
 AC_CHECK_PROG([MEX], [mex], [mex], [no])
+
+if test "$platform" = win32; then 
+	AC_SUBST([WIN32_LIBS], "-lws2_32"), 
+fi
 
 if test "$platform" = linux ; then 
 	if test "$MWRAP" = no ; then 
@@ -61,9 +66,9 @@ if test "$platform" = linux ; then
 	if test "$MEX" = no ; then 
 		AC_MSG_ERROR(Cannot find mex.) 
 	fi
-	#if test "$DOXYGEN" = no ; then 
-	#	AC_MSG_ERROR(Cannot find doxygen.) 
-	#fi
+	if test "$DOXYGEN" = no ; then 
+		AC_MSG_ERROR(Cannot find doxygen.) 
+	fi
 fi
 
 AC_SUBST([RELEASE],[lib_release])
