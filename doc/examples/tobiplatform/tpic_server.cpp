@@ -23,6 +23,8 @@
 #include <tobiic/ICMessage.hpp>
 #include <tobiic/ICSerializerRapid.hpp>
 
+#define ENDLESS true
+
 int main(void) {
 	ICMessage message;
 	ICSerializerRapid serializer(&message);
@@ -30,28 +32,41 @@ int main(void) {
 	TPiC server;
 	std::string buffer;
 
-	if(server.Plug("127.0.0.1", "8000", TPiC::AsServer) != TPiC::Successful) {
-		std::cout << "Cannot plug iC server" << std::endl;
-		return false;
-	}
-
-	int frame = 1;
 	while(true) {
-		message.SetBlockIdx(++frame);
-		int status = server.Get(&serializer);
-		if(status == TPiC::Successful) {
-			frame = message.GetBlockIdx();
-			//message.Dump();
-			std::cout << "iC message received: " << frame << std::endl;
-		}
-		else if(status == TPiC::Unsuccessful)
+		std::cout << "Initializing iC server and waiting for client to plug-in" << std::endl;
+
+		if(server.Plug("127.0.0.1", "8000", TPiC::AsServer) != TPiC::Successful) {
+#ifdef ENDLESS
+			std::cout << "Cannot plug iC server: trying in 5 seconds" << std::endl;
+			sleep(5);
 			continue;
-		else 
-			break;
+#else
+			std::cout << "Cannot plug iC server" << std::endl;
+			return false;
+#endif
+		}
 
+		int frame = 1;
+		bool first = true;
+		while(true) {
+			message.SetBlockIdx(++frame);
+			int status = server.Get(&serializer);
+			if(status == TPiC::Successful) {
+				frame = message.GetBlockIdx();
+				std::cout << "iC message received: " << frame << std::endl;
+				if(first == true) {
+					message.Dump();
+					first = false;
+				}
+			}
+			else if(status == TPiC::Unsuccessful)
+				continue;
+			else 
+				break;
+
+		}
+		std::cout << "iC client is down" << std::endl;
+		server.Unplug();
 	}
-	std::cout << "iC client is down" << std::endl;
-	server.Unplug();
-
 	return 0;
 }

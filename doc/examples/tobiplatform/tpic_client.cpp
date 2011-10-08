@@ -24,6 +24,8 @@
 #include <tobiic/ICSerializerRapid.hpp>
 #include <tobicore/TCTime.hpp>
 
+#define ENDLESS true
+
 int main(void) {
 	ICClass class1("0x301", 0.60f);
 	ICClass class2("0x302", 0.40f);
@@ -38,23 +40,34 @@ int main(void) {
 	message.Dump();
 	
 	ICSerializerRapid serializer(&message);
+		
 
 	TPiC client;
-	if(client.Plug("127.0.0.1", "8000", TPiC::AsClient) != TPiC::Successful) {
-		std::cout << "Cannot plug iC client" << std::endl;
-		return false;
-	}
-
-	int frame = 1;
 	while(true) {
-		message.SetBlockIdx(++frame);
-		if(client.Set(&serializer) != TPiC::Successful)
-			break;
-		std::cout << "iC message sent: " << frame << std::endl;
-		sleep(1);
+		std::cout << "Initializing iC client and trying to plug-in" << std::endl;
+		
+		if(client.Plug("127.0.0.1", "8000", TPiC::AsClient) != TPiC::Successful) {
+#ifdef ENDLESS
+			std::cout << "Cannot plug iC client: trying in 5 seconds" << std::endl;
+			sleep(5);
+			continue;
+#else
+			std::cout << "Cannot plug iC client" << std::endl;
+			return false;
+#endif
+		}
+
+		int frame = 1;
+		while(true) {
+			message.SetBlockIdx(++frame);
+			if(client.Set(&serializer) != TPiC::Successful)
+				break;
+			std::cout << "iC message sent: " << frame << std::endl;
+			sleep(1);
+		}
+		std::cout << "iC server is down" << std::endl;
+		client.Unplug();
 	}
-	std::cout << "iC server is down" << std::endl;
-	client.Unplug();
 
 	return 0;
 }
