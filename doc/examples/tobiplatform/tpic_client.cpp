@@ -53,6 +53,7 @@ int main(void) {
 		std::cout << "iC message sent: " << frame << std::endl;
 		sleep(1);
 	}
+	std::cout << "iC server is down" << std::endl;
 	client.Unplug();
 
 	return 0;

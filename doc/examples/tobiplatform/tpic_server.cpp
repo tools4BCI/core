@@ -50,6 +50,7 @@ int main(void) {
 			break;
 
 	}
+	std::cout << "iC client is down" << std::endl;
 	server.Unplug();
 
 	return 0;

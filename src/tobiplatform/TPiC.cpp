@@ -116,6 +116,8 @@ bool TPiC::IsPlugged(void) {
 int TPiC::Set(ICSerializer* serializer) {
 	if(this->_endpoint != NULL)
 		return TPiC::ErrorNotSupported;
+	if(this->com->IsConnected() == false)
+		return TPiC::ErrorSocket;
 
 	serializer->Serialize(&this->_cache);
 	return(this->com->Send(this->_cache) > 0 ? TPiC::Successful : TPiC::ErrorSocket);
@@ -124,6 +126,8 @@ int TPiC::Set(ICSerializer* serializer) {
 int TPiC::Get(ICSerializer* serializer) {
 	if(this->_endpoint == NULL)
 		return TPiC::ErrorNotSupported;
+	if(this->com->IsConnected() == false)
+		return TPiC::ErrorSocket;
 
 	this->_cache.clear();
 	this->com->Recv(&this->_cache);
