@@ -20,6 +20,9 @@
 #define TPIC_HPP 
 
 #include "TPSocket.hpp"
+#include "TPStreamer.hpp"
+#include <tobiic/ICSerializer.hpp>
+#include <string>
 
 /*! \brief Simple iC interface
  */
@@ -27,8 +30,8 @@ class TPiC {
 	public:
 		TPiC(void);
 		virtual ~TPiC(void);
-		bool Send(void);
-		bool Recv(void);
+		int Set(ICSerializer* serializer);
+		int Get(ICSerializer* serializer);
 		int Plug(const std::string &ip, const std::string& port,
 				int mode = TPiC::AsServer);
 		void Unplug(void);
@@ -40,18 +43,21 @@ class TPiC {
 	public:
 		const static int AsServer = 0;
 		const static int AsClient = 1;
+		const static int Unsuccessful = -1;
 		const static int Successful = 0;
 		const static int ErrorSocket = 1;
 		const static int ErrorEndpoint = 2;
 		const static int ErrorBound = 3;
 		const static int ErrorGeneric = 4;
+		const static int ErrorNotSupported = 5;
 
 	private:
 		TPSocket* _socket;
 		TPSocket* _endpoint;
-	//protected:
-	public:
+		std::string _cache;
+	protected:
 		TPSocket* com;
+		TPStreamer stream;
 };
 
 #endif

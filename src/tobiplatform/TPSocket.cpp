@@ -262,7 +262,7 @@ ssize_t TPSocket::Send(const std::string& message) {
 	}
 	return bytes;
 }
-		
+	
 ssize_t TPSocket::Recv(std::string* message) {
 	ssize_t bytes = -1;
 	switch(this->_type) {
@@ -284,7 +284,7 @@ ssize_t TPSocket::Recv(std::string* message) {
 #endif
 			break;
 	}
-
+	
 	if(bytes > 0)
 		message->assign((const char*)this->_buffer, (size_t)bytes);
 

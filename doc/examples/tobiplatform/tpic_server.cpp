@@ -16,40 +16,41 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <cstdio>
+#include <string>
 #include <iostream>
 #include <unistd.h>
-#include <tobiplatform/TPSocket.hpp>
+#include <tobiplatform/TPiC.hpp>
+#include <tobiic/ICMessage.hpp>
+#include <tobiic/ICSerializerRapid.hpp>
 
 int main(void) {
-	std::string message;
-	TPSocket socket(TPSocket::TCP), endpoint(TPSocket::TCP);
-	
-	if(socket.Open(true) == false) {
-		std::cout << "Error: cannot open" << std::endl;
-		return 1;
+	ICMessage message;
+	ICSerializerRapid serializer(&message);
+
+	TPiC server;
+	std::string buffer;
+
+	if(server.Plug("127.0.0.1", "8000", TPiC::AsServer) != TPiC::Successful) {
+		std::cout << "Cannot plug iC server" << std::endl;
+		return false;
 	}
 
-	if(socket.Bind("0.0.0.0", "8000") == false) {
-		std::cout << "Error: cannot bind" << std::endl;
-		return 1;
+	int frame = 1;
+	while(true) {
+		message.SetBlockIdx(++frame);
+		int status = server.Get(&serializer);
+		if(status == TPiC::Successful) {
+			frame = message.GetBlockIdx();
+			//message.Dump();
+			std::cout << "iC message received: " << frame << std::endl;
+		}
+		else if(status == TPiC::Unsuccessful)
+			continue;
+		else 
+			break;
+
 	}
+	server.Unplug();
 
-	if(socket.Listen() == false) {
-		std::cout << "Error: cannot listen" << std::endl;
-		return 1;
-	} 
-
-	if(socket.Accept(&endpoint) == false) {
-		std::cout << "Error: cannot accept" << std::endl;
-		return 1;
-	}
-
-	std::cout << "Endpoint connected: " << socket.remote.address << std::endl;
-	endpoint.Send("My dear client, send me something to die.\n");
-	endpoint.Recv(&message);
-	std::cout << "Received: " << message << std::endl;
-	endpoint.Close();
-	socket.Close();
 	return 0;
 }
