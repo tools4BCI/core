@@ -21,6 +21,7 @@
 
 #include "TPInterface.hpp"
 #include <tobiid/IDSerializer.hpp>
+#include <tobicore/TCLanguage.hpp>
 
 /*! \brief TOBI iD interface
  */
@@ -28,10 +29,13 @@ class TPiD : public TPInterface {
 	public:
 		TPiD(void);
 		virtual ~TPiD(void);
-		int Set(IDSerializer* serializer);
+		int Set(IDSerializer* serializer, int bidx = TCBlock::BlockIdxUnset, 
+				int* abidx = NULL);
 		int Get(IDSerializer* serializer);
 	private:
 		virtual int ConfAsServer(const std::string &ip, const std::string& port);
+	private:
+		TCLanguage _lang;
 };
 
 #endif

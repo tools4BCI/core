@@ -20,55 +20,43 @@
 #include <iostream>
 #include <unistd.h>
 #include <tobiplatform/TPiD.hpp>
-#include <tobiic/ICMessage.hpp>
-#include <tobiic/ICSerializerRapid.hpp>
+#include <tobiid/IDMessage.hpp>
+#include <tobiid/IDSerializerRapid.hpp>
 #include <tobicore/TCTime.hpp>
 
 #define ENDLESS true
 
 int main(void) {
-	/*
-	ICClass class1("0x301", 0.60f);
-	ICClass class2("0x302", 0.40f);
-	ICClassifier classifier("cnbi_mi", "CNBI MI Classifier", 
-			ICClassifier::ValueProb, 
-			ICClassifier::LabelBiosig);
-	classifier.classes.Add(&class1);
-	classifier.classes.Add(&class2);
-
-	ICMessage message;
-	message.classifiers.Add(&classifier);
+	IDMessage message(IDMessage::FamilyBiosig, 1000);
 	message.Dump();
-	
-	ICSerializerRapid serializer(&message);
-		
+	IDSerializerRapid serializer(&message);
 
-	TPiC client;
+	TPiD client;
+
 	while(true) {
-		std::cout << "Initializing iC client and trying to plug-in" << std::endl;
+		std::cout << "Initializing iD client and trying to plug-in" << std::endl;
 		
-		if(client.Plug("127.0.0.1", "8000", TPiC::AsClient) != TPiC::Successful) {
+		if(client.Plug("127.0.0.1", "8126", TPiD::AsClient) != TPiD::Successful) {
 #ifdef ENDLESS
-			std::cout << "Cannot plug iC client: trying in 5 seconds" << std::endl;
+			std::cout << "Cannot plug iD client: trying in 5 seconds" << std::endl;
 			sleep(5);
 			continue;
 #else
-			std::cout << "Cannot plug iC client" << std::endl;
+			std::cout << "Cannot plug iD client" << std::endl;
 			return false;
 #endif
 		}
 
-		int frame = 1;
+		int frame = TCBlock::BlockIdxUnset, aframe;
 		while(true) {
-			message.SetBlockIdx(++frame);
-			if(client.Set(&serializer) != TPiC::Successful)
+			if(client.Set(&serializer, frame, &aframe) != TPiD::Successful)
 				break;
-			std::cout << "iC message sent: " << frame << std::endl;
+			std::cout << "iD message sent: " << frame << "/" << aframe << std::endl;
 			sleep(1);
 		}
-		std::cout << "iC server is down" << std::endl;
+		std::cout << "iD server is down" << std::endl;
 		client.Unplug();
 	}
-	*/
+	
 	return 0;
 }

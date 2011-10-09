@@ -45,6 +45,7 @@ class TPInterface {
 		const static int ErrorBound = 3;
 		const static int ErrorGeneric = 4;
 		const static int ErrorNotSupported = 5;
+		const static int ErrorProtocol = 6;
 	protected:
 		TPSocket* _socket;
 		TPSocket* _endpoint;
