@@ -21,28 +21,26 @@
 
 #include "TPiC.hpp" 
 
-TPiC::TPiC(void) {
-}
-
-TPiC::~TPiC(void) {
-}
-
 int TPiC::Set(ICSerializer* serializer) {
+	if(TPInterface::_com == NULL)
+		return TPInterface::ErrorSocket;
 	if(TPInterface::_endpoint != NULL)
-		return TPiC::ErrorNotSupported;
+		return TPInterface::ErrorNotSupported;
 	if(TPInterface::_com->IsConnected() == false)
-		return TPiC::ErrorSocket;
+		return TPInterface::ErrorSocket;
 
 	serializer->Serialize(&this->_cache);
 	return(TPInterface::_com->Send(TPInterface::_cache) > 0 ? 
-			TPiC::Successful : TPiC::ErrorSocket);
+			TPInterface::Successful : TPInterface::ErrorSocket);
 }
 
 int TPiC::Get(ICSerializer* serializer) {
+	if(TPInterface::_com == NULL)
+		return TPInterface::ErrorSocket;
 	if(TPInterface::_endpoint == NULL)
-		return TPiC::ErrorNotSupported;
+		return TPInterface::ErrorNotSupported;
 	if(TPInterface::_com->IsConnected() == false)
-		return TPiC::ErrorSocket;
+		return TPInterface::ErrorSocket;
 
 	TPInterface::_cache.clear();
 	TPInterface::_com->Recv(&this->_cache);
@@ -51,9 +49,9 @@ int TPiC::Get(ICSerializer* serializer) {
 	std::string buffer;
 	if(TPInterface::_stream.Extract(&buffer, "<tobiic", "</tobiic>") == true) {
 		serializer->Deserialize(&buffer);
-		return TPiC::Successful;
+		return TPInterface::Successful;
 	}
-	return TPiC::Unsuccessful;
+	return TPInterface::Unsuccessful;
 }
 
 #endif

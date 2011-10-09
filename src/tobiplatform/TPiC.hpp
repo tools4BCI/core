@@ -26,8 +26,6 @@
  */
 class TPiC : public TPInterface {
 	public:
-		TPiC(void);
-		virtual ~TPiC(void);
 		int Set(ICSerializer* serializer);
 		int Get(ICSerializer* serializer);
 };
