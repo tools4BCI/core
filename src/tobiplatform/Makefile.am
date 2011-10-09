@@ -3,7 +3,13 @@ lib_LTLIBRARIES = libtobiplatform.la
 
 libtobiplatform_includedir = $(includedir)/tobiplatform
 
-libtobiplatform_include_HEADERS = TPSocket.hpp
+libtobiplatform_include_HEADERS = TPSocket.hpp \
+								  TPMutex.hpp \
+								  TPStreamer.hpp \
+								  TPSocket.hpp \
+								  TPInterface.hpp \
+								  TPiC.hpp \
+								  TPiD.hpp
 
 libtobiplatform_la_SOURCES = TPMutex.cpp \
 							 TPMutex.hpp \
@@ -11,6 +17,8 @@ libtobiplatform_la_SOURCES = TPMutex.cpp \
 							 TPStreamer.hpp \
 							 TPSocket.cpp \
 							 TPSocket.hpp \
+							 TPInterface.cpp \
+							 TPInterface.hpp \
 							 TPiC.cpp \
 							 TPiC.hpp \
 							 TPiD.cpp \
