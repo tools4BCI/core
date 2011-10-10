@@ -76,7 +76,7 @@ void TCSleep(double ms) {
 	tm.tv_usec = (long)1000*ms;
 	//nanosleep(&tm, 0);
 #ifdef __MINGW32__
-	Sleep(1);
+	Sleep(ms);
 #else
 	select(0, 0, 0, 0, &tm);
 #endif

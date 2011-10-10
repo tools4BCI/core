@@ -51,7 +51,7 @@ int main(void) {
 		if(client.Plug("127.0.0.1", "8000", TPiC::AsClient) != TPiC::Successful) {
 #ifdef ENDLESS
 			std::cout << "Cannot plug iC client: trying in 5 seconds" << std::endl;
-			sleep(5);
+			TCSleep(5000);
 			continue;
 #else
 			std::cout << "Cannot plug iC client" << std::endl;
@@ -65,7 +65,7 @@ int main(void) {
 			if(client.Set(&serializer) != TPiC::Successful)
 				break;
 			std::cout << "iC message sent: " << frame << std::endl;
-			sleep(1);
+			TCSleep(1000);
 		}
 		std::cout << "iC server is down" << std::endl;
 		client.Unplug();

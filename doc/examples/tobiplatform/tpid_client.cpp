@@ -41,7 +41,7 @@ int main(void) {
 		if(client.Plug("127.0.0.1", "8126", TPiD::AsClient) != TPiD::Successful) {
 #ifdef ENDLESS
 			std::cout << "Cannot plug iD client: trying in 5 seconds" << std::endl;
-			sleep(5);
+			TCSleep(5000);
 			continue;
 #else
 			std::cout << "Cannot plug iD client" << std::endl;
@@ -59,7 +59,7 @@ int main(void) {
 				std::cout << "iD message received: " << std::endl;
 				message.Dump();
 			}
-			sleep(1);
+			TCSleep(1000.00f);
 		}
 		std::cout << "iD server is down" << std::endl;
 		client.Unplug();

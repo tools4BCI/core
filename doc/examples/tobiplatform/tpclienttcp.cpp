@@ -20,6 +20,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <tobiplatform/TPSocket.hpp>
+#include <tobicore/TCTime.hpp>
 
 int main(void) {
 	std::string message;
@@ -35,7 +36,7 @@ int main(void) {
 		if(bytes > 0)
 			std::cout << "Received [" << bytes << "]: " << message << std::endl;
 		else {
-			sleep(1);
+			TCSleep(1000);
 			socket.Send("My dear server, here you go again.\n");
 		}
 	}
