@@ -62,10 +62,10 @@ bool TPStreamer::Extract(std::string *buffer, std::string hdr, std::string trl,
 
 	if(direction == TPStreamer::Forward) {
 		p_hdr = this->_stream.find(hdr);
-		p_trl = this->_stream.find(trl);
+		p_trl = this->_stream.find(trl, p_hdr);
 	} else {
 		p_hdr = this->_stream.rfind(hdr);
-		p_trl = this->_stream.rfind(trl);
+		p_trl = this->_stream.rfind(trl, p_hdr);
 	}
 	delta = trl.size();
 
@@ -150,10 +150,10 @@ bool TPStreamer::ImplHas(std::string hdr, std::string trl,
 
 	if(direction == TPStreamer::Forward) {
 		p_hdr = this->_stream.find(hdr);
-		p_trl = this->_stream.find(trl);
+		p_trl = this->_stream.find(trl, p_hdr);
 	} else {
 		p_hdr = this->_stream.rfind(hdr);
-		p_trl = this->_stream.rfind(trl);
+		p_trl = this->_stream.rfind(trl, p_hdr);
 	}
 
 	if(p_hdr == std::string::npos || p_trl == std::string::npos) 
