@@ -22,8 +22,9 @@
 #include <tobiplatform/TPiC.hpp>
 #include <tobiic/ICMessage.hpp>
 #include <tobiic/ICSerializerRapid.hpp>
+#include <tobicore/TCTime.hpp>
 
-#define ENDLESS true
+#define ENDLESS
 
 int main(void) {
 	ICMessage message;
@@ -32,13 +33,15 @@ int main(void) {
 	TPiC server;
 	std::string buffer;
 
+#ifdef ENDLESS
 	while(true) {
+#endif
 		std::cout << "Initializing iC server and waiting for client to plug-in" << std::endl;
 
 		if(server.Plug("127.0.0.1", "8000", TPiC::AsServer) != TPiC::Successful) {
 #ifdef ENDLESS
 			std::cout << "Cannot plug iC server: trying in 5 seconds" << std::endl;
-			sleep(5);
+			TCSleep(5000);
 			continue;
 #else
 			std::cout << "Cannot plug iC server" << std::endl;
@@ -67,6 +70,8 @@ int main(void) {
 		}
 		std::cout << "iC client is down" << std::endl;
 		server.Unplug();
+#ifdef ENDLESS
 	}
+#endif
 	return 0;
 }

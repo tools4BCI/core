@@ -55,6 +55,7 @@ class TPSocket {
 		virtual ~TPSocket(void);
 		bool Open(bool asserver);
 		bool Close(void);
+		bool Async(bool block);
 		bool Bind(const std::string &ip, const std::string& port);
 		bool Listen(void);
 		int Accept(TPSocket* endpoint);

@@ -20,15 +20,26 @@
 #include <iostream>
 #include <unistd.h>
 #include <tobiplatform/TPSocket.hpp>
+#include <tobicore/TCTime.hpp>
 
 int main(void) {
 	std::string message;
 	TPSocket socket(TPSocket::TCP);
 	socket.Open(false);
 	socket.Connect("127.0.0.1", "8001");
+	socket.Async(true);
 	socket.Send("My dear server, here you go.\n");
-	socket.Recv(&message);
-	std::cout << "Received: " << message << std::endl;
+	
+	ssize_t bytes = 0;
+	while(true) {
+		bytes =  socket.Recv(&message);
+		if(bytes > 0)
+			std::cout << "Received [" << bytes << "]: " << message << std::endl;
+		else {
+			TCSleep(1000);
+			socket.Send("My dear server, here you go again.\n");
+		}
+	}
 	socket.Close();
 	return 0;
 }

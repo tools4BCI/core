@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 #ifdef _WIN32
 #include <stdio.h>
 #endif
@@ -47,6 +48,24 @@ TPSocket::TPSocket(int type, size_t bsize) {
 }
 
 TPSocket::~TPSocket(void) {
+}
+
+bool TPSocket::Async(bool block) {
+#ifndef __MINGW32__
+	int oldflags = fcntl(this->_fd, F_GETFL, 0);
+	if(oldflags < 0)
+		return false;
+
+	if(block == true)
+		oldflags |= O_NONBLOCK;
+	else
+		oldflags &= ~O_NONBLOCK;
+	return(fcntl(this->_fd, F_SETFL, oldflags) > -1);
+#else
+	u_long arg = (u_long)block;
+	ioctlsocket(this->_fd, FIONBIO, &arg);
+	return true;
+#endif
 }
 
 void TPSocket::Init(void) {
