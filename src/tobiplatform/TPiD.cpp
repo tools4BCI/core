@@ -79,7 +79,6 @@ int TPiD::Get(IDSerializer* serializer) {
 		return TPInterface::Unsuccessful;
 
 	serializer->Deserialize(&this->_cache);
-
 	return TPInterface::Successful;
 }
 
