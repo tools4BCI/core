@@ -31,7 +31,7 @@ class TPInterface {
 				int mode = TPInterface::AsServer);
 		void Unplug(void);
 		bool IsPlugged(void);
-	private:
+	protected:
 		virtual int ConfAsServer(const std::string &ip, const std::string& port);
 		virtual int ConfAsClient(const std::string &ip, const std::string& port);
 

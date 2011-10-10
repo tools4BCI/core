@@ -9,6 +9,12 @@ TPiD::TPiD(void) {
 
 TPiD::~TPiD(void) {
 }
+
+int TPiD::ConfAsClient(const std::string &ip, const std::string& port) {
+	int status = TPInterface::ConfAsClient(ip, port);
+	this->_com->Async(true);
+	return status;
+}
 		
 int TPiD::ConfAsServer(const std::string &ip, const std::string& port) {
 	return TPInterface::ErrorNotSupported;
@@ -16,7 +22,6 @@ int TPiD::ConfAsServer(const std::string &ip, const std::string& port) {
 
 #include <iostream>
 int TPiD::Set(IDSerializer* serializer, int bidx, int* abidx) {
-	//this->_com->Blocking(true);
 	if(TPInterface::_com == NULL)
 		return TPInterface::ErrorSocket;
 	if(TPInterface::_com->IsConnected() == false)

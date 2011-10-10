@@ -33,6 +33,7 @@ class TPiD : public TPInterface {
 				int* abidx = NULL);
 		int Get(IDSerializer* serializer);
 	private:
+		virtual int ConfAsClient(const std::string &ip, const std::string& port);
 		virtual int ConfAsServer(const std::string &ip, const std::string& port);
 	private:
 		TCLanguage _lang;
