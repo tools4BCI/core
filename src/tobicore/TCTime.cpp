@@ -19,6 +19,11 @@
 
 #include "TCTime.hpp"
 
+#ifdef __MINGW32__
+#include <time.h>
+#include <windows.h>
+#endif
+
 #ifdef _WIN32
 #include <time.h>
 
@@ -65,16 +70,10 @@ int timerisset(struct timeval *tvp) {
 }
 #endif
 
-#ifdef __MINGW32__
-#include <time.h>
-#include <windows.h>
-#endif
-
 void TCSleep(double ms) {
 	timeval tm;
 	tm.tv_sec = 0;
 	tm.tv_usec = (long)1000*ms;
-	//nanosleep(&tm, 0);
 #ifdef __MINGW32__
 	Sleep(ms);
 #else

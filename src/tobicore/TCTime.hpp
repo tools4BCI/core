@@ -19,17 +19,19 @@
 
 #ifndef TCTIME_HPP
 #define TCTIME_HPP
-#include <sys/time.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif 
 
 #ifdef __MINGW32__
 #undef _WIN32
-#endif  //__MINGW32__
+#endif //__MINGW32__
 
 #ifndef _WIN32
 #include <sys/time.h>
 #else
 #include <windows.h>
-
 struct timeval {
 	long tv_sec; 
 	long tv_usec;
@@ -44,5 +46,9 @@ bool timerisset(struct timeval *tvp);
 #endif //_WIN32
 
 void TCSleep(double ms);
+
+#ifdef __cplusplus
+}
+#endif //__cplusplus
 
 #endif //TCTIME_HPP
