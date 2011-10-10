@@ -30,34 +30,30 @@ int TPiD::Set(IDSerializer* serializer, int bidx, int* abidx) {
 	if(abidx != NULL)
 		*abidx = TCBlock::BlockIdxUnset;
 	
-	//TPInterface::_com->Recv(&this->_cache);
-	
 	serializer->message->SetBlockIdx(bidx);
 	serializer->message->absolute.Tic();
 	serializer->Serialize(&this->_cache);
 	if(TPInterface::_com->Send(TPInterface::_cache) <= 0)
 		return TPInterface::ErrorSocket;
 
-	TPInterface::_cache.clear();
-	TPInterface::_com->Recv(&this->_cache);
-	TPInterface::_stream.Append(TPInterface::_cache);
-	
-	std::string buffer;
-	if(TPInterface::_stream.Extract(&buffer, "<tcstatus", "/>") == false) {
-		std::cout << "FUCK ME" << std::endl;
-		_stream.Dump();
-		sleep(10);
-		return TPInterface::ErrorProtocol;
-	}
-	std::cout << buffer << std::endl;
 
+	while(true) {
+		TPInterface::_cache.clear();
+		TPInterface::_com->Recv(&this->_cache);
+		this->_sendrecv.Append(TPInterface::_cache);
+		
+		TPInterface::_cache.clear();
+		if(this->_sendrecv.Extract(&this->_cache, "<tcstatus", "/>") == true)
+			break;
+	}
+	
 	int comp, status, fidx;
-	if(this->_lang.IsStatus(buffer, &comp, &status, &fidx) == true) {
+	if(this->_lang.IsStatus(this->_cache, &comp, &status, &fidx) == true) {
 		if(abidx != NULL) 
 			*abidx = fidx;
 		return TPInterface::Successful;
 	}
-	
+
 	return TPInterface::ErrorProtocol;
 }
 

@@ -37,6 +37,7 @@ class TPiD : public TPInterface {
 		virtual int ConfAsServer(const std::string &ip, const std::string& port);
 	private:
 		TCLanguage _lang;
+		TPStreamer _sendrecv;
 };
 
 #endif
