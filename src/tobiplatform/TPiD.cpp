@@ -16,6 +16,7 @@ int TPiD::ConfAsServer(const std::string &ip, const std::string& port) {
 
 #include <iostream>
 int TPiD::Set(IDSerializer* serializer, int bidx, int* abidx) {
+	//this->_com->Blocking(true);
 	if(TPInterface::_com == NULL)
 		return TPInterface::ErrorSocket;
 	if(TPInterface::_com->IsConnected() == false)
@@ -23,6 +24,8 @@ int TPiD::Set(IDSerializer* serializer, int bidx, int* abidx) {
 	
 	if(abidx != NULL)
 		*abidx = TCBlock::BlockIdxUnset;
+	
+	//TPInterface::_com->Recv(&this->_cache);
 	
 	serializer->message->SetBlockIdx(bidx);
 	serializer->message->absolute.Tic();
