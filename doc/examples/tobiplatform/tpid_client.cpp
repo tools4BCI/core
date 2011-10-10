@@ -24,7 +24,7 @@
 #include <tobiid/IDSerializerRapid.hpp>
 #include <tobicore/TCTime.hpp>
 
-#define ENDLESS true
+//#define ENDLESS 
 
 int main(void) {
 	IDMessage message(IDMessage::FamilyBiosig, 1000);
@@ -33,7 +33,9 @@ int main(void) {
 
 	TPiD client;
 
+#ifdef ENDLESS
 	while(true) {
+#endif
 		std::cout << "Initializing iD client and trying to plug-in" << std::endl;
 		
 		if(client.Plug("127.0.0.1", "8126", TPiD::AsClient) != TPiD::Successful) {
@@ -52,11 +54,18 @@ int main(void) {
 			if(client.Set(&serializer, frame, &aframe) != TPiD::Successful)
 				break;
 			std::cout << "iD message sent: " << frame << "/" << aframe << std::endl;
+
+			while(client.Get(&serializer) != TPInterface::Unsuccessful) {
+				std::cout << "iD message received: " << std::endl;
+				message.Dump();
+			}
 			sleep(1);
 		}
 		std::cout << "iD server is down" << std::endl;
 		client.Unplug();
+#ifdef ENDLESS
 	}
+#endif
 	
 	return 0;
 }

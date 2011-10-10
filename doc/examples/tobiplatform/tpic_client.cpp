@@ -24,7 +24,7 @@
 #include <tobiic/ICSerializerRapid.hpp>
 #include <tobicore/TCTime.hpp>
 
-#define ENDLESS true
+#define ENDLESS
 
 int main(void) {
 	ICClass class1("0x301", 0.60f);
@@ -43,7 +43,9 @@ int main(void) {
 		
 
 	TPiC client;
+#ifdef ENDLESS
 	while(true) {
+#endif
 		std::cout << "Initializing iC client and trying to plug-in" << std::endl;
 		
 		if(client.Plug("127.0.0.1", "8000", TPiC::AsClient) != TPiC::Successful) {
@@ -67,7 +69,9 @@ int main(void) {
 		}
 		std::cout << "iC server is down" << std::endl;
 		client.Unplug();
+#ifdef ENDLESS
 	}
+#endif
 
 	return 0;
 }

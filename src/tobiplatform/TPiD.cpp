@@ -40,16 +40,19 @@ int TPiD::Set(IDSerializer* serializer, int bidx, int* abidx) {
 	while(true) {
 		TPInterface::_cache.clear();
 		if(TPInterface::_com->Recv(&this->_cache) <= 0) {
-			if(count++ == 100)
+			if(count++ == 100) 
 				return TPInterface::ErrorTimeout;
 			TCSleep(1.000f);
 			continue;
 		}
 
-		this->_sendrecv.Append(TPInterface::_cache);
+
+		this->_stream.Append(TPInterface::_cache);
 		TPInterface::_cache.clear();
-		if(this->_sendrecv.Extract(&this->_cache, "<tcstatus", "/>") == true)
+		if(this->_stream.Extract(&this->_cache, "<tcstatus", "/>") == true) {
 			break;
+		} else {
+		}
 	}
 	
 	int comp, status, fidx;
@@ -67,7 +70,17 @@ int TPiD::Get(IDSerializer* serializer) {
 		return TPInterface::ErrorSocket;
 	if(TPInterface::_com->IsConnected() == false)
 		return TPInterface::ErrorSocket;
+		
+	TPInterface::_cache.clear();
+	if(TPInterface::_com->Recv(&this->_cache) > 0)
+		this->_stream.Append(TPInterface::_cache);
 	
+	if(this->_stream.Extract(&this->_cache, "<tobiid", "/>") == false) 
+		return TPInterface::Unsuccessful;
+
+	serializer->Deserialize(&this->_cache);
+
+	return TPInterface::Successful;
 }
 
 #endif
