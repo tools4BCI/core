@@ -20,7 +20,6 @@ int TPiD::ConfAsServer(const std::string &ip, const std::string& port) {
 	return TPInterface::ErrorNotSupported;
 }
 
-#include <iostream>
 int TPiD::Set(IDSerializer* serializer, int bidx, int* abidx) {
 	if(TPInterface::_com == NULL)
 		return TPInterface::ErrorSocket;
