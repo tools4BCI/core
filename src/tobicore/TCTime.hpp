@@ -42,4 +42,7 @@ int gettimeofday (struct timeval *tv, struct timezone *tz);
 void timerclear(struct timeval *tvp);
 bool timerisset(struct timeval *tvp);
 #endif //_WIN32
+
+void TCSleep(double ms);
+
 #endif //TCTIME_HPP

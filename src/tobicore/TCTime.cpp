@@ -63,3 +63,13 @@ int timerisset(struct timeval *tvp) {
 		return 0;
 }
 #endif
+
+
+void TCSleep(double ms) {
+	timeval tm;
+	tm.tv_sec = 0;
+	tm.tv_usec = (long)1000*ms;
+
+	select(0, 0, 0, 0, &tm);
+}
+

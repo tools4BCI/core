@@ -36,12 +36,17 @@ int TPiD::Set(IDSerializer* serializer, int bidx, int* abidx) {
 	if(TPInterface::_com->Send(TPInterface::_cache) <= 0)
 		return TPInterface::ErrorSocket;
 
-
+	int count = 0;
 	while(true) {
 		TPInterface::_cache.clear();
-		TPInterface::_com->Recv(&this->_cache);
+		if(TPInterface::_com->Recv(&this->_cache) <= 0) {
+			if(count++ == 100)
+				return TPInterface::ErrorTimeout;
+			TCSleep(1.000f);
+			continue;
+		}
+
 		this->_sendrecv.Append(TPInterface::_cache);
-		
 		TPInterface::_cache.clear();
 		if(this->_sendrecv.Extract(&this->_cache, "<tcstatus", "/>") == true)
 			break;
