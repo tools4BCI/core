@@ -26,7 +26,29 @@
 #include <tobicore/TCBlock.hpp>
 #include <stdint.h>
 
-//class DLLEXPORT ICMessage {
+/*! \brief TOBI iC message
+ *
+ * An ICMessage is a set of ICClassifier objects stored in an ICSetClassifier
+ * map. 
+ * Whithin the ICSetClassifier map, each ICClassifier is identified with its
+ * name (i.e. "mi_classifier", "errp_classifier"). 
+ * ICClassifier objects are added/removed directly via ICSetClassifier.
+ *
+ * Each ICClassifier is a set of ICClass objects, stored in an ICSetClass
+ * map.
+ * Whithin the ICSetClass map, each ICClass is identified with its
+ * label (i.e. 0x756, 0x562). 
+ *
+ * Certain methods allows you to retrieve a pointer to a classifier or the value
+ * of a class belonging to a classifier.
+ *
+ * An ICMessage can be serialized/deserialized for IPC. As today the only
+ * possible serialization is in XML format via the ICSerializerRapid class.
+ * Still, users might derive their own serializers from the ICSerializer
+ * interface.
+ *
+ * \sa classifiers, GetClassifier, GetClass, GetValue, SetValue 
+ */
 class ICMessage : public TCBlock {
 	public:
 		/*! \brief Constructor
@@ -44,43 +66,44 @@ class ICMessage : public TCBlock {
 		 * 
 		 * Raises an exception if the classifier was not found
 		 *
-		 * \arg name ICClassifier name
+		 * \arg name ICClassifier name (i.e. "mi_classifier")
 		 */
 		virtual ICClassifier* GetClassifier(const std::string& name) const;
 		/*! \brief Returns a class
 		 * 
 		 * Raises an exception if the classifier or the class were not found
 		 *
-		 * \arg name ICClassifier name
-		 * \arg label ICLabel class label
+		 * \arg name ICClassifier name (i.e. "mi_classifier")
+		 * \arg label ICLabel class label (i.e. 0x756)
 		 */
 		virtual ICClass* GetClass(const std::string& name, const ICLabel label) const;
 		/*! \brief Returns class value
 		 * 
 		 * Raises an exception if the classifier or the class were not found
 		 *
-		 * \arg name ICClassifier name
-		 * \arg label ICLabel class label
+		 * \arg name ICClassifier name (i.e. "mi_classifier")
+		 * \arg label ICLabel class label (i.e. 0x756)
 		 */
 		virtual ICValue GetValue(const std::string& name, const ICLabel label) const;
 		/*! \brief Sets class value
 		 * 
 		 * Raises an exception if the classifier or the class were not found
 		 *
-		 * \arg name ICClassifier name
-		 * \arg label ICLabel class label
-		 * \arg value ICValue class value
+		 * \arg name ICClassifier name (i.e. "mi_classifier")
+		 * \arg label ICLabel class label (i.e. 0x756)
+		 * \arg value ICValue class value (i.e. 0.750)
 		 */
 		virtual void SetValue(const std::string& name, const ICLabel label, 
 				const ICValue value);
-		/*! \brief Sets class value
-		 *
-		 * Dumps internal data structure
+		/*! \brief Dumps internal structure on STDOUT
 		 */
 		virtual void Dump(void) const;
 	public:
+		/*! \brief ICClassifier map
+		 * 
+		 * Set of ICClassifier objects
+		 */
 		ICSetClassifier classifiers;
-	private:
 };
 
 #endif

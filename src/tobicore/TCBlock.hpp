@@ -24,6 +24,9 @@
 
 typedef struct timeval TCTimeval;
 
+/*! \brief TODO
+ *
+ */
 class TCBlock {
 	public:
 		TCBlock(void);

@@ -26,6 +26,9 @@
 #include <tobicore/TCBlock.hpp>
 #include <vector>
 
+/*! \brief TODO
+ *
+ */
 class IDAsClient : public TCBlock {
 	public:
 		IDAsClient(void);

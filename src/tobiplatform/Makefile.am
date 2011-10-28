@@ -6,6 +6,7 @@ libtobiplatform_includedir = $(includedir)/tobiplatform
 libtobiplatform_include_HEADERS = TPSocket.hpp \
 								  TPMutex.hpp \
 								  TPStreamer.hpp \
+								  TPSocket.hpp \
 								  TPInterface.hpp \
 								  TPiC.hpp \
 								  TPiD.hpp

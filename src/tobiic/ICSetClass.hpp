@@ -25,122 +25,53 @@
 
 /*! \brief A set of ICClass objects
  *
- * Used by ICClassifier to manage multiple ICClass objects
- * \sa ICClassifier, ICClass, ICMapClass
+ * Used by ICClassifier to manage multiple ICClass objects. 
+ * This class is a proxy to an std::map.
+ * The ICClass objects are indexed with their names.
+ *
+ * \sa ICClassifier, ICClass, ICSetClassMap
  */
 class ICSetClass {
 	public:
-		/*! \brief Constructor
-		 */
+		//! \brief Constructor
 		ICSetClass(void);
-		/*! \brief Destructor
-		 */
+		//! \brief Destructor
 		virtual ~ICSetClass(void);
-		/*! \brief Adds an ICClass to ICMapClass
-		 *
-		 * It raises an exception if a class with the same ICLabel is already
-		 * present in ICMapClass or if the argument is NULL.
-		 *
-		 * \arg pclass pointer to ICClass
-		 * \return Pointer to instance
-		 */
+		//! \brief Adds an ICClass
 		virtual ICClass* Add(ICClass* pclass);
-		/*! \brief Removes an ICClass from ICMapClass
-		 *
-		 * It raises an exception if no class with the same ICLabel is present
-		 * in ICMapClass or if the argument is NULL.
-		 *
-		 * \arg lclass class label
-		 * \return Pointer to ICClass 
-		 */
+		//! \brief Removes an ICClassifier
 		virtual ICClass* Remove(ICLabel lclass);
-		/*! \brief Removes an ICClass from ICMapClass
-		 *
-		 * It raises an exception if no class with the same ICLabel is present
-		 * in ICMapClass or if the argument is NULL.
-		 *
-		 * \arg lclass class label
-		 * \return Pointer to ICClass 
-		 */
+		//! \brief Removes an ICClassifier
 		virtual ICClass* Remove(unsigned int lclass);
-		/*! \brief Removes an ICClass from ICMapClass
-		 *
-		 * It raises an exception if no class with the same ICLabel is present
-		 * in ICMapClass or if the argument is NULL.
-		 *
-		 * It raises an exception (TODO) if not found
-		 * \return Pointer to ICClass 
-		 */
+		//! \brief Removes an ICClassifier
 		virtual ICClass* Remove(ICClass* pclass);
-		/*! \brief Returns a pointer to ICClass instance
-		 *
-		 * It raises an exception if no class with the same ICLabel is present.
-		 *
-		 * \return Pointer to ICClass 
-		 */
+		//! \brief Returns an ICClassifier
 		virtual ICClass* Get(ICLabel lclass) const;
-		/*! \brief Returns a pointer to ICClass instance
-		 *
-		 * It raises an exception if no class with the same ICLabel is present.
-		 *
-		 * \return Pointer to ICClass 
-		 */
+		//! \brief Returns an ICClassifier
 		virtual ICClass* Get(unsigned int lclass) const;
-		/*! \brief Returns a pointer to ICClass instance
-		 *
-		 * It raises an exception if no class with the same ICLabel is present.
-		 *
-		 * \return Pointer to ICClass 
-		 */
+		//! \brief Returns an ICClassifier
 		virtual ICClass* Get(ICClass* pclass) const;
-		/*! \brief Checks if ICLabel is present
-		 *
-		 * \return True if present, false otherwise
-		 */
+		//! \brief Checks if an ICClassifier is present
 		virtual bool Has(ICLabel lclass) const;
-		/*! \brief Checks if ICLabel is present
-		 *
-		 * \return True if present, false otherwise
-		 */
+		//! \brief Checks if an ICClassifier is present
 		virtual bool Has(unsigned int lclass) const;
-		/*! \brief Checks if ICClass is present
-		 *
-		 * \return True if present, false otherwise
-		 */
+		//! \brief Checks if an ICClassifier is present
 		virtual bool Has(ICClass* pclass) const;
-		/*! \brief Returns the number of classes
-		 *
-		 * \return The number of classes
-		 */
+		//! \brief Returns the size of the ICClassMap
 		virtual unsigned int Size(void) const;
-		/*! \brief Checks if is empty
-		 *
-		 * \return True if empty, false otherwise
-		 */
+		//! \brief Checks if the ICSetClassMap is empty
 		virtual bool Empty(void) const;
-		/*! \brief Clear all the stored ICClass pointers 
-		 *
-		 * This method simply drops the pointers, without calling delete() on
-		 * the pointed ICClass instances
-		 */
+		//! \brief Clears the ICSetClassMap
 		virtual void Clear(void);
-		/*! \brief Destroy and clear all the stored ICClass
-		 * 
-		 * Before dropping the pointers, calls delete() on the pointed ICClass
-		 * instances
-		 */
+		//! \brief Destroys the ICSetClassMap
 		virtual void Destroy(void);
-		/*! \brief Returns an ICSetClassIter
-		 */
+		//! \brief ICSetClassMap iterator
 		virtual ICSetClassIter Begin(void);
-		/*! \brief Returns an ICSetClassIter
-		 */
+		//! \brief ICSetClassMap iterator
 		virtual ICSetClassIter End(void);
-		/*! \brief Returns an ICSetClassConstIter
-		 */
+		//! \brief ICSetClassMap constant iterator
 		virtual ICSetClassConstIter Begin(void) const;
-		/*! \brief Returns an ICSetClassConstIter
-		 */
+		//! \brief ICSetClassMap constant iterator
 		virtual ICSetClassConstIter End(void) const;
 	protected:
 		ICSetClassMap _map;

@@ -23,6 +23,9 @@
 
 typedef struct timeval TCTimeval;
 
+/*! \brief TODO
+ *
+ */
 class TCTimestamp {
 	public:
 		TCTimestamp(void);

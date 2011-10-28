@@ -22,7 +22,9 @@
 #include "IDTypes.hpp"
 #include <tobicore/TCBlock.hpp>
 
-//class DLLEXPORT IDMessage {
+/*! \brief TODO
+ *
+ */
 class IDMessage : public TCBlock {
 	friend class IDSerializerRapid;
 	public:

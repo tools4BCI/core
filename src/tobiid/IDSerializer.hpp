@@ -21,6 +21,9 @@
 
 #include "IDMessage.hpp"
 
+/*! \brief TODO
+ *
+ */
 class IDSerializer {
 	public:
 		IDSerializer(void);
