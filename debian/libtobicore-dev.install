@@ -2,4 +2,8 @@
 /usr/include/tobiic/*
 /usr/include/tobiid/*
 /usr/include/tobiplatform/*
+/usr/lib/libtobicore.so
+/usr/lib/libtobiic.so
+/usr/lib/libtobiid.so
+/usr/lib/libtobiplatform.so
 /usr/lib/pkgconfig/*
