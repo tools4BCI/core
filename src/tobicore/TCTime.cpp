@@ -16,16 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #include "TCTime.hpp"
 
 #ifdef __MINGW32__
 #include <time.h>
 #include <windows.h>
 #endif
-
-#ifdef __MINGW32__
-#undef _WIN32
-#endif //__MINGW32__
 
 #ifdef _WIN32
 #include <time.h>

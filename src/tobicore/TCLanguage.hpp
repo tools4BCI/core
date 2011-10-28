@@ -22,6 +22,9 @@
 #include "TCBlock.hpp"
 #include <string>
 
+/*! \brief TODO
+ *
+ */
 class TCLanguage {
 	public:
 		std::string Status(const int component, const int status, 

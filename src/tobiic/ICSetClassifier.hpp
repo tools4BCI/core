@@ -23,30 +23,49 @@
 #include "ICClassifier.hpp"
 #include "ICMapClassifier.hpp"
 
+/*! \brief A set of ICClassifier objects
+ *
+ * Used by ICMessage to manage multiple ICClassifier objects. 
+ * This class is a proxy to an std::map.
+ * The ICClassifier objects are indexed with their names.
+ *
+ * \sa ICClassifier, ICSetClassifierMap, ICMessage
+ */
 class ICSetClassifier {
 	public:
+		//! \brief Constructor
 		ICSetClassifier(void);
+		//! \brief Destructor
 		virtual ~ICSetClassifier(void);
-		
+		//! \brief Adds an ICClassifier
 		virtual ICClassifier* Add(ICClassifier* pclr);
-	
+		//! \brief Removes an ICClassifier
 		virtual ICClassifier* Remove(std::string nclr);
+		//! \brief Removes an ICClassifier
 		virtual ICClassifier* Remove(ICClassifier* pclr);
-		
+		//! \brief Returns an ICClassifier
 		virtual ICClassifier* Get(std::string nclr) const;
+		//! \brief Returns an ICClassifier
 		virtual ICClassifier* Get(ICClassifier* pclr) const;
-		
+		//! \brief Checks if an ICClassifier is present
 		virtual bool Has(std::string nclr) const;
+		//! \brief Checks if an ICClassifier is present
 		virtual bool Has(ICClassifier* pclr) const;
+		//! \brief Checks if the ICClassifierMap is empty
 		virtual bool Empty(void) const;
+		//! \brief Returns the size of the ICClassifierMap
 		virtual unsigned int Size(void) const;
-		
+		//! \brief Clears the ICClassifierMap
 		virtual void Clear(void);
+		//! \brief Destroys the ICClassifierMap
 		virtual void Destroy(void);
-		
+		//! \brief ICClassifierMap iterator
 		virtual ICClassifierIter Begin(void);
+		//! \brief ICClassifierMap iterator
 		virtual ICClassifierIter End(void);
+		//! \brief ICClassifierMap constant iterator
 		virtual ICClassifierConstIter Begin(void) const;
+		//! \brief ICClassifierMap constant iterator
 		virtual ICClassifierConstIter End(void) const;
 	
 	public:

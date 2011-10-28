@@ -25,15 +25,14 @@
 #define ICCLASS_CHVALUE_SIZE	64
 #define ICCLASS_CHLABEL_SIZE  	64
 
-/*! \brief Pair of ICLabel and ICValue 
+/*! \brief TOBI iC class
  *
  * This class is used to store a single pair of ICLabel and ICValue.
  * It implements methods that will be used later serializers.
  * Class labels are represented as strings for the time being (not to loose too
- * much time with the different types). Be sure you check the very bottom of the
- * icserializerrapid.cpp example.
+ * much time with the different types). 
  *
- * \sa ICSerializer, ICSerializerRapid
+ * \sa ICClassifier, ICMessage, ICSerializer, ICSerializerRapid
  */
 class ICClass {
 	public:

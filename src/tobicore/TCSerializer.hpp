@@ -21,6 +21,9 @@
 
 #include "TCBlock.hpp"
 
+/*! \brief TODO
+ *
+ */
 class TCSerializer {
 	public:
 		TCSerializer(void);

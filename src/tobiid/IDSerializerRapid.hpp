@@ -22,6 +22,9 @@
 #include "IDMessage.hpp"
 #include "IDSerializer.hpp"
 
+/*! \brief TODO
+ *
+ */
 class IDSerializerRapid : public IDSerializer {
 	public:
 		IDSerializerRapid(IDMessage* const message = NULL, 

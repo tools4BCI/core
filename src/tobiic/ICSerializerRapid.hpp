@@ -22,17 +22,42 @@
 #include "ICMessage.hpp"
 #include "ICSerializer.hpp"
 
+/*! \brief TOBI iC XML serializer 
+ *
+ * Serializes an ICMessage to XML using RapidXML.
+ *
+ * \sa ICSerializer
+ */
 class ICSerializerRapid : public ICSerializer {
 	public:
+		/*! \brief Constructor
+		 * \arg message Pointer to an ICMessage instance
+		 * \arg indent If true, the XML output will be indented
+		 * \arg declaration If true, the XML output will contain an XML
+		 * declaration
+		 */
 		ICSerializerRapid(ICMessage* const message = NULL, 
 				const bool indent = false, const bool declaration = false);
 		virtual ~ICSerializerRapid(void);
-		
+		/*! \brief Serializes to std::string
+		 *
+		 * \arg buffer Pointer to the std::string that will contain the result
+		 * of the serialization
+		 * \return Pointer to the buffer instance
+		 */
 		virtual std::string* Serialize(std::string* buffer);
+		/*! \brief Deserializes from std::string
+		 *
+		 * \arg buffer Pointer to the std::string that contains the result
+		 * of a serialization and that will be used for the deserialization
+		 * \return A pointer to the buffer instance
+		 */
 		virtual std::string* Deserialize(std::string* const buffer);
 
 	protected:
+		//! \brief Indentation flag
 		bool _indent;
+		//! \brief Declaration flag
 		bool _declaration;
 };
 
