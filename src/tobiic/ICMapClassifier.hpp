@@ -23,8 +23,8 @@
 #include <string>
 #include "ICClassifier.hpp"
 
-typedef std::map<std::string, ICClassifier*> ICClassifierMap;
-typedef ICClassifierMap::iterator ICClassifierIter;
-typedef ICClassifierMap::const_iterator	ICClassifierConstIter;
+typedef std::map<std::string, ICClassifier*> ICMapClassifier;
+typedef ICMapClassifier::iterator ICClassifierIter;
+typedef ICMapClassifier::const_iterator	ICClassifierConstIter;
 
 #endif

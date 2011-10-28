@@ -51,25 +51,25 @@ class ICSetClassifier {
 		virtual bool Has(std::string nclr) const;
 		//! \brief Checks if an ICClassifier is present
 		virtual bool Has(ICClassifier* pclr) const;
-		//! \brief Checks if the ICClassifierMap is empty
+		//! \brief Checks if the ICMapClassifier is empty
 		virtual bool Empty(void) const;
-		//! \brief Returns the size of the ICClassifierMap
+		//! \brief Returns the size of the ICMapClassifier
 		virtual unsigned int Size(void) const;
-		//! \brief Clears the ICClassifierMap
+		//! \brief Clears the ICMapClassifier
 		virtual void Clear(void);
-		//! \brief Destroys the ICClassifierMap
+		//! \brief Destroys the ICMapClassifier
 		virtual void Destroy(void);
-		//! \brief ICClassifierMap iterator
+		//! \brief ICMapClassifier iterator
 		virtual ICClassifierIter Begin(void);
-		//! \brief ICClassifierMap iterator
+		//! \brief ICMapClassifier iterator
 		virtual ICClassifierIter End(void);
-		//! \brief ICClassifierMap constant iterator
+		//! \brief ICMapClassifier constant iterator
 		virtual ICClassifierConstIter Begin(void) const;
-		//! \brief ICClassifierMap constant iterator
+		//! \brief ICMapClassifier constant iterator
 		virtual ICClassifierConstIter End(void) const;
 	
 	public:
-		ICClassifierMap _map;
+		ICMapClassifier _map;
 };
 
 #endif
