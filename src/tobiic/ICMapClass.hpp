@@ -23,8 +23,8 @@
 #include <string>
 #include "ICClass.hpp"
 
-typedef std::map<ICLabel, ICClass*> ICSetClassMap;
-typedef ICSetClassMap::iterator ICSetClassIter;
-typedef ICSetClassMap::const_iterator ICSetClassConstIter;
+typedef std::map<ICLabel, ICClass*> ICMapClass;
+typedef ICMapClass::iterator ICSetClassIter;
+typedef ICMapClass::const_iterator ICSetClassConstIter;
 
 #endif

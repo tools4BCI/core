@@ -29,7 +29,7 @@
  * This class is a proxy to an std::map.
  * The ICClass objects are indexed with their names.
  *
- * \sa ICClassifier, ICClass, ICSetClassMap
+ * \sa ICClassifier, ICClass, ICMapClass
  */
 class ICSetClass {
 	public:
@@ -59,22 +59,22 @@ class ICSetClass {
 		virtual bool Has(ICClass* pclass) const;
 		//! \brief Returns the size of the ICClassMap
 		virtual unsigned int Size(void) const;
-		//! \brief Checks if the ICSetClassMap is empty
+		//! \brief Checks if the ICMapClass is empty
 		virtual bool Empty(void) const;
-		//! \brief Clears the ICSetClassMap
+		//! \brief Clears the ICMapClass
 		virtual void Clear(void);
-		//! \brief Destroys the ICSetClassMap
+		//! \brief Destroys the ICMapClass
 		virtual void Destroy(void);
-		//! \brief ICSetClassMap iterator
+		//! \brief ICMapClass iterator
 		virtual ICSetClassIter Begin(void);
-		//! \brief ICSetClassMap iterator
+		//! \brief ICMapClass iterator
 		virtual ICSetClassIter End(void);
-		//! \brief ICSetClassMap constant iterator
+		//! \brief ICMapClass constant iterator
 		virtual ICSetClassConstIter Begin(void) const;
-		//! \brief ICSetClassMap constant iterator
+		//! \brief ICMapClass constant iterator
 		virtual ICSetClassConstIter End(void) const;
 	protected:
-		ICSetClassMap _map;
+		ICMapClass _map;
 };
 
 #endif
