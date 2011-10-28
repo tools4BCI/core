@@ -21,7 +21,7 @@
 
 #include <string>
 #include "ICClass.hpp"
-#include "ICSetClassMap.hpp"
+#include "ICMapClass.hpp"
 
 /*! \brief A set of ICClass objects
  *
