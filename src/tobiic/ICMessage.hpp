@@ -28,6 +28,8 @@
 
 /*! \brief TOBI iC message
  *
+ * \ingroup tobiic
+ *
  * An ICMessage is a set of ICClassifier objects stored in an ICSetClassifier
  * map. 
  * Whithin the ICSetClassifier map, each ICClassifier is identified with its

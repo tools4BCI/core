@@ -32,6 +32,8 @@
 
 /*! \brief TOBI iC classifier
  * 
+ * \ingroup tobiic
+ * 
  * An ICClassifier is a set of ICClass objects, stored in an ICSetClass
  * map.
  * Whithin the ICSetClass map, each ICClass is identified with its

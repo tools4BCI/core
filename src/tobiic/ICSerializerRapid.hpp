@@ -24,6 +24,8 @@
 
 /*! \brief TOBI iC XML serializer 
  *
+ * \ingroup tobiic
+ *
  * Serializes an ICMessage to XML using RapidXML.
  *
  * \sa ICSerializer

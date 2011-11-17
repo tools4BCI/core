@@ -23,6 +23,8 @@
 
 /*! \brief TOBI iC serializer interface
  *
+ * \ingroup tobiic
+ *
  * An ICMessage object embeds a complex and recursive data structure. In order
  * to transmit an ICMessage from one process to another, it is then necessary to
  * serialize its data structure to a format that might be transferred, for

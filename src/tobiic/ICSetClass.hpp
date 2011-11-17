@@ -25,6 +25,8 @@
 
 /*! \brief A set of ICClass objects
  *
+ * \ingroup tobiic
+ *
  * Used by ICClassifier to manage multiple ICClass objects. 
  * This class is a proxy to an std::map.
  * The ICClass objects are indexed with their names.

@@ -27,11 +27,11 @@
 
 /*! \brief TOBI iC class
  *
+ * \ingroup tobiic
+ *
  * This class is used to store a single pair of ICLabel and ICValue.
- * It implements methods that will be used later serializers.
  * Class labels are represented as strings for the time being (not to loose too
  * much time with the different types). 
- *
  * \sa ICClassifier, ICMessage, ICSerializer, ICSerializerRapid
  */
 class ICClass {
@@ -45,6 +45,7 @@ class ICClass {
 		 * \sa			ICLabel, ICValue
 		 */
 		ICClass(ICLabel label, ICValue value = 0.00f); 
+	
 		/*! \brief Constructor
 		 * Raises exceptions.
 		 *
@@ -53,45 +54,53 @@ class ICClass {
 		 * \sa			ICLabel, ICValue
 		 */
 		ICClass(unsigned int label, ICValue value = 0.00f); 
+		
 		//! \brief Destructor
 		virtual ~ICClass();
 
 	public:
-		/*! \brief Returns value type
+		/*! \brief Value type getter
 		 * \return Value type
 		 */
 		virtual ICValue GetValue(void) const;
-		/*! \brief Returns label type
+		
+		/*! \brief Label type getter
 		 * \return Label type
 		 */
 		virtual ICLabel GetLabel(void) const;
-		/*! \brief Returns label type
+		
+		/*! \brief Label type getter
 		 * \return Label type as integer or (int)0 on failure
 		 */
 		virtual unsigned int GetLabelUInt(void) const;
-		/*! \brief Set the value type
+		
+		/*! \brief Value type setter
 		 * \return A pointer to the ICClass instance
 		 */
 		virtual ICClass* SetValue(ICValue value = 0.00f);
-		/*! \brief Set the label type
+		
+		/*! \brief Label type setter
 		 * Raises exceptions.
 		 *
 		 * \return A pointer to the ICClass instance
 		 */
 		virtual ICClass* SetLabel(ICLabel label);
-		/*! \brief Set the label type
+		
+		/*! \brief Label type setter
 		 * Raises exceptions.
 		 *
 		 * \return A pointer to the ICClass instance
 		 */
 		virtual ICClass* SetLabel(unsigned int label);
-		/*! \brief Get ICValue as char array
+
+		/*! \brief Value type getter (as char array)
 		 * Raises exceptions.
 		 *
 		 * \return A pointer to the ICClass instance
 		 */
 		virtual const char* GetChValue(void);
-		/*! \brief Get ICLabel as char array
+
+		/*! \brief Label type getter (as char array)
 		 * \return A pointer to the ICClass instance
 		 */
 		virtual const char* GetChLabel(void);
