@@ -50,55 +50,74 @@ class ICClassifier {
 		/*! \brief Constructor
 		 */
 		ICClassifier(const std::string& name, const std::string& desc);
+
 		/*! \brief Constructor
 		 */
 		ICClassifier(const std::string& name, const std::string& desc, 
 				ICVtype vtype, ICLtype ltype);
+
 		virtual ~ICClassifier();
-		/*! \brief Returns the classifier name
+
+		/*! \brief Classifier name getter
+		 * \return Classifier name
 		 */
 		virtual std::string GetName(void) const;
-		/*! \brief Returns the classifier description
+
+		/*! \brief Classifier description getter
+		 * \return Classifier description
 		 */
 		virtual std::string GetDescription(void) const;
-		/*! \brief Returns the classifier name
+
+		/*! \brief Classifier name getter (as char array)
+		 * \return Reference to classifier name
 		 */
 		virtual const char* GetChName(void);
-		/*! \brief Returns the classifier description
+
+		/*! \brief Classifier description getter (as char array)
+		 * \return Reference to lassifier description
 		 */
 		virtual const char* GetChDescription(void);
-		/*! \brief Sets the class value type
+
+		/*! \brief Value type setter
+		 *
+		 * \arg vtype Value type
+		 * \returns True if successful, false otherwise
 		 */
 		virtual bool SetValueType(ICVtype vtype);
-		/*! \brief Sets the class label type
+
+		/*! \brief Label type setter
 		 *
-		 * \arg vtype Label value type
+		 * \arg ltype Label type
 		 * \returns True if successful, false otherwise
 		 */
 		virtual bool SetLabelType(ICLtype ltype);
-		/*! \brief Sets the class value type
+
+		/*! \brief Value type setter
 		 *
-		 * \arg vtype Class value type
+		 * \arg vtype Value type
 		 * \returns True if successful, false otherwise
 		 */
 		virtual bool SetValueType(std::string vtype);
-		/*! \brief Sets the class label type
+
+		/*! \brief Label type setter
 		 *
-		 * \arg vtype Class label type
+		 * \arg ltype Label type
 		 * \returns True if successful, false otherwise
 		 */
 		virtual bool SetLabelType(std::string ltype);
-		/*! \brief Returns the class value type
+
+		/*! \brief Value type getter
 		 *
-		 * \returns vtype Class label type
+		 * \returns Value type
 		 */
 		virtual ICVtype GetValueType(void) const;
-		/*! \brief Returns the class label type
+
+		/*! \brief Label type getter
 		 *
-		 * \returns Class value type
+		 * \returns Label type
 		 */
 		virtual ICLtype GetLabelType(void) const;
-	public:
+		
 		/*! \brief Converts a value type
 		 *
 		 * \arg vtype Value type as std::string
@@ -111,12 +130,14 @@ class ICClassifier {
 		 * \returns Label type
 		 */
 		static ICLtype LabelType(const std::string& ltype);
+
 		/*! \brief Converts a value type
 		 *
 		 * \arg vtype Value type as char array
 		 * \returns Value type
 		 */
 		static ICVtype ValueChType(const char* vtype);
+
 		/*! \brief Converts a label type
 		 * \arg ltype Label type as char array
 		 * \returns Label type
@@ -166,7 +187,7 @@ class ICClassifier {
 	public:
 		/*! \brief ICClass map
 		 * 
-		 * Set of ICClass objects
+		 * Set of ICClass objects.
 		 */
 		ICSetClass classes;
 	protected:
