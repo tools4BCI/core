@@ -39,16 +39,20 @@ class ICSerializer {
 		/*! \brief Constructor
 		 */
 		ICSerializer(void);
+
 		/*! \brief Constructor
 		 *
 		 * \arg message Pointer to the ICMessage to serialize/deserialize
 		 */
 		ICSerializer(ICMessage* const message);
+
+		/*! \brief Destructor
+		 */
 		virtual ~ICSerializer(void);
 		
 		/*! \brief Sets the associated ICMessage
 		 *
-		 * \arg message Pointer to the ICMessage to serialize/deserialize
+		 * \arg ICMessage to serialize/deserialize
 		 * \return Pointer to the serializer instance
 		 */
 		ICSerializer* SetMessage(ICMessage* const message);
