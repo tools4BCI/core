@@ -23,8 +23,22 @@
 #include <string>
 #include "ICClass.hpp"
 
+/*! \brief TOBI iC class map
+ *
+ * \ingroup tobiic
+ */
 typedef std::map<ICLabel, ICClass*> ICMapClass;
+
+/*! \brief TOBI iC class map iterator
+ *
+ * \ingroup tobiic
+ */
 typedef ICMapClass::iterator ICSetClassIter;
+
+/*! \brief TOBI iC class map iterator
+ *
+ * \ingroup tobiic
+ */
 typedef ICMapClass::const_iterator ICSetClassConstIter;
 
 #endif

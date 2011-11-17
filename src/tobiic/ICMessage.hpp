@@ -41,8 +41,8 @@
  * Whithin the ICSetClass map, each ICClass is identified with its
  * label (i.e. 0x756, 0x562). 
  *
- * Certain methods allows you to retrieve a pointer to a classifier or the value
- * of a class belonging to a classifier.
+ * Certain methods return a pointer to a classifier or the value of a class
+ * belonging to a classifier.
  *
  * An ICMessage can be serialized/deserialized for IPC. As today the only
  * possible serialization is in XML format via the ICSerializerRapid class.
@@ -56,6 +56,7 @@ class ICMessage : public TCBlock {
 		/*! \brief Constructor
 		 */
 		ICMessage(void);
+
 		/*! \brief Copy constructor
 		 *
 		 * Uses serialization/deserialization to copy data structrues
@@ -63,31 +64,41 @@ class ICMessage : public TCBlock {
 		 * \arg other Pointer to ICMessage to copy
 		 */
 		ICMessage(ICMessage* const other);
+
+		/*! \brief Destructor
+		 */
 		virtual ~ICMessage(void);
-		/*! \brief Returns a classifier
+
+		/*! \brief Classifier getter
 		 * 
 		 * Raises an exception if the classifier was not found
 		 *
 		 * \arg name ICClassifier name (i.e. "mi_classifier")
+		 * \return Reference to ICClassifier
 		 */
 		virtual ICClassifier* GetClassifier(const std::string& name) const;
-		/*! \brief Returns a class
+
+		/*! \brief Class getter
 		 * 
 		 * Raises an exception if the classifier or the class were not found
 		 *
 		 * \arg name ICClassifier name (i.e. "mi_classifier")
 		 * \arg label ICLabel class label (i.e. 0x756)
+		 * \return Reference to ICClass
 		 */
 		virtual ICClass* GetClass(const std::string& name, const ICLabel label) const;
-		/*! \brief Returns class value
+
+		/*! \brief Class value getter
 		 * 
 		 * Raises an exception if the classifier or the class were not found
 		 *
 		 * \arg name ICClassifier name (i.e. "mi_classifier")
 		 * \arg label ICLabel class label (i.e. 0x756)
+		 * \return Value
 		 */
 		virtual ICValue GetValue(const std::string& name, const ICLabel label) const;
-		/*! \brief Sets class value
+
+		/*! \brief Class value setter
 		 * 
 		 * Raises an exception if the classifier or the class were not found
 		 *
@@ -97,7 +108,8 @@ class ICMessage : public TCBlock {
 		 */
 		virtual void SetValue(const std::string& name, const ICLabel label, 
 				const ICValue value);
-		/*! \brief Dumps internal structure on STDOUT
+
+		/*! \brief Prints internal data
 		 */
 		virtual void Dump(void) const;
 	public:

@@ -42,6 +42,8 @@ class IDMessage : public TCBlock {
 		virtual IDFtype GetFamilyType(void) const;
 		virtual void SetEvent(const IDevent event);
 		virtual IDevent GetEvent(void) const;
+		/*! \brief Prints internal data
+		 */
 		virtual void Dump(void) const;
 		static const IDFtype FamilyType(IDFvalue family);
 	private:

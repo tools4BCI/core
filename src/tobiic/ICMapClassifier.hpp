@@ -23,8 +23,22 @@
 #include <string>
 #include "ICClassifier.hpp"
 
+/*! \brief TOBI iC classifier map
+ *
+ * \ingroup tobiic
+ */
 typedef std::map<std::string, ICClassifier*> ICMapClassifier;
+
+/*! \brief TOBI iC classifier map iterator
+ *
+ * \ingroup tobiic
+ */
 typedef ICMapClassifier::iterator ICClassifierIter;
+
+/*! \brief TOBI iC classifier map const iterator
+ *
+ * \ingroup tobiic
+ */
 typedef ICMapClassifier::const_iterator	ICClassifierConstIter;
 
 #endif
