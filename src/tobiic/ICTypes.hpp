@@ -45,130 +45,78 @@
 #define ICMESSAGE_TIMESTAMPNODE		"absolute"
 #define ICMESSAGE_REFERENCENODE		"relative"
 
+/*! \brief TOBI iC value type
+ *
+ * \ingroup tobiic
+ *
+ * ICClass value type.
+ */
+typedef int   		ICVtype;
 
-/*! \mainpage libtobiic
+/*! \brief TOBI iC value data
+ *
+ * \ingroup tobiic
+ *
+ * ICClass value data type.
+ */
+typedef float 		ICValue;
+
+/*! \brief TOBI iC label type
+ *
+ * \ingroup tobiic
+ *
+ * ICClass label type.
+ */
+typedef int   		ICLtype;
+
+/*! \brief TOBI iC label data
+ *
+ * \ingroup tobiic
+ *
+ * ICClass label data.
+ */
+typedef std::string ICLabel;
+
+#endif
+
+/** 
+ * \defgroup tobicore TOBI Core library
+ * \brief Provide some stuff to do stuff
+ *
+ * \defgroup tobiic TOBI iC library
+ * \brief Provide some stuff to do stuff
+ *
+ * \defgroup tobiid TOBI iD library
+ * \brief Provide some stuff to do stuff
+ *
+ * \defgroup tobiplatform TOBI Platform library
+ * \brief Provide some stuff to do stuff
+ *
+ */
+
+/*! \mainpage tobicore
  *
  * \section sec_intro Introduction
- * libtobiic implements the TOBI hBCI Interface C. 
- * The ICLanguage class handles the sICMessage message structure.
- * ICLanguageRapid is responsible for serializing/deserializing messages in XML
- * format.
+ * todo
  *
- * As today, the library is at his very stage of development. 
+ * \section sec_install Install
+ * todo
  *
- * \section sec_xml XML message
- * The XML structure looks like this:
+ * \subsection sec_install_linux_source Tarball/Git
+ * todo
  *
- * <PRE>
- * <?xml version="1.0" encoding="utf-8"?>
- * <<b>tobiic</b> version="0.0.1">
- *   <<b>classifier</b> id="1" description="MI Classifier">
- *     <<b>class</b> id="1" description="Right Hand">
- *             <<b>value</b> type="prob">0.100000</<b>value</b>>
- *             <<b>label</b> type="biosig">0x301</<b>label</b>>
- *     </<b>class</b>>
- *     <<b>class</b> id="2" description="Left Hand">
- *             <<b>value</b> type="prob">0.200000</<b>value</b>>
- *             <<b>label</b> type="biosig">0x302</<b>label</b>>
- *     </<b>class</b>>
- *     <<b>class</b> id="3" description="Feet">
- *             <<b>value</b> type="prob">0.300000</<b>value</b>>
- *             <<b>label</b> type="biosig">0x303</<b>label</b>>
- *     </<b>class</b>>
- *    </<b>classifier</b>>
- *    <<b>classifier</b> id="15" description="Language Classifier">
- *      <<b>class</b> id="12" description="Error">
- *              <<b>value</b> type="rcoe">0.100000</<b>value</b>>
- *              <<b>label</b> type="biosig">0x401</<b>label</b>>
- *      </<b>class</b>>
- *      <<b>class</b> id="1" description="Correct">
- *              <<b>value</b> type="rcoe">0.900000</<b>value</b>>
- *              <<b>label</b> type="biosig">0x402</<b>label</b>>
- *      </<b>class</b>>
- *    </<b>classifier</b>>
- * </<b>tobiic</b>>
- * </PRE>
+ * \subsection sec_install_linux_deb Debian packages
+ * todo
+ * 
+ * \subsection sec_install_windows Microsoft Windows
+ * todo
  *
- * Each message can hold at max ICTYPES_MAX_CLASSIFIERS classifiers and
- * ICTYPES_MAX_CLASSES classes per classifier (look at ICTypes.hpp).
- * Look at ICLanguage and ICLanguageRapid for a more precise description of what
- * is going on.
+ * \section sec_resources Resources
+ * todo
  *
- * \section sec_install Installation
+ * \section sec_author Author
+ * todo
  *
- * \subsection sec_install_step1 Dependencies
- * In order to compile the library, you need: 
- * <a href='http://rapidxml.sourceforge.net/'>RapidXML</a>.
- *
- * \subsection sec_install_step2 Compile the sources
- * Execute, as usual:
- * <PRE>
- * sh autogen.sh
- * mkdir build
- * cd build/ 
- * ../configure --prefix=/home/mtavella/Build 
- * make
- * make install
- * </PRE>
- *
- * \subsection sec_install_examples Examples
- * Please take a look at:
- * <PRE>
- * examples/exampleicrapid.cpp
- * </PRE>
- *
- * \subsection sec_install_doxy Compile the Doxygen documentation 
- * <PRE>
- * make doxygen-doc
- * </PRE>
- *
- * \subsection sec_install_windows Visual Studio 2008 
- * If you are willing to compile libtobiic with Visual Studio 2008, you might
- * want to check the bindings/windll/ folder.
- * Be aware that you need to set where the RapidXML includes are in the project
- * properties.
- *
- * \subsection sec_notes Notes, to-do list etc.
- * Feel free to add/remove.
- *  - Errors
- *  	-# Handle errors properly, both in libtobiic and mextobiic
- *	- XML
- * 		-# Do we like RapidXML?
- * 		-# Are the performances good enough? 
- * 		-# Personally, I would also be able to send the binary data directly.
- *	- Labels
- *  	-# As today the labels are handled as char arrays. Any suggestion
- *  	here?
- *  	-# Generally speaking, how are labels handled in the hBCI?
- *	- Misc
- *      -# assert() is widely used when something is not done correctly. 
- *      Much work is required on this side, but before making things better,
- *      we need to decide whether we are on the right track.
- *      By the way, should we define return codes or use exceptions?
- *
- * \subsection sec_releases Releases and changelog
- * 	- v0.0.3.0 
- * 		-# Fixed ICClassifier::LabelType when asked for LabelClass
- * 	- v0.0.2.0 First public release
  */
 
 
-//! Typedef
-typedef int   		ICVtype;
-//! Typedef
-typedef float 		ICValue;
-//! Typedef
-typedef int   		ICLtype;
-//! Typedef
-typedef std::string ICLabel;
-
-//! Typedef
-typedef ICVtype		IValueType;
-//! Typedef
-typedef ICValue		IValueData;
-//! Typedef
-typedef ICLtype		ILabelType;
-//! Typedef
-typedef ICLabel		ILabelData;
-
-#endif
