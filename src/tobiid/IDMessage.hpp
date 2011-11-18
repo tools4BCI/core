@@ -24,6 +24,8 @@
 
 /*! \brief TODO
  *
+ * \ingroup tobiid
+ *
  */
 class IDMessage : public TCBlock {
 	friend class IDSerializerRapid;

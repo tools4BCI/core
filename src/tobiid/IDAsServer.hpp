@@ -21,6 +21,8 @@
 
 /*! \brief TODO
  *
+ * \ingroup tobiid
+ *
  */
 class IDAsServer {
 	public:

@@ -22,7 +22,7 @@
 #include "ICMessage.hpp"
 #include "ICSerializer.hpp"
 
-/*! \brief TOBI iC XML serializer 
+/*! \brief TOBI iC concrete XML serializer 
  *
  * \ingroup tobiic
  *
@@ -40,7 +40,11 @@ class ICSerializerRapid : public ICSerializer {
 		 */
 		ICSerializerRapid(ICMessage* const message = NULL, 
 				const bool indent = false, const bool declaration = false);
+
+		/*! \brief Destructor
+	   	 */
 		virtual ~ICSerializerRapid(void);
+
 		/*! \brief Serializes to std::string
 		 *
 		 * \arg buffer Pointer to the std::string that will contain the result
@@ -48,6 +52,7 @@ class ICSerializerRapid : public ICSerializer {
 		 * \return Pointer to the buffer instance
 		 */
 		virtual std::string* Serialize(std::string* buffer);
+
 		/*! \brief Deserializes from std::string
 		 *
 		 * \arg buffer Pointer to the std::string that contains the result

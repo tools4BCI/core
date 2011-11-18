@@ -30,9 +30,9 @@
  * serialize its data structure to a format that might be transferred, for
  * examples, trough a socket.
  *
- * The ICSerializer interface can then be derived to implement different kinds
- * of serialization formats. Ad today only XML is supported in
- * ICSerializerRapid.
+ * The ICSerializer interface can then be derived to implement different flavors
+ * of serialization formats. Ad today only XML is supported by the concrete
+ * ICSerializerRapid class.
  */
 class ICSerializer {
 	public:
@@ -64,6 +64,7 @@ class ICSerializer {
 		 * \return Pointer to the buffer instance
 		 */
 		virtual std::string* Serialize(std::string* buffer) = 0;
+
 		/*! \brief Deserializes from std::string
 		 *
 		 * \arg buffer Pointer to the std::string that contains the result
@@ -76,6 +77,7 @@ class ICSerializer {
 		 * \return std::string that contains the result of the serialization
 		 */
 		virtual std::string SerializeCp(void);
+
 		/*! \brief Deserializes from std::string
 		 *
 		 * \arg buffer std::string that contains the result
@@ -90,6 +92,7 @@ class ICSerializer {
 		 * \arg bsize Size of the char array
 		 */
 		virtual char* SerializeCh(char* buffer, const unsigned int bsize);
+
 		/*! \brief Deserializes from a char array
 		 *
 		 * \arg buffer Pointer to a char array that contains a serialized
