@@ -23,10 +23,32 @@
 #include <tobiic/ICSerializer.hpp>
 
 /*! \brief TOBI iC interface
+ *
+ * \ingroup tobiplatform
+ *
+ * Implements a TOBI iC client or sever object by heavily relying on the
+ * functionalities provided by TPInterface.
  */
 class TPiC : public TPInterface {
 	public:
+		/*! \brief Sends an ICMessage
+		 *
+		 * An ICSerializer is configured passing a reference to an ICMessage. 
+		 * This method simply needs a reference to an existing ICSerializer to
+		 * serialize its content and send it over a TCP connection.
+		 *
+		 * \arg serializer Reference to ICSerializer
+		 */
 		int Set(ICSerializer* serializer);
+		
+		/*! \brief Receives an ICMessage
+		 *
+		 * An ICSerializer is configured passing a reference to an ICMessage. 
+		 * This method simply needs a reference to an existing ICSerializer to
+		 * deserialize a message received via a TCP connection.
+		 *
+		 * \arg serializer Reference to ICSerializer
+		 */
 		int Get(ICSerializer* serializer);
 };
 

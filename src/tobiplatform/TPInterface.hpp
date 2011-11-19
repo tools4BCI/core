@@ -23,38 +23,108 @@
 #include "TPStreamer.hpp"
 #include <string>
 
-/*! \brief TODO
+/*! \brief TOBI platform generic interface
  *
+ * \ingroup tobiplatform
+ *
+ * This class provides all the methods to develop a TCP/IP TOBI platform
+ * component. It uses a TPSocket object to abstract communication as server or
+ * as client.
+ * For this reason, a TPInterface can be "plugged" to another. The TOBI platform
+ * iC and iD pluggable classes (TPiC and TPiD) derive directly from this class.
+ *
+ * \sa TPiC, TPiD
  */
 class TPInterface {
 	public:
+		/*! \brief Constructor
+		 */
 		TPInterface(void);
+		
+		/*! \brief Destructor
+		 */
 		virtual ~TPInterface(void);
+		
+		/*! \brief Plug
+		 * 
+		 * This method allows to bind a TCP socket or to connect to a 
+		 * remote one.
+		 *
+		 * \arg ip IP to bind or remote IP to connect to.
+		 * \arg port Port to bind or remote port to connect to.
+		 * \arg mode Behavior, AsClient or AsServer
+		 * \return Status or error code
+		 */
 		int Plug(const std::string &ip, const std::string& port,
 				int mode = TPInterface::AsServer);
+		
+		/*! \brief Unplug
+		 * 
+		 * Unbinds or disconnect.
+		 */
 		void Unplug(void);
+		
 		bool IsPlugged(void);
 	protected:
 		virtual int ConfAsServer(const std::string &ip, const std::string& port);
+		
 		virtual int ConfAsClient(const std::string &ip, const std::string& port);
 
 	public:
-		const static int AsServer = 0;
-		const static int AsClient = 1;
-		const static int Unsuccessful = -1;
-		const static int Successful = 0;
-		const static int ErrorSocket = 1;
-		const static int ErrorEndpoint = 2;
-		const static int ErrorBound = 3;
-		const static int ErrorGeneric = 4;
-		const static int ErrorNotSupported = 5;
-		const static int ErrorProtocol = 6;
-		const static int ErrorTimeout = 7;
+		/*! \brief Plugging mode
+		 */
+		enum { 
+			//! Configure/plug as TCP server
+			AsServer = 0, 
+			
+			//! Configure/plug as TCP client
+			AsClient 
+		};
+	
+		/*! \brief Status/error codes.
+		 */
+		enum { 
+			//! Generic unsuccessful operation
+			Unsuccessful = 0, 	
+			
+			//! Generic uccessful operation
+			Successful,		
+		
+			//! Cannot bind, listen or connect socket
+			ErrorSocket,
+			
+			//! Cannot communicate with endpoint
+			ErrorEndpoint,
+			
+			//! Socket already bound/connected
+			ErrorBound,
+			
+			//! Generic configuration error
+			ErrorGeneric,
+			
+			//! Operattion/request not supported 
+			ErrorNotSupported,
+			
+			//! Protocol related error
+			ErrorProtocol,
+			
+			//! Timeout error
+			ErrorTimeout 
+		};
 	protected:
+		//! \brief Socket for TCP communication
 		TPSocket* _socket;
+		
+		//! \brief Reference to communication endpoint
 		TPSocket* _endpoint;
+		
+		//! \brief Reference to _socket or _endpoint 
 		TPSocket* _com;
+		
+		//! \brief Data streamer
 		TPStreamer _stream;
+		
+		//! \brief 
 		std::string _cache;
 };
 

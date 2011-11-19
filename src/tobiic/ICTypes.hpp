@@ -81,17 +81,21 @@ typedef std::string ICLabel;
 
 /** 
  * \defgroup tobicore TOBI Core library
- * \brief Provide some stuff to do stuff
+ * \brief The TOBI Core library provides some basic tools used by the remaining
+ * components of tobicore, such as threading stuff, time and the very useful
+ * TCBlock class, from wich ICMessage and IDMessage are derived.
  *
  * \defgroup tobiic TOBI iC library
- * \brief Provide some stuff to do stuff
+ * \brief TOBI iC implements the point-to-point encoding and decoding of
+ * the classifier output data.
  *
  * \defgroup tobiid TOBI iD library
- * \brief Provide some stuff to do stuff
+ * \brief TOBI iD implements the one-to-many encoding and decoding of
+ * software events.
  *
  * \defgroup tobiplatform TOBI Platform library
- * \brief Provide some stuff to do stuff
- *
+ * \brief Provides implementations of the iC client/server and of an iD
+ * client.
  */
 
 /*! \mainpage tobicore
@@ -154,24 +158,24 @@ typedef std::string ICLabel;
  * Example showing the use of TCLanguage.
  */
 
-/*! \example tpid_client.cpp
+/*! \example tpidclient.cpp
  * TOBI plaform iD client program.
  */
 
 /*! \example tpservertcp.cpp
- * TOBI plaform iD server program.
+ * TOBI plaform TCP server example.
  */
 
-/*! \example tpic_client.cpp
+/*! \example tpicclient.cpp
  * TOBI plaform iC client program.
  */
 
-/*! \example tpic_server.cpp
+/*! \example tpicserver.cpp
  * TOBI plaform iC server program.
  */
 
 /*! \example tpclienttcp.cpp
- * TOBI plaform TCP client program.
+ * TOBI plaform TCP client example.
  */
 
 /*! \example tpic.cpp

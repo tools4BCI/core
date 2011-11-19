@@ -87,7 +87,8 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 INPUT                  = @top_srcdir@/src/tobicore \
 						 @top_srcdir@/src/tobiic \
-						 @top_srcdir@/src/tobiid 
+						 @top_srcdir@/src/tobiid \
+						 @top_srcdir@/src/tobiplatform 
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.hpp *.cpp
 RECURSIVE              = NO

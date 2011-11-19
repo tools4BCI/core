@@ -32,14 +32,19 @@
 #endif
 #include <string>
 
-/*! \brief libtransport host 
- * This structure holds whatever identifies an host
+/*! \brief Endpoint structure for TPSocket 
+ *
+ * \ingroup tobiplatform
+ *
+ * This structure holds whatever turns to be useful to identify an host.
  */
 class TPHost {
 	public:
+		//! \brief Constructor
 		TPHost(void);
 
 	public:
+		//! Maximum address size
 		const static size_t AddressSize = INET_ADDRSTRLEN + 1;
 		//! Address (e.g.: 127.0.0.1)
 		char address[TPHost::AddressSize];
@@ -48,47 +53,126 @@ class TPHost {
 };
 
 /*! \brief TCP/UDP socket
+ * 
+ * \ingroup tobiplatform
+ *
+ * Provides basic sync/async connectivity.
  */
 class TPSocket {
 	public:
+		/*! \brief Constructor
+		 * \arg type Socket type, TCP or UDP
+		 * \arg bsize Internal buffer size
+		 */
 		TPSocket(int type = TPSocket::TCP, size_t bsize = 4096);
+	
+		/*! \brief Destructor
+		 */
 		virtual ~TPSocket(void);
+		
+		/*! \brief Initializes whatever needs to be initialized
+		 * \arg asserver Perform initialization for a server socket if true, for
+		 * a client socket otherwise.
+		 */
 		bool Open(bool asserver);
+		
+		/*! \brief Closes the socket
+		 */
 		bool Close(void);
+		
+		/*! \brief Configures the socket for asynchronous operation
+		 * \arg block True for asynchronous operation, false for synchronous
+		 */
 		bool Async(bool block);
+		
+		/*! \brief Bind the socket to a specified IP:port
+		 *
+		 * If TPSocket is configured AsClient this method will always fail.
+		 *
+		 * \arg ip IP address (i.e. "127.0.0.1", "1.2.3.4", "0.0.0.0")
+		 * \arg port Port to bind (i.e. "8080")
+		 * \return True if successful, false otherwise
+		 */
 		bool Bind(const std::string &ip, const std::string& port);
+		
+		/*! \brief Starts listening
+		 * \return True if successful, false otherwise
+		 */
 		bool Listen(void);
+		
+		/*! \brief Accepts an endpoint
+		 * \return The file descriptor of successful, <= 0 otherwise
+		 */
 		int Accept(TPSocket* endpoint);
+		
+		/*! \brief Connects the socket to a specified IP:port
+		 *
+		 * If TPSocket is configured AsServer this method will always fail.
+		 *
+		 * \arg ip IP address (i.e. "127.0.0.1", "1.2.3.4", "0.0.0.0")
+		 * \arg port Port to bind (i.e. "8080")
+		 * \return True if successful, false otherwise
+		 */
 		bool Connect(const std::string& ip, const std::string& port);
+		
+		/*! \brief Sends a string to the remote endpoint
+		 * \arg message Message to send
+		 * \return Sent bytes
+		 */
 		ssize_t Send(const std::string& message);
+		
+		/*! \brief Receives a string from the remote endpoint
+		 * \arg message Buffer for receiving
+		 * \return Received bytes
+		 */
 		ssize_t Recv(std::string* message);
+		
+		/*! \brief Checks if socket is connected
+		 * \return True if connected, false otherwise
+		 */
 		bool IsConnected(void);
+
 #ifdef _WIN32
 		static bool InitializeWSA(void);
 #endif
 
 	protected:
+		//! \brief Allocates internal memory and initializes structures
 		void Init(void);
+		//! \brief Releases internal memory
 		void Free(void);
+
+		//! \brief Updates local TPHost
 		bool GetLocal(void);
+		//! \brief Updates remote TPHost
 		bool GetRemote(void);
+		//! \brief Updates maximum buffer size
 		void GetMaxBSize(void);
 
 	public:
 		//! Host informations associated to the current socket
 		TPHost local;
+
+		//! Host informations associated to the remote endpoint
 		TPHost remote;
-		const static int TCP = 0;
-		const static int UDP = 1;
+
+		enum {
+			//! Configure as TCP
+			TCP = 0,
+			//! Configure as UDP
+			UDP = 1
+		};
 
 	protected:
 		//! File descriptor
 		int _fd;
 		//! Socket address
 		struct sockaddr_in _address;
+		//! Endpoint address
 		struct sockaddr_storage _endpoint;
 		//! Buffer 
 		void* _buffer;
+		//! Buffer size
 		size_t _bsize;
 		//! Maximum number of connections
 		unsigned int _mc;

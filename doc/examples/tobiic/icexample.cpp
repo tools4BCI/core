@@ -82,7 +82,7 @@ int main(void) {
 	ICMessage receiver;
 	std::string buffer2;
 	ICSerializerRapid rapidReceiver(&receiver, true);
-	rapidReceiver.Deserialize(&buffer2);
+	rapidReceiver.Deserialize(&buffer1);
 	receiver.Dump();
 
 	// If buffer1 and buffer2 are the same, it works. 

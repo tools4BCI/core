@@ -24,19 +24,71 @@
 #include <tobicore/TCLanguage.hpp>
 
 /*! \brief TOBI iD interface
+ *
+ * \ingroup tobiplatform
+ *
+ * Implements a TOBI iD client relying on the functionalities provided by
+ * TPInterface.
  */
 class TPiD : public TPInterface {
 	public:
+		//! \brief Constructor
 		TPiD(void);
+		
+		//! \brief Destructor
 		virtual ~TPiD(void);
+	
+		/*! \brief Sends an IDMessage
+		 *
+		 * An IDSerializer is configured passing a reference to an IDMessage. 
+		 * This method simply needs a reference to an existing IDSerializer to
+		 * serialize its content and send it over a TCP connection.
+		 * Each time we send an IDMessage to the acquisition server we need to
+		 * tag the aformentioned message with a frame number. Once the server
+		 * received the IDMessage, it replies to the sender by sending a status
+		 * message containg the frame number at which the message was received.
+		 *
+		 * \arg serializer Reference to ICSerializer
+		 * \arg bidx Frame number
+		 * \arg abidx Frame number at which the message was received
+		 * \return TPInterface::Successful upon success
+		 *
+		 * \sa TCBlock, TCLanguage
+		 */
 		int Set(IDSerializer* serializer, int bidx = TCBlock::BlockIdxUnset, 
 				int* abidx = NULL);
+		
+		/*! \brief Receives an IDMessage
+		 *
+		 * An IDSerializer is configured passing a reference to an IDMessage. 
+		 * This method simply needs a reference to an existing IDSerializer to
+		 * serialize its content and send it over a TCP connection.
+		 *
+		 * \arg serializer Reference to ICSerializer
+		 * \arg bidx Frame number
+		 * \arg abidx Frame number at which the message was received
+		 * \return TPInterface::Successful upon success
+		 *
+		 * \sa TCBlock, TCLanguage
+		 */
 		int Get(IDSerializer* serializer);
 	private:
+		
+		/*! \brief Implements specific configuration
+		 *
+		 * Overrides TPInterface::ConfAsClient
+		 */
 		virtual int ConfAsClient(const std::string &ip, const std::string& port);
+		
+		/*! \brief Implements specific configuration
+		 *
+		 * Overrides TPInterface::ConfAsServer
+		 */
 		virtual int ConfAsServer(const std::string &ip, const std::string& port);
 	private:
+		
 		TCLanguage _lang;
+		
 		TPStreamer _sendrecv;
 };
 

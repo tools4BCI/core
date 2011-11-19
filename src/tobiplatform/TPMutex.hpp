@@ -25,8 +25,10 @@
 
 /*! \brief pthread mutex
  *
- * It simply wraps a pthread mutex.
+ * \ingroup tobiplatform
  *
+ * It simply wraps a pthread mutex. Later on it might be used to support other
+ * platforms.
  */
 class TPMutex {
 	public:
