@@ -23,9 +23,12 @@
 #include <tobicore/TCException.hpp>
 
 int main(void) {
+	// Create 3 ID messages
 	IDMessage message1(IDMessage::FamilyBiosig, 781);
 	IDMessage message2(IDMessage::FamilyBiosig, 760);
 	IDMessage message3(&message2);
+	
+	// Print internal structure
 	message1.Dump();
 	message2.Dump();
 	message3.Dump();

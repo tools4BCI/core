@@ -22,8 +22,12 @@
 using namespace std;
 
 
+/* In this example I play with TCBlock and the timestamps.
+ *
+ * The example is trivial; refer to the API documentation to understand
+ * what we do here.
+ */
 int main(void) {
-
 	TCLanguage language;
 	std::string status = language.Status(TCLanguage::IC, TCLanguage::Ready);
 	cout << status << endl;

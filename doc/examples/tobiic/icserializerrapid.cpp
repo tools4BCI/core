@@ -25,6 +25,7 @@
 #include <tobicore/TCException.hpp>
 
 int main(void) {
+	// Create a MI classifier w/ 3 classes
 	ICClassifier classifierMI("cnbi_mi", "CNBI MI Classifier", 
 			ICClassifier::ValueProb, 
 			ICClassifier::LabelBiosig);
@@ -35,6 +36,7 @@ int main(void) {
 	classifierMI.classes.Add(&class_lh);
 	classifierMI.classes.Add(&class_bf);
 	
+	// Create an ERRP classifier w/ 3 classes
 	ICClassifier classifierERP("fsl_erp", "FSL ERP Classifier", 
 			ICClassifier::ValueDist, 
 			ICClassifier::LabelCustom);
@@ -45,38 +47,43 @@ int main(void) {
 	classifierERP.classes.Add(&class_b);
 	classifierERP.classes.Add(&class_c);
 
+	// Create an IC message and add the two classifiers
 	ICMessage sender;
 	sender.classifiers.Add(&classifierMI);
 	sender.classifiers.Add(&classifierERP);
 	
+	// Set a block number
 	sender.SetBlockIdx(1234567890);
-	ICSerializerRapid rapid(&sender, true);
 
+	// Serialize the message to buffer1
+	ICSerializerRapid rapid(&sender, true);
 	std::string buffer1;
 	rapid.Serialize(&buffer1);
 	
+	// Or to buffer2 with SerializeCp
 	std::string buffer2;
 	buffer2 = rapid.SerializeCp();
 	
+	// Or to buffer3 with SerializeCh
 	char buffer3[4800];
 	rapid.SerializeCh(buffer3, 4800);
 
+	// The three buffers are the same
 	std::cout << "[1]>> " << buffer1 << std::endl;
 	std::cout << "[2]>> " << buffer2 << std::endl;
 	std::cout << "[3]>> " << buffer3 << std::endl;
 
-	/* We need to be careful:
-	 * - if we pass a string ("0x300"), it will be impossible to retrieve it as
-	 * an integer (although I could use sscanf)
+	/* Although supported, it would be better not to use strings for the class
+	 * labels.
 	 */
 	ICClass class_s("0x300", 0.10f);
 	std::cout << "[s,s] This will work >> " << class_s.GetLabel() << std::endl;
 	std::cout << "[s,i] This will fail >> " << class_s.GetLabelUInt() << std::endl;
 	
+	// It is always better to use integers
 	ICClass class_i(0x300, 0.10f);
 	std::cout << "[i,s] This will work >> " << class_i.GetLabel() << std::endl;
 	std::cout << "[i,s] This will work >> " << class_i.GetLabelUInt() << std::endl;
-
 
 	return 0;
 }

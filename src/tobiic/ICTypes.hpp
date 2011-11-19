@@ -119,4 +119,65 @@ typedef std::string ICLabel;
  *
  */
 
+/*! \example icexample.cpp
+ *
+ * \ingroup tobiic
+ * 
+ * Comprehensive TOBI iC example, using all classes.
+ */
 
+/*! \example icclass.cpp
+ * A basic example on how to use ICClass.
+ */
+
+/*! \example icclassifier.cpp
+ * This example shows the relation between ICClassifier and ICClass.
+ */
+
+/*! \example icserializerrapid.cpp
+ * Comprehensive iC example focusing on XML serialization.
+ */
+
+/*! \example idexample.cpp
+ * Simplest TOBI iD example.
+ */
+
+/*! \example idserializerrapid.cpp
+ * Comprehensive iD example focusing on XML serialization.
+ */
+
+/*! \example tcblock.cpp
+ * Important example that focuses on the use of blocks and timestamps.
+ */
+
+/*! \example tclanguage.cpp
+ * Example showing the use of TCLanguage.
+ */
+
+/*! \example tpid_client.cpp
+ * TOBI plaform iD client program.
+ */
+
+/*! \example tpservertcp.cpp
+ * TOBI plaform iD server program.
+ */
+
+/*! \example tpic_client.cpp
+ * TOBI plaform iC client program.
+ */
+
+/*! \example tpic_server.cpp
+ * TOBI plaform iC server program.
+ */
+
+/*! \example tpclienttcp.cpp
+ * TOBI plaform TCP client program.
+ */
+
+/*! \example tpic.cpp
+ * TOBI plaform iC program.
+ */
+
+/*! \example tpid.cpp
+ * TOBI plaform iD program.
+ */

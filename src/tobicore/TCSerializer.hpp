@@ -21,11 +21,13 @@
 
 #include "TCBlock.hpp"
 
-/*! \brief TCBlock serializer interface
+/*! \brief Serializer interface for TCBlock
  *
  * \ingroup tobicore
  *
- * Exactly like ICSerializer.
+ * Exactly like ICSerializer or IDSerializer
+ *
+ * \sa ICSerializer, IDSerializer
  */
 class TCSerializer {
 	public:

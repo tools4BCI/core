@@ -24,6 +24,9 @@
 #include <tobicore/TCException.hpp>
 
 int main(void) {
+	/* I create 10 classes. Please note that each class is uniquely identified
+	 * by its class label
+	 */
 	ICClass class_0("0x300", 0.0f);
 	ICClass class_1("0x301", 1.0f);
 	ICClass class_2("0x302", 2.0f);
@@ -35,9 +38,11 @@ int main(void) {
 	ICClass class_8("0x308", 8.0f);
 	ICClass class_9("0x309", 9.0f);
 	
+	// It's now time to create a dummy classifier...
 	ICClassifier classifier("test", "Test Classifier", 
 			ICClassifier::ValueRCoe, ICClassifier::LabelBiosig);
-	
+
+	// ... and see what happens if I add all the classes to it.
 	try {
 		classifier.classes.Add(&class_0);
 		classifier.classes.Add(&class_1);
@@ -54,6 +59,7 @@ int main(void) {
 		std::cout << e << std::endl;
 	}
 
+	// Removing a class twice will lead to an exception.
 	try {
 		classifier.classes.Remove(class_0.GetLabel());
 		classifier.classes.Remove(class_0.GetLabel());
@@ -61,43 +67,13 @@ int main(void) {
 		std::cout << e << std::endl;
 	}
 		
+	// ... also adding.
 	try {
 		classifier.classes.Add(&class_1);
-	} catch(TCException e) { 
-		std::cout << e << std::endl;
-	}
-	try {
-		classifier.classes.Remove(class_1.GetLabel());
 		classifier.classes.Add(&class_1);
 	} catch(TCException e) { 
 		std::cout << e << std::endl;
 	}
 
-	std::cout << 
-		ICClassifier::ValueProb  << " " << 
-		ICClassifier::ValueType("prob") << std::endl;
-	std::cout << 
-		ICClassifier::ValueDist  << " " << 
-		ICClassifier::ValueType("dist") << std::endl;
-	std::cout << 
-		ICClassifier::ValueRCoe  << " " << 
-		ICClassifier::ValueType("rcoe") << std::endl;
-	std::cout << 
-		ICClassifier::ValueCLbl  << " " << 
-		ICClassifier::ValueType("clbl") << std::endl;
-	std::cout << 
-		ICClassifier::ValueUndef << " " << 
-		ICClassifier::ValueType("undef") << std::endl;
-	
-	std::cout << 
-		ICClassifier::LabelCustom << " " << 
-		ICClassifier::LabelType("custom") << std::endl;
-	std::cout << 
-		ICClassifier::LabelBiosig << " " << 
-		ICClassifier::LabelType("biosig") << std::endl;
-	std::cout << 
-		ICClassifier::LabelUndef << " " << 
-		ICClassifier::LabelType("undef") << std::endl;
-	
 	return 0;
 }

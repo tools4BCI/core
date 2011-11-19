@@ -82,7 +82,7 @@ class TCTimestamp {
 		 * 
 		 * Reads a stringified representation of the timestamp
 		 * \arg timestamp Stringified timestamp representation
-		 * \bool True if stringified representation is valid
+		 * \return True if stringified representation is valid
 		 */
 		virtual bool Set(const std::string& timestamp);
 

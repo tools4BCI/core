@@ -24,6 +24,7 @@
 
 /*! \brief Language model
  *
+ * \ingroup tobicore
  */
 class TCLanguage {
 	public:
@@ -75,13 +76,14 @@ class TCLanguage {
 		std::string GetStatus(int component);
 
 	public:
+		/*
 		//! \brief Supported components
-		enum { Other = 0, IA, IB, IC, ID };
+		enum { IA, IB, IC, ID, Otherwise };
 
 		//! \brief Error codes
 		enum { Ready = 0, Quit, ErrorGeneric, ErrorNotSupported };
+		 */
 
-		/*
 		//! \brief TOBI iA
 		const static int IA = 1;
 		
@@ -105,7 +107,6 @@ class TCLanguage {
 		
 		//! \brief Not-supported error code
 		const static int ErrorNotSupported = -2;
-		 */
 };
 
 #endif

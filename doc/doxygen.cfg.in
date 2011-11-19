@@ -95,7 +95,10 @@ EXCLUDE                =
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = rapidxml*
 EXCLUDE_SYMBOLS        = 
-EXAMPLE_PATH           = @top_srcdir@/doc/examples/
+EXAMPLE_PATH           = @top_srcdir@/doc/examples/tobicore \
+						 @top_srcdir@/doc/examples/tobiic \
+						 @top_srcdir@/doc/examples/tobiid \
+						 @top_srcdir@/doc/examples/tobiplatform
 EXAMPLE_PATTERNS       = 
 EXAMPLE_RECURSIVE      = NO
 IMAGE_PATH             = 

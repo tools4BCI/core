@@ -22,22 +22,36 @@
 #include <tobiid/IDMessage.hpp>
 #include <tobiid/IDSerializerRapid.hpp>
 
-
 int main(void) {
+	// I create and ID message
 	IDMessage message1(IDMessage::FamilyBiosig, 781);
 	message1.SetDescription("module1");
-	message1.Dump();
 	
+	// I create a second message
 	IDMessage message2;
 	
+	// And I print both messages
+	message1.Dump();
+	message2.Dump();
+	
+	// I create two buffers and two serializers
 	std::string buffer1; IDSerializerRapid serializer1(&message1);
 	std::string buffer2; IDSerializerRapid serializer2(&message2);
+	
+	// I reset the frame number of message1
 	message1.SetBlockIdx();
 	for(int i = 0; i < 5; i++) {
+		// I increment (++) the frame number of message1
 		message1.IncBlockIdx();
+
+		// I serialize message1 to buffer1
 		serializer1.Serialize(&buffer1);
 		std::cout << i << ",S) " << buffer1 << std::endl;
+		
+		// I deserialize buffer1 into serializer2
 		serializer2.Deserialize(&buffer1);
+
+		// And once more, I serialize message2 into buffer2
 		serializer2.Serialize(&buffer2);
 		std::cout << i << ",D) " << buffer1 << std::endl;
 	}

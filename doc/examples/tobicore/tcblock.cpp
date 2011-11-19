@@ -22,6 +22,11 @@
 using namespace std;
 
 
+/* In this example I play with TCBlock and the timestamps.
+ *
+ * The example is trivial; refer to the API documentation to understand
+ * what we do here.
+ */
 int main(void) {
 	TCBlock block0, block1;
 	string timestamp, reference;
