@@ -24,13 +24,28 @@
 #include <tobiid/IDSerializerRapid.hpp>
 #include <tobicore/TCTime.hpp>
 
+// Endless operation
 //#define ENDLESS 
 
+
+/* In this example we send and receive iD messages.
+ *
+ * In order to run this example successfully, you need an acquisition server
+ * that implements an TOBI iD compliant server. Surely the CnbiToolkit BCI loop
+ * implements what you need, and most probably also the acquisition libraries
+ * and applications by the TU-Graz BCI team.
+ */
 int main(void) {
+	/* We first need an ID message and an ID concrete serializer
+	 * that can convert from and to XML the contents of the ID message
+	 */
 	IDMessage message(IDMessage::FamilyBiosig, 1000);
 	message.Dump();
 	IDSerializerRapid serializer(&message);
 
+	/* This is our ID client. It will provide all the functionalities we need
+	 * to send an receive ID messages
+	 */
 	TPiD client;
 
 #ifdef ENDLESS
@@ -38,6 +53,7 @@ int main(void) {
 #endif
 		std::cout << "Initializing iD client and trying to plug-in" << std::endl;
 		
+		// Connect (Plug...) the client to localhost:8126
 		if(client.Plug("127.0.0.1", "8126", TPiD::AsClient) != TPiD::Successful) {
 #ifdef ENDLESS
 			std::cout << "Cannot plug iD client: trying in 5 seconds" << std::endl;
@@ -49,18 +65,25 @@ int main(void) {
 #endif
 		}
 
+		/* We need a frame number to tag outgoing messages (frame)
+		 * We will receive the frame number at which the acquisition received
+		 * our message on aframe.
+		 */
 		int frame = TCBlock::BlockIdxUnset, aframe;
 		while(true) {
+			// Try to send a message, break upon failure
 			if(client.Set(&serializer, frame, &aframe) != TPiD::Successful)
 				break;
 			std::cout << "iD message sent: " << frame << "/" << aframe << std::endl;
 
+			// Keep getting messages until they are available
 			while(client.Get(&serializer) != TPInterface::Unsuccessful) {
 				std::cout << "iD message received: " << std::endl;
 				message.Dump();
 			}
 			TCSleep(1000.00f);
 		}
+		// If the iD server is down, disconnect (Unplug...) the client 
 		std::cout << "iD server is down" << std::endl;
 		client.Unplug();
 #ifdef ENDLESS

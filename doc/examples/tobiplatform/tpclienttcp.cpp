@@ -22,14 +22,28 @@
 #include <tobiplatform/TPSocket.hpp>
 #include <tobicore/TCTime.hpp>
 
+/* In this example we connect to a TCP server on localhost:8001 and we 
+ * send/receive some messages.
+ *
+ * You can use this example with tpservertcp.cpp, or you can use your own TCP
+ * server.
+ */
 int main(void) {
-	std::string message;
+	// This is a TCP socket
 	TPSocket socket(TPSocket::TCP);
+	// And this is a string used as buffer/cache
+	std::string message;
+
+	// We open the socket as client...
 	socket.Open(false);
+	// ... we connect to localhost:80001 ...
 	socket.Connect("127.0.0.1", "8001");
+	// ... setting the socket to asynchronous operation...
 	socket.Async(true);
+	// ... and sending a message
 	socket.Send("My dear server, here you go.\n");
 	
+	// Finally, we enter a boring loop
 	ssize_t bytes = 0;
 	while(true) {
 		bytes =  socket.Recv(&message);

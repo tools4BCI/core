@@ -21,34 +21,53 @@
 #include <unistd.h>
 #include <tobiplatform/TPSocket.hpp>
 
+/* In this example we bind a TCP socket and we communicate with a TCP client.
+ *
+ * You can use this example with tpclienttcp.cpp, or you can use your own TCP
+ * client.
+ */
 int main(void) {
-	std::string message;
+	// I create a TCP socket and a TCP endpoint
 	TPSocket socket(TPSocket::TCP), endpoint(TPSocket::TCP);
 	
+	// This string will work as buffer/cache
+	std::string message;
+	
+	// Here I open the socket, as server
 	if(socket.Open(true) == false) {
 		std::cout << "Error: cannot open" << std::endl;
 		return 1;
 	}
-
-	if(socket.Bind("0.0.0.0", "8000") == false) {
+	
+	// Here I bind the socket to all local addresses and TCP port 8001
+	if(socket.Bind("0.0.0.0", "8001") == false) {
 		std::cout << "Error: cannot bind" << std::endl;
 		return 1;
 	}
 
+	// Put the socket in listening mode
 	if(socket.Listen() == false) {
 		std::cout << "Error: cannot listen" << std::endl;
 		return 1;
 	} 
 
+	// Wait for an endpoint to connect
 	if(socket.Accept(&endpoint) == false) {
 		std::cout << "Error: cannot accept" << std::endl;
 		return 1;
 	}
 
+	// If Accept() returns true, an endpoint is connected...
 	std::cout << "Endpoint connected: " << socket.remote.address << std::endl;
+
+	// .. and we can send a message to it...
 	endpoint.Send("My dear client, send me something to die.\n");
+
+	// ... or even receive a message from it.
 	endpoint.Recv(&message);
 	std::cout << "Received: " << message << std::endl;
+
+	// Now we go down closing all sockets and endpoints
 	endpoint.Close();
 	socket.Close();
 	return 0;
