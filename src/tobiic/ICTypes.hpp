@@ -120,7 +120,9 @@ typedef std::string ICLabel;
  * 
  * \subsection sec_intro5 tobicoremat: mextobicore, mextobiic and mextobiid
  * tobicoremat provides MEX interfaces to a large set of the tobicore
- * functionalities.
+ * functionalities. The MEX interfaces are not documented here since a
+ * per-funtion documentation is provided in the .m files and examples are
+ * provided with the interfaces.
  *
  * \section sec_resources Resources
  * - <a href="http://www.tobi-project.org">TOBI project website</a>: general
@@ -135,7 +137,7 @@ typedef std::string ICLabel;
  * - <a href="http://files.mtvl.org/projects/tobicore/doc/libtobiid.pdf">TOBI iD
  * for dummies</a>: as before.
  *
- * \section sec_install Install
+ * \section sec_install Compile and install
  * The tobicore libraries and tools are available on multiple platforms, and the
  * author provides ready-to-use packages. The rule of thumb is:
  * - Ubuntu and Debian Linux 32bit/64bit are always supported via .deb packages
@@ -143,18 +145,57 @@ typedef std::string ICLabel;
  * - No package is provided for other platforms
  * - GNU automake and autoconf make it easy to build the libraries on other
  * platforms
+ * Some videos are available and provide an overall introduction to the
+ * tobicore technicalities.
+ *
+ * \subsection sec_install_requirments Requirements
+ * In order to build tobicore you need:
+ * - automake, autoconf, libtool, gcc
+ * - Mathworks Matlab for the MEX interfaces
+ * - <a href="http://www.cims.nyu.edu/~dbindel/mwrap/">mwap</a>
+ *
+ * To compile for Microsoft Windows, you also need:
+ * - Mingw + Msys
+ * - <a href="http://gnumex.sourceforge.net">Gnumex</a>
  *
  * \subsection sec_install_linux_source Tarball
- * todo
+ * <PRE>
+ * tar xvf tobicore_3.1.0.tar.gz 
+ * cd tobicore-3.1.0/
+ * autoreconf -i
+ * mkdir build
+ * cd build
+ * ../configure
+ * make
+ * make install # to install
+ * make check   # to build the examples
+ * make html    # to build the documentation
+ * </PRE>
  *
  * \subsection sec_install_linux_git Git
- * todo
+ * <PRE>
+ * git clone TODO/tobicore/
+ * cd tobicore
+ * git checkout -t origin/devel
+ * autoreconf -i
+ * mkdir build
+ * cd build
+ * ../configure
+ * make
+ * make install # to install
+ * make check   # to build the examples
+ * make html    # to build the documentation
+ * </PRE>
  *
  * \subsection sec_install_linux_deb Debian packages
- * todo
- * 
+ * Obtain the latest .deb packages and run:
+ * <PRE>
+ * dpkg -i libtobicore*.deb
+ * </PRE>
+ *
  * \subsection sec_install_windows Microsoft Windows
- * todo
+ * Assuming your Windows installation satisfies all the requirements, you can
+ * follow the Tarball or the Git steps above. 
  * 
  * \section sev_version Versioning
  * tobicore versions follow the $CURRENT.$REVISION.$AGE schema and the following
