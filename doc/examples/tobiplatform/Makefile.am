@@ -1,16 +1,16 @@
 AM_CPPFLAGS = -I$(top_srcdir)/src
 
-check_PROGRAMS = tpclienttcp \
-				 tpservertcp \
+check_PROGRAMS = tptcpclient \
+				 tptcpserver \
 				 tpicclient \
 				 tpicserver \
 				 tpidclient 
 
-tpclienttcp_SOURCES = tpclienttcp.cpp
-tpclienttcp_LDADD = $(top_builddir)/src/tobiplatform/libtobiplatform.la 
+tptcpclient_SOURCES = tptcpclient.cpp
+tptcpclient_LDADD = $(top_builddir)/src/tobiplatform/libtobiplatform.la 
 
-tpservertcp_SOURCES = tpservertcp.cpp
-tpservertcp_LDADD = $(top_builddir)/src/tobiplatform/libtobiplatform.la 
+tptcpserver_SOURCES = tptcpserver.cpp
+tptcpserver_LDADD = $(top_builddir)/src/tobiplatform/libtobiplatform.la 
 
 tpicclient_SOURCES = tpicclient.cpp
 tpicclient_LDADD = $(top_builddir)/src/tobiplatform/libtobiplatform.la
