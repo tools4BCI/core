@@ -16,6 +16,9 @@
 
 clear all;
 
+% Make sure you add the correct path
+%addpath('../../../build/mex/mextobiic/');
+
 % Create a structure for the SMR classifier, with
 % - an iC message
 % - an iC serializer 

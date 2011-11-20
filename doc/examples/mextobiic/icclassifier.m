@@ -16,31 +16,35 @@
 
 clear all;
 
+% Make sure you add the correct path
+%addpath('../../../build/mex/mextobiic/');
+
+% Create a new message and a new serializer associated 
+% with the message
 message = icmessage_new();
 serializer = icserializerrapid_new(message);
-icmessage_dumpmessage(message);
 
+% Add a 'cnbi_mi' classifier to the message
 icmessage_addclassifier(message, ...
 	'cnbi_mi', ...
 	'CNBI MI Classifier', ...
 	icmessage_getvaluetype('prob'), ...
 	icmessage_getlabeltype('biosig'));
-icmessage_addclassifier(message, ...
-	'cnbi_mi', ...
-	'CNBI MI Classifier', ...
-	icmessage_getvaluetype('prob'), ...
-	icmessage_getlabeltype('biosig'));
-
-
-icmessage_addclass(message, 'cnbi_mi', '0x300', 0.60);
-icmessage_addclass(message, 'cnbi_mi', '0x300', 0.60);
 icmessage_dumpmessage(message);
 
-value = icmessage_getvalue(message, 'error', '0x300');
-value = icmessage_getvalue(message, 'cnbi_mi', 'error');
+% Add 10 MI classes to the 'cnbi_mi' classifier
+icmessage_addclass(message, 'cnbi_mi', '0x300', 0.10);
+icmessage_addclass(message, 'cnbi_mi', '0x301', 0.10);
+icmessage_addclass(message, 'cnbi_mi', '0x302', 0.10);
+icmessage_addclass(message, 'cnbi_mi', '0x303', 0.10);
+icmessage_addclass(message, 'cnbi_mi', '0x304', 0.10);
+icmessage_addclass(message, 'cnbi_mi', '0x305', 0.10);
+icmessage_addclass(message, 'cnbi_mi', '0x306', 0.10);
+icmessage_addclass(message, 'cnbi_mi', '0x307', 0.10);
+icmessage_addclass(message, 'cnbi_mi', '0x308', 0.10);
+icmessage_addclass(message, 'cnbi_mi', '0x309', 0.10);
+icmessage_dumpmessage(message);
 
-value = icmessage_setvalue(message, 'error', '0x300', 1);
-value = icmessage_setvalue(message, 'cnbi_mi', 'error', 1);
-
+% Do not forget to clean up
 icmessage_delete(message);
 icserializerrapid_delete(serializer);
