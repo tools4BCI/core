@@ -33,7 +33,6 @@ void IDAsClient::Add(const IDMessage message, bool updatefidx) {
 		TCBlock::SetBlockIdx(message.GetBlockIdx());
 }
 
-#include <iostream>
 bool IDAsClient::Get(IDMessage* message,  const IDFtype type,
 		const IDevent event, const int direction) {
 	if(message == NULL)

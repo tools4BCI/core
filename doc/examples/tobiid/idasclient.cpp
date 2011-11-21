@@ -21,11 +21,11 @@
 
 #include <tobiid/IDAsClient.hpp>
 
-class Client : public IDAsClient {
+class MyFusion : public IDAsClient {
 };
 
 int main(void) {
-	IDAsClient fusion;
+	MyFusion fusion;
 	fusion.SetBlockIdx(100);
 
 	IDMessage message1(IDMessage::FamilyBiosig, 781);

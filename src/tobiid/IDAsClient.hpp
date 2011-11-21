@@ -26,7 +26,7 @@
 #include <tobicore/TCBlock.hpp>
 #include <vector>
 
-/*! \brief TODO
+/*! \brief U
  * 
  * \ingroup tobiid
  *
@@ -47,10 +47,12 @@ class IDAsClient : public TCBlock {
 	protected:
 
 	public:
-		static const int BlockThis = 0;
-		static const int BlockPrev = 1;
-		static const int BlockNext = 2;
-		static const int BlockAll = 3;
+		enum { 
+			BlockThis = 0, 
+			BlockPrev,
+			BlockNext,
+			BlockAll 
+		};
 	private:
 		std::vector<IDMessage> _queue;
 	protected:
