@@ -18,12 +18,18 @@
 */
 
 #include "TCTime.hpp"
+#undef _WIN32
+
+#ifdef __MINGW32__
+#undef _WIN32
+#endif //__MINGW32__
 
 #ifdef __MINGW32__
 #include <time.h>
 #include <windows.h>
 #endif
 
+/*
 #ifdef _WIN32
 #include <time.h>
 
@@ -39,9 +45,9 @@ int gettimeofday (struct timeval *tv, struct timezone *tz) {
 		tmpres <<= 32;
 		tmpres |= ft.dwLowDateTime;
  
-		/*converting file time to unix epoch*/
+		// converting file time to unix epoch
 		tmpres -= 11644473600000000ULL; 
-		tmpres /= 10;  /*convert into microseconds*/
+		tmpres /= 10;  // convert into microseconds
 		tv->tv_sec = (long)(tmpres / 1000000UL);
 		tv->tv_usec = (long)(tmpres % 1000000UL);
 	}
@@ -69,6 +75,7 @@ int timerisset(struct timeval *tvp) {
 		return 0;
 }
 #endif
+*/
 
 void TCSleep(double ms) {
 	timeval tm;
