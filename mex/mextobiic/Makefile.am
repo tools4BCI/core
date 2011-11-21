@@ -10,8 +10,6 @@ mexwin = $(top_srcdir)/mex/mex$(interface)/make.m
 verwin = win32-$(CURRENT).$(REVISION).$(AGE)
 tarwin = mex$(interface)-$(verwin).tar.bz2
 docwin = $(top_srcdir)/doc/examples/mex$(interface)
-dirdll = $(interface)-$(verwin)
-tardll = $(interface)-$(verwin).tar.bz2
 endif
 
 EXTRA_DIST = ${mexmw}
@@ -25,10 +23,6 @@ mex: $(interface).cc
 if LINUX
 	mex -largeArrayDims $(mexinc) $(mexcc) $(mexld)
 else
-	pwd
-	mkdir -p $(dirdll)
-	find . -iname *.dll | xargs -i cp {} $(dirdll)/
-	tar -cjf $(tardll) $(dirdll)
 	cp $(mexwin) .
 	matlab -nodesktop -wait -r make
 	rm make.m
