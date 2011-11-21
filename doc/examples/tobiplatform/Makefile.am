@@ -4,8 +4,7 @@ check_PROGRAMS = tptcpclient \
 				 tptcpserver \
 				 tpicclient \
 				 tpicserver \
-				 tpidclient \
-				 tpic
+				 tpidclient
 
 tptcpclient_SOURCES = tptcpclient.cpp
 tptcpclient_LDADD = $(top_builddir)/src/tobiplatform/libtobiplatform.la 
