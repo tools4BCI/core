@@ -45,12 +45,20 @@ class IDAsClient : public TCBlock {
 
 		/*! \brief Add an IDMessage to the internal queue
 		 *  
-		 * \arg message
-	 	 * \arg updatefidx
+		 * \arg message IDMessage to enqueue
+	 	 * \arg updatefidx Tic the frame timestamp if true
 		 */
-		virtual void Add(const IDMessage message, bool updatefidx = false);
+		virtual void Enqueue(const IDMessage message, bool updatefidx = false);
 		
-		virtual bool Get(IDMessage* message = NULL,  
+
+		/*! \brief 
+		 *  
+		 * \arg message Reference to an already allocated IDMessage
+	 	 * \arg type Matching rule based on IDFtype
+	 	 * \arg event Matching rule based on IDevent
+	 	 * \arg direction Matching rule based on direction
+		 */
+		virtual bool Dequeue(IDMessage* message = NULL,  
 				const IDFtype type = IDMessage::FamilyUndef,
 				const IDevent event = IDMessage::EventNull, 
 				const int direction = IDAsClient::BlockAll);

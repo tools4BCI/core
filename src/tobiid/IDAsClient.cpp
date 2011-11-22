@@ -27,13 +27,13 @@ IDAsClient::IDAsClient(void) {
 IDAsClient::~IDAsClient(void) {
 }
 
-void IDAsClient::Add(const IDMessage message, bool updatefidx) {
+void IDAsClient::Enqueue(const IDMessage message, bool updatefidx) {
 	this->_queue.push_back(message);
 	if(updatefidx)
 		TCBlock::SetBlockIdx(message.GetBlockIdx());
 }
 
-bool IDAsClient::Get(IDMessage* message,  const IDFtype type,
+bool IDAsClient::Dequeue(IDMessage* message,  const IDFtype type,
 		const IDevent event, const int direction) {
 	if(message == NULL)
 		throw TCException("iD message needs to be allocated",
