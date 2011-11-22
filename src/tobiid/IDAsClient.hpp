@@ -26,25 +26,40 @@
 #include <tobicore/TCBlock.hpp>
 #include <vector>
 
-/*! \brief U
+/*! \brief Utility class to handle iD messages
  * 
  * \ingroup tobiid
  *
+ * This class can be useful to:
+ * - handle large amounts of received IDMessage objects searching them by
+ * IDFtype, IDevent and direction
+ * - gather a deeper understanding on how IDMessage classes can be handled
  */
 class IDAsClient : public TCBlock {
 	public:
+		//! \brief Constructor
 		IDAsClient(void);
+
+		//! \brief Destructor
 		virtual ~IDAsClient(void);
+
+		/*! \brief Add an IDMessage to the internal queue
+		 *  
+		 * \arg message
+	 	 * \arg updatefidx
+		 */
 		virtual void Add(const IDMessage message, bool updatefidx = false);
+		
 		virtual bool Get(IDMessage* message = NULL,  
 				const IDFtype type = IDMessage::FamilyUndef,
 				const IDevent event = IDMessage::EventNull, 
 				const int direction = IDAsClient::BlockAll);
+		
 		virtual unsigned int Size(void) const;
+		
 		virtual unsigned int Clear(void);
+		
 		virtual void Dump(void) const;
-	private:
-	protected:
 
 	public:
 		enum { 
