@@ -7,8 +7,7 @@ libtobiid_include_HEADERS = IDTypes.hpp \
 							IDMessage.hpp \
 							IDSerializer.hpp \
 							IDSerializerRapid.hpp \
-							IDAsClient.hpp \
-							IDAsServer.hpp
+							IDAsClient.hpp
 
 libtobiid_la_SOURCES = IDTypes.hpp \
 					   IDMessage.cpp \
@@ -18,9 +17,7 @@ libtobiid_la_SOURCES = IDTypes.hpp \
 					   IDSerializerRapid.cpp \
 					   IDSerializerRapid.hpp \
 					   IDAsClient.cpp \
-					   IDAsClient.hpp \
-					   IDAsServer.hpp \
-					   IDAsServer.cpp
+					   IDAsClient.hpp 
 
 libtobiid_la_LDFLAGS = $(AM_CFLAGS) -version-info $(CURRENT):$(REVISION):$(AGE) -no-undefined
 
