@@ -29,7 +29,7 @@ else
 	matlab -nodesktop -wait -r make
 	rm make.m
 	tar -cjf $(top_builddir)/$(tarwin) $(docwin) *.m *.mex*
-	@echo "Creating DLL tarball"
+	@echo "Creating DLL tarball in the dirtiest possible way"
 	mkdir -p $(top_builddir)/$(dirdll)
 	find $(top_builddir)/src/ -iname *.dll | xargs -i cp {} $(top_builddir)/$(dirdll)/
 	tar -cjf $(top_builddir)/$(tardll) $(top_builddir)/$(dirdll)/*.dll
