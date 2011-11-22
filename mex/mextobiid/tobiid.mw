@@ -444,33 +444,33 @@ $ #include <string.h>
 	$ }
 	# int size = size(IDAsClient* c);
 
-@function idasclient_add(c, q)
+@function idasclient_enqueue(c, q)
 % Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
 % Michele Tavella <michele.tavella@epfl.ch>
 %
 % IDASCLIENT_ADD Adds an IDMessage to the queue of an IDAsClient
 %
-% IDASCLIENT_ADD(C, Q) adds IDMessage Q to the queue of IDAsClient C. The
+% IDASCLIENT_ADD(C, Q) enqueues IDMessage Q to the queue of IDAsClient C. The
 % IDMessage Q is copied to the queue and its destruction is handled internally
 % when C is deleted or when IDASCLIENT_GETPREV, IDASCLIENT_GETNEXT or
 % IDASCLIENT_GETTHIS are called.
 %
 % See also IDASCLIENT_NEW, IDMESSAGE_NEW, IDASCLIENT_SIZE, IDASCLIENT_GETPREV,
 % IDASCLIENT_GETNEXT, IDASCLIENT_GETTHIS
-	$ void add(IDAsClient* c, IDMessage* q) {
+	$ void enqueues(IDAsClient* c, IDMessage* q) {
 	$	try {
 	$	  IDMessage cache;
 	$	  cache.Copy(q);
-	$ 	  c->Add(cache);
+	$ 	  c->Enqueue(cache);
 	$	} catch(TCException e) {
 	$		printf("[idasclient_size] Exception in libtobiid: %s, %s\n",
 	$			e.GetCaller().c_str(), e.GetInfo().c_str());
 	$	}
 	$ }
-	# add(IDAsClient* c, IDMessage* q);
+	# enqueues(IDAsClient* c, IDMessage* q);
 
 
-@function [status] = idasclient_getprev(c, q, type, event)
+@function [status] = idasclient_dequeueprev(c, q, type, event)
 % Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
 % Michele Tavella <michele.tavella@epfl.ch>
 %
@@ -493,21 +493,21 @@ $ #include <string.h>
 %
 % Example: 
 %	% Get all previous messages, independently from TYPE and EVENT.
-%	idasclient_getprev(client, message, [], []);
+%	idasclient_dequeueprev(client, message, [], []);
 %
 %	% Get all previous messages of TYPE 'biosig', independently from EVENT.
-%   idasclient_getprev(client, message, idmessage_familytype('biosig'), []);
+%   idasclient_dequeueprev(client, message, idmessage_familytype('biosig'), []);
 %
 %	% Get all previous messages of TYPE 'biosig' and EVENT 781
-%   idasclient_getprev(client, message, idmessage_familytype('biosig'), 781);
+%   idasclient_dequeueprev(client, message, idmessage_familytype('biosig'), 781);
 %
 % See also IDASCLIENT_ADD, IDASCLIENT_GETNEXT, IDASCLIENT_GETTHIS,
 % IDASCLIENT_SETBIDX, IDASCLIENT_INCBIDX
 	$ bool getprev(IDAsClient* c, IDMessage* q, IDFtype type, IDevent event) {
 	$	try {
-	$ 		return(c->Get(q, type, event, IDAsClient::BlockPrev));
+	$ 		return(c->Dequeue(q, type, event, IDAsClient::BlockPrev));
 	$	} catch(TCException e) {
-	$		printf("[idasclient_getprev] Exception in libtobiid: %s, %s\n",
+	$		printf("[idasclient_dequeueprev] Exception in libtobiid: %s, %s\n",
 	$			e.GetCaller().c_str(), e.GetInfo().c_str());
 	$		return false;
 	$	}
@@ -520,7 +520,7 @@ $ #include <string.h>
 	end
 	# bool status = getprev(IDAsClient* c, IDMessage* q, int type, int event);
 
-@function [status] = idasclient_getnext(c, q, type, event)
+@function [status] = idasclient_dequeuenext(c, q, type, event)
 % Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
 % Michele Tavella <michele.tavella@epfl.ch>
 %
@@ -543,21 +543,21 @@ $ #include <string.h>
 %
 % Example: 
 %	% Get all next messages, independently from TYPE and EVENT.
-%	idasclient_getnext(client, message, [], []);
+%	idasclient_dequeuenext(client, message, [], []);
 %
 %	% Get all next messages of TYPE 'biosig', independently from EVENT.
-%   idasclient_getnext(client, message, idmessage_familytype('biosig'), []);
+%   idasclient_dequeuenext(client, message, idmessage_familytype('biosig'), []);
 %
 %	% Get all next messages of TYPE 'biosig' and EVENT 781
-%   idasclient_getnext(client, message, idmessage_familytype('biosig'), 781);
+%   idasclient_dequeuenext(client, message, idmessage_familytype('biosig'), 781);
 %
 % See also IDASCLIENT_ADD, IDASCLIENT_GETNEXT, IDASCLIENT_GETTHIS
 % IDASCLIENT_SETBIDX, IDASCLIENT_INCBIDX
 	$ bool getnext(IDAsClient* c, IDMessage* q, IDFtype type, IDevent event) {
 	$	try {
-	$ 		return(c->Get(q, type, event, IDAsClient::BlockNext));
+	$ 		return(c->Dequeue(q, type, event, IDAsClient::BlockNext));
 	$	} catch(TCException e) {
-	$		printf("[idasclient_getnext] Exception in libtobiid: %s, %s\n",
+	$		printf("[idasclient_dequeuenext] Exception in libtobiid: %s, %s\n",
 	$			e.GetCaller().c_str(), e.GetInfo().c_str());
 	$		return false;
 	$	}
@@ -570,7 +570,7 @@ $ #include <string.h>
 	end
 	# bool status = getnext(IDAsClient* c, IDMessage* q, int type, int event);
 
-@function [status] = idasclient_getthis(c, q, type, event)
+@function [status] = idasclient_dequeuethis(c, q, type, event)
 % Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
 % Michele Tavella <michele.tavella@epfl.ch>
 %
@@ -593,21 +593,21 @@ $ #include <string.h>
 %
 % Example: 
 %	% Get all next messages, independently from TYPE and EVENT.
-%	idasclient_getthis(client, message, [], []);
+%	idasclient_dequeuethis(client, message, [], []);
 %
 %	% Get all next messages of TYPE 'biosig', independently from EVENT.
-%   idasclient_getthis(client, message, idmessage_familytype('biosig'), []);
+%   idasclient_dequeuethis(client, message, idmessage_familytype('biosig'), []);
 %
 %	% Get all next messages of TYPE 'biosig' and EVENT 781
-%   idasclient_getthis(client, message, idmessage_familytype('biosig'), 781);
+%   idasclient_dequeuethis(client, message, idmessage_familytype('biosig'), 781);
 %
 % See also IDASCLIENT_ADD, IDASCLIENT_GETTHIS, IDASCLIENT_GETTHIS
 % IDASCLIENT_SETBIDX, IDASCLIENT_INCBIDX
 	$ bool getthis(IDAsClient* c, IDMessage* q, IDFtype type, IDevent event) {
 	$	try {
-	$ 		return(c->Get(q, type, event, IDAsClient::BlockThis));
+	$ 		return(c->Dequeue(q, type, event, IDAsClient::BlockThis));
 	$	} catch(TCException e) {
-	$		printf("[idasclient_getthis] Exception in libtobiid: %s, %s\n",
+	$		printf("[idasclient_dequeuethis] Exception in libtobiid: %s, %s\n",
 	$			e.GetCaller().c_str(), e.GetInfo().c_str());
 	$		return false;
 	$	}
@@ -620,7 +620,7 @@ $ #include <string.h>
 	end
 	# bool status = getthis(IDAsClient* c, IDMessage* q, int type, int event);
 
-@function [bidx] = idasclient_getbidx(q)
+@function [bidx] = idasclient_dequeuebidx(q)
 % Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
 % Michele Tavella <michele.tavella@epfl.ch>
 %
