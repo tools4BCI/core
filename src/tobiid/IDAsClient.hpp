@@ -82,8 +82,8 @@ class IDAsClient : public TCBlock {
 		/*! \brief Dequeue search direction (in time)
 		 *
 		 * Indentifies the messages generated and sent by BCI modules located
-		 * before, after or at the same position of the current module.
-		 * Please refer to this document: 
+		 * before, after or at the same position of the current module. 
+		 * For further details: 
 		 * <a href="http://files.mtvl.org/projects/tobicore/doc/libtobiid.pdf">TOBI iD for dummies</a>.
 		 */
 		enum { 
@@ -103,8 +103,8 @@ class IDAsClient : public TCBlock {
 			BlockAll 
 		};
 	private:
+		//! \brief IDMessage queue
 		std::vector<IDMessage> _queue;
-	protected:
 };
 
 #endif
