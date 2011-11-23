@@ -51,7 +51,7 @@ class IDAsClient : public TCBlock {
 		virtual void Enqueue(const IDMessage message, bool updatefidx = false);
 		
 
-		/*! \brief 
+		/*! \brief Dequeues an IDMessage, removing it from the internal queue 
 		 *  
 		 * \arg message Reference to an already allocated IDMessage
 	 	 * \arg type Matching rule based on IDFtype
@@ -63,17 +63,43 @@ class IDAsClient : public TCBlock {
 				const IDevent event = IDMessage::EventNull, 
 				const int direction = IDAsClient::BlockAll);
 		
+		/*! \brief Queue size getter
+		 *
+		 * \return The number of queued IDMessage
+		 */
 		virtual unsigned int Size(void) const;
 		
+		/*! \brief Queue cleaner
+		 *
+		 * \return The number of deleted IDMessage
+		 */
 		virtual unsigned int Clear(void);
 		
+		//! \brief Queue cleaner
 		virtual void Dump(void) const;
 
 	public:
+		/*! \brief Dequeue search direction (in time)
+		 *
+		 * Indentifies the messages generated and sent by BCI modules located
+		 * before, after or at the same position of the current module.
+		 * Please refer to this document: 
+		 * <a href="http://files.mtvl.org/projects/tobicore/doc/libtobiid.pdf">TOBI iD for dummies</a>.
+		 */
 		enum { 
-			BlockThis = 0, 
+			/*! Messages from modules at the same position in the processing
+			 * pipeline of the current module
+			 */
+			BlockThis = 0,
+			/*! Messages from modules at the same position in the processing
+			 * pipeline of the current module
+			 */
 			BlockPrev,
+			/*! Messages from modules at the same position in the processing
+			 * pipeline of the current module
+			 */
 			BlockNext,
+			//! Messages from all modules
 			BlockAll 
 		};
 	private:
