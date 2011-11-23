@@ -158,6 +158,9 @@ typedef std::string ICLabel;
  * - Mingw + Msys
  * - <a href="http://gnumex.sourceforge.net">Gnumex</a>
  *
+ * This screencast shows the procedure:
+ * <a href="http://files.mtvl.org/projects/tobicore/screencasts/tobicore_mingw.ogv">Build tobicore on MinGW</a>
+ *
  * \subsection sec_install_linux_source Tarball
  * <PRE>
  * tar xvf tobicore_3.1.0.tar.gz 
