@@ -25,13 +25,13 @@
 #endif //__MINGW32__
 
 #ifdef __MINGW32__
-#undef _WIN32
 #include <time.h>
 #include <windows.h>
 #endif
 
 // It happened that gcc does not understand the #undef directive
-/*
+///*
+#ifndef __MINGW32__
 #ifdef _WIN32
 #include <time.h>
 
@@ -77,7 +77,7 @@ int timerisset(struct timeval *tvp) {
 		return 0;
 }
 #endif
-*/
+#endif
 
 void TCSleep(double ms) {
 	timeval tm;
