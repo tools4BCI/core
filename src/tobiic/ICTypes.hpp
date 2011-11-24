@@ -155,11 +155,12 @@ typedef std::string ICLabel;
  * - <a href="http://www.cims.nyu.edu/~dbindel/mwrap/">mwap</a>
  *
  * To compile for Microsoft Windows, you also need:
- * - Mingw + Msys
+ * - MinGW + Msys
  * - <a href="http://gnumex.sourceforge.net">Gnumex</a>
  *
+ * \subsection sec_install_screencast Screencast 
  * This screencast shows the procedure:
- * <a href="http://files.mtvl.org/projects/tobicore/screencasts/tobicore_mingw.ogv">Build tobicore on MinGW</a>
+ * <a href="http://files.mtvl.org/projects/tobicore/screencasts/tobicore_build.ogv">Build tobicore on Linux and MinGW</a>
  *
  * \subsection sec_install_linux_source Tarball
  * <PRE>
@@ -189,6 +190,10 @@ typedef std::string ICLabel;
  * make check   # to build the examples
  * make html    # to build the documentation
  * </PRE>
+ * 
+ * \subsection sec_install_windows Microsoft Windows
+ * Assuming your Windows installation satisfies all the requirements, you can
+ * follow the Tarball or the Git steps above. 
  *
  * \subsection sec_install_linux_deb Debian packages
  * Obtain the latest .deb packages and run:
@@ -196,10 +201,6 @@ typedef std::string ICLabel;
  * dpkg -i libtobicore*.deb
  * </PRE>
  *
- * \subsection sec_install_windows Microsoft Windows
- * Assuming your Windows installation satisfies all the requirements, you can
- * follow the Tarball or the Git steps above. 
- * 
  * \section sev_version Versioning
  * tobicore versions follow the $CURRENT.$REVISION.$AGE schema and the following
  * rules:
