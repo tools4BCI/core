@@ -29,8 +29,6 @@
 #include <windows.h>
 #endif
 
-// It happened that gcc does not understand the #undef directive
-///*
 #ifndef __MINGW32__
 #ifdef _WIN32
 #include <time.h>
