@@ -31,7 +31,7 @@
 #endif
 
 // It happened that gcc does not understand the #undef directive
-// /*
+/*
 #ifdef _WIN32
 #include <time.h>
 
@@ -77,7 +77,7 @@ int timerisset(struct timeval *tvp) {
 		return 0;
 }
 #endif
-// */
+*/
 
 void TCSleep(double ms) {
 	timeval tm;
