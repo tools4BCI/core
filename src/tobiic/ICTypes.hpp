@@ -155,32 +155,12 @@ typedef std::string ICLabel;
  * - <a href="http://www.cims.nyu.edu/~dbindel/mwrap/">mwap</a>
  *
  * To compile for Microsoft Windows, you also need:
- * - MinGW + Msys
+ * - MinGW + Msys: I suggest you download the "mingw-get-install" installer and
+ * install the latest official package list. 
  * - <a href="http://gnumex.sourceforge.net">Gnumex</a>
  *
- * \subsection sec_install_screencast Screencast 
- * This screencast shows the procedure:
- * <a href="http://files.mtvl.org/projects/tobicore/screencasts/tobicore_build.ogv">Build tobicore on Linux and MinGW</a>
- *
- * \subsection sec_install_linux_source Tarball
+ * \subsection sec_install_linux Linux
  * <PRE>
- * tar xvf tobicore_3.1.0.tar.gz 
- * cd tobicore-3.1.0/
- * autoreconf -i
- * mkdir build
- * cd build
- * ../configure
- * make
- * make install # to install
- * make check   # to build the examples
- * make html    # to build the documentation
- * </PRE>
- *
- * \subsection sec_install_linux_git Git
- * <PRE>
- * git clone TODO/tobicore/
- * cd tobicore
- * git checkout -t origin/devel
  * autoreconf -i
  * mkdir build
  * cd build
@@ -191,12 +171,19 @@ typedef std::string ICLabel;
  * make html    # to build the documentation
  * </PRE>
  * 
- * \subsection sec_install_windows Microsoft Windows
- * Assuming your Windows installation satisfies all the requirements, you can
- * follow the Tarball or the Git steps above. 
+ * \subsection sec_install_mingw MinGW
+ * <PRE>
+ * autoreconf -i
+ * mkdir build
+ * cd build
+ * ../configure --prefix=/mingw/
+ * make
+ * make install # to install
+ * make check   # to build the examples
+ * make html    # to build the documentation
+ * </PRE>
  *
  * \subsection sec_install_linux_deb Debian packages
- * Obtain the latest .deb packages and run:
  * <PRE>
  * dpkg -i libtobicore*.deb
  * </PRE>
