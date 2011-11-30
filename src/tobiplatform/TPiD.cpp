@@ -9,10 +9,11 @@ TPiD::TPiD(void) {
 
 TPiD::~TPiD(void) {
 }
-
+#include <iostream>
 int TPiD::ConfAsClient(const std::string &ip, const std::string& port) {
 	int status = TPInterface::ConfAsClient(ip, port);
-	this->_com->Async(true);
+	if(status == TPInterface::Successful)
+		this->_com->Async(true);
 	return status;
 }
 		

@@ -48,18 +48,18 @@ int main(void) {
 	message5.SetBlockIdx(99);
 	message6.SetBlockIdx(100);
 
-	fusion.Add(message1);
-	fusion.Add(message4);
-	fusion.Add(message2);
-	fusion.Add(message5);
-	fusion.Add(message3);
-	fusion.Add(message6);
+	fusion.Enqueue(message1);
+	fusion.Enqueue(message4);
+	fusion.Enqueue(message2);
+	fusion.Enqueue(message5);
+	fusion.Enqueue(message3);
+	fusion.Enqueue(message6);
 	
 	std::cout << "+ Size: " << fusion.Size() << std::endl;
 	IDMessage message;
 	bool hasmessage = false;
 	do {
-		hasmessage = fusion.Get(&message, 
+		hasmessage = fusion.Dequeue(&message, 
 				IDMessage::FamilyUndef, 
 				IDMessage::EventNull, 
 				IDAsClient::BlockAll);
