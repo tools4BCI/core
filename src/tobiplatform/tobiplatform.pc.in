@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: libtobiplatform
+Description: TOBI Platform library
+Version: @PACKAGE_VERSION@
+Libs: -L${libdir} -ltobicore -ltobiic -ltobiid
+Cflags: -I${includedir}/tobiplatform

@@ -1,0 +1,6 @@
+<tobiic version="0.1.1.0" frame="1">
+	<classifier name="smr" description="SMR classifier" vtype="prob" ltype="biosig">
+		<class label="0x769">0.743132</class>
+		<class label="0x770">0.256868</class>
+	</classifier>
+</tobiic>
