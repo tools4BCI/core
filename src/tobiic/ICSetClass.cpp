@@ -33,11 +33,23 @@ ICSetClass::~ICSetClass(void) {
 
 ICClass* ICSetClass::Add(ICClass* pclass) {
 	if(pclass == NULL)
-		throw TCException("pclass is NULL", __PRETTY_FUNCTION__);
+		throw TCException("pclass is NULL",    
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 
     ICSetClassIter it = this->_map.find(pclass->GetLabel());
 	if(it != this->_map.end())
-		throw TCException("ICLabel already present", __PRETTY_FUNCTION__);
+		throw TCException("ICLabel already present",    
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 
 	this->_map[pclass->GetLabel()] = pclass;
 	return pclass;
@@ -46,7 +58,13 @@ ICClass* ICSetClass::Add(ICClass* pclass) {
 ICClass* ICSetClass::Remove(ICLabel lclass) {
     ICSetClassIter it = this->_map.find(lclass);
 	if(it == this->_map.end())
-		throw TCException("ICLabel not found", __PRETTY_FUNCTION__);
+		throw TCException("ICLabel not found",    
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 	
 	ICClass* retval = (*it).second;
 	this->_map.erase(it);
@@ -59,7 +77,13 @@ ICClass* ICSetClass::Remove(unsigned int lclass) {
 
 ICClass* ICSetClass::Remove(ICClass* pclass) {
 	if(pclass == NULL)
-		throw TCException("pclass is NULL", __PRETTY_FUNCTION__);
+		throw TCException("pclass is NULL",    
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 	
 	return this->Remove(pclass->GetLabel());
 }
@@ -67,7 +91,13 @@ ICClass* ICSetClass::Remove(ICClass* pclass) {
 ICClass* ICSetClass::Get(ICLabel lclass) const {
     ICSetClassConstIter it = this->_map.find(lclass);
 	if(it == this->_map.end())
-		throw TCException("ICLabel not found", __PRETTY_FUNCTION__);
+		throw TCException("ICLabel not found",    
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 
 	ICClass* retval = (*it).second;
 	return retval;

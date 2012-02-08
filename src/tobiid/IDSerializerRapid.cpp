@@ -107,7 +107,13 @@ std::string* IDSerializerRapid::Deserialize(std::string* const buffer) {
 	
 	xml_node<>* rootnode = doc.first_node(IDMESSAGE_ROOTNODE);
 	if(rootnode == NULL) 
-		throw TCException("iD root node not found", __PRETTY_FUNCTION__);
+		throw TCException("iD root node not found",      
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 	
 	/* Check version */
 	cache = rootnode->first_attribute(IDMESSAGE_VERSIONNODE)->value();
@@ -116,7 +122,13 @@ std::string* IDSerializerRapid::Deserialize(std::string* const buffer) {
 		info.append(IDMESSAGE_VERSION);
 		info.append("/");
 		info.append(cache);
-		throw TCException(info, __PRETTY_FUNCTION__);
+		throw TCException(info,      
+												    #ifdef _WIN32  
+															      __FUNCSIG__       
+												    #else          
+                                    __PRETTY_FUNCTION__ 
+												    #endif 
+    );
 	}
 	
 	// Get frame number

@@ -37,10 +37,20 @@ bool IDAsClient::Dequeue(IDMessage* message,  const IDFtype type,
 		const IDevent event, const int direction) {
 	if(message == NULL)
 		throw TCException("iD message needs to be allocated",
-				__PRETTY_FUNCTION__);
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 	if(direction != IDAsClient::BlockAll && TCBlock::IsSetBlockIdx() == false)
 		throw TCException("Block number must be set for searching Prev/Next",
-				__PRETTY_FUNCTION__);
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 	
 	if(this->Size() == 0)
 		return false;

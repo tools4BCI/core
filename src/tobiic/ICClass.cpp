@@ -60,7 +60,13 @@ ICClass* ICClass::SetValue(ICValue value) {
 
 ICClass* ICClass::SetLabel(ICLabel label) {
 	if(label.size() > ICCLASS_CHLABEL_SIZE)
-		throw TCException("ICCLASS_CHLABEL_SIZE exceeded", __PRETTY_FUNCTION__);
+		throw TCException("ICCLASS_CHLABEL_SIZE exceeded",     
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 	
 	this->_label = label;
 	return this;

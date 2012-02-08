@@ -62,7 +62,13 @@ std::string ICClassifier::GetDescription(void) const {
 
 const char* ICClassifier::GetChName(void) {
 	if(this->_name.size() > ICCLASSIFIER_CHNAME_SIZE)
-		throw TCException("ICCLASSIFIER_CHNAME_SIZE exceeded", __PRETTY_FUNCTION__);
+		throw TCException("ICCLASSIFIER_CHNAME_SIZE exceeded",     
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 
 	strcpy(this->_chname, this->_name.c_str());
 	return this->_chname;
@@ -70,7 +76,13 @@ const char* ICClassifier::GetChName(void) {
 
 const char* ICClassifier::GetChDescription(void) {
 	if(this->_desc.size() > ICCLASSIFIER_CHDESC_SIZE)
-		throw TCException("ICCLASSIFIER_CHDESC_SIZE exceeded", __PRETTY_FUNCTION__);
+		throw TCException("ICCLASSIFIER_CHDESC_SIZE exceeded",     
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 	
 	strcpy(this->_chdesc, this->_desc.c_str());
 	return this->_chdesc;
@@ -159,7 +171,13 @@ ICLtype ICClassifier::LabelType(const std::string& ltype) {
 
 ICVtype ICClassifier::ValueChType(const char* vtype) {
 	if(vtype == NULL)
-		throw TCException("vtype is NULL", __PRETTY_FUNCTION__);
+		throw TCException("vtype is NULL",     
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 	ICVtype cvtype = ICClassifier::ValueUndef;
 	
 	if(strcmp(vtype, ICTYPES_ENTRY_PROB) == 0) 
@@ -176,7 +194,13 @@ ICVtype ICClassifier::ValueChType(const char* vtype) {
 
 ICLtype ICClassifier::LabelChType(const char* ltype) {
 	if(ltype == NULL)
-		throw TCException("ltype is NULL", __PRETTY_FUNCTION__);
+		throw TCException("ltype is NULL",     
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 	ICLtype cltype = ICClassifier::LabelUndef;
 		
 	if(strcmp(ltype, ICTYPES_LABEL_CUSTOM) == 0) 

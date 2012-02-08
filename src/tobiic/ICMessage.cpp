@@ -58,7 +58,13 @@ void ICMessage::SetValue(const std::string& name, const ICLabel label, const ICV
 	
 void ICMessage::Dump(void) const {
 	if(this->classifiers.Empty()) 
-		throw TCException("Ethernal sunshine of an empty message", __PRETTY_FUNCTION__);
+		throw TCException("Ethernal sunshine of an empty message",     
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 		
 	printf("[ICMessage::Dump] TOBI iC message for frame %d\n", GetBlockIdx());
 	ICClassifier* cptr = NULL;

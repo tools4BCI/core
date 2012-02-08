@@ -60,7 +60,13 @@ float TCTools::atof(const char* value) {
 
 	int fields = sscanf(value, "%f", &retval);
 	if(fields != 1)
-		throw TCException("Field number exceeded", __PRETTY_FUNCTION__);
+		throw TCException("Field number exceeded", 
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+		);
 
 	return retval;
 }

@@ -22,6 +22,8 @@
 
 #ifdef __MINGW32__
 #undef _WIN32
+#elif WIN32
+#define _WIN32
 #endif //__MINGW32__
 
 #ifdef __MINGW32__
@@ -32,6 +34,7 @@
 #ifndef __MINGW32__
 #ifdef _WIN32
 #include <time.h>
+#include <WinSock2.h>
 
 int gettimeofday (struct timeval *tv, struct timezone *tz) {
 	FILETIME ft;
@@ -64,16 +67,16 @@ int gettimeofday (struct timeval *tv, struct timezone *tz) {
 	return 0;
 }
 
-void timerclear(struct timeval *tvp) {
-	ZeroMemory(tvp, sizeof(timeval));
-}
+//void timerclear(struct timeval *tvp) {
+//	ZeroMemory(tvp, sizeof(timeval));
+//}
 
-int timerisset(struct timeval *tvp) {
-	if (tvp->tv_sec || tvp->tv_usec)
-		return 1;
-	else
-		return 0;
-}
+//int timerisset(struct timeval *tvp) {
+//	if (tvp->tv_sec || tvp->tv_usec)
+//		return 1;
+//	else
+//		return 0;
+//}
 #endif
 #endif
 

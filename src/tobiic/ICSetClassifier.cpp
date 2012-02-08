@@ -33,7 +33,13 @@ ICSetClassifier::~ICSetClassifier(void) {
 ICClassifier* ICSetClassifier::Add(ICClassifier* pclr) {
     ICClassifierIter it = this->_map.find(pclr->GetName());
 	if(it != this->_map.end())
-		throw TCException("ICClassifier already present", __PRETTY_FUNCTION__);
+		throw TCException("ICClassifier already present",  
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+		);
 
 	this->_map[pclr->GetName()] = pclr;
 	return pclr;
@@ -42,7 +48,13 @@ ICClassifier* ICSetClassifier::Add(ICClassifier* pclr) {
 ICClassifier* ICSetClassifier::Remove(std::string nclr) {
     ICClassifierIter it = this->_map.find(nclr);
 	if(it == this->_map.end())
-		throw TCException("nclr not found", __PRETTY_FUNCTION__);
+		throw TCException("nclr not found",   
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 
 	ICClassifier* retval = (*it).second;
 	this->_map.erase(it);
@@ -51,7 +63,13 @@ ICClassifier* ICSetClassifier::Remove(std::string nclr) {
 
 ICClassifier* ICSetClassifier::Remove(ICClassifier* pclr) {
 	if(pclr == NULL)
-		throw TCException("pclr is NULL", __PRETTY_FUNCTION__);
+		throw TCException("pclr is NULL",     
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 
 	return this->Remove(pclr->GetName());
 }
@@ -59,7 +77,13 @@ ICClassifier* ICSetClassifier::Remove(ICClassifier* pclr) {
 ICClassifier* ICSetClassifier::Get(std::string nclr) const {
     ICClassifierConstIter it = this->_map.find(nclr);
 	if(it == this->_map.end())
-		throw TCException("nclr not found", __PRETTY_FUNCTION__);
+		throw TCException("nclr not found",    
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 
 	ICClassifier* retval = (*it).second;
 	return retval;

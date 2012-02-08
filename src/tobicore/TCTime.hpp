@@ -31,19 +31,20 @@ extern "C" {
 #ifndef _WIN32
 #include <sys/time.h>
 #else
-#include <windows.h>
-struct timeval {
-	long tv_sec; 
-	long tv_usec;
-};
+#include <WinSock2.h>
+#pragma comment(lib, "Ws2_32.lib")
+//struct timeval {
+//	long tv_sec; 
+//	long tv_usec;
+//};
 struct timezone {
 	int tz_minuteswest;
 	int tz_dsttime;
 };
 
 int gettimeofday (struct timeval *tv, struct timezone *tz);
-void timerclear(struct timeval *tvp);
-bool timerisset(struct timeval *tvp);
+//void timerclear(struct timeval *tvp);
+//bool timerisset(struct timeval *tvp);
 #endif //_WIN32
 
 /*! \brief Sleep milliseconds

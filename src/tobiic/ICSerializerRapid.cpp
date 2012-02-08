@@ -180,7 +180,13 @@ std::string* ICSerializerRapid::Deserialize(std::string* const buffer) {
 	/* Trasverse to root node */
 	xml_node<>* rootnode = doc.first_node(ICMESSAGE_ROOTNODE);
 	if(rootnode == NULL) {
-		throw TCException("iC root node not found", __PRETTY_FUNCTION__);
+		throw TCException("iC root node not found",     
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 	}
 
 	/* Check version */
@@ -190,7 +196,13 @@ std::string* ICSerializerRapid::Deserialize(std::string* const buffer) {
 		info.append(ICMESSAGE_VERSION);
 		info.append("/");
 		info.append(cache);
-		throw TCException(info, __PRETTY_FUNCTION__);
+		throw TCException(info,     
+												                       #ifdef _WIN32  
+															                         __FUNCSIG__       
+												                       #else          
+                                                       __PRETTY_FUNCTION__ 
+												                       #endif 
+    );
 	}
 	
 	/* Get frame number */
