@@ -49,7 +49,7 @@ int main()
 
 
     client.connect(std::string("10.0.2.15"), 9001);
-    client.startReceiving();
+    client.startReceiving(true);
 
     string str;
     cout << endl << ">>";

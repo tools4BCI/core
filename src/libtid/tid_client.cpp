@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include <boost/bind.hpp>
+#include <boost/exception/all.hpp>
 
 #include "input_stream_socket.h"
 #include "messages/tid_message_parser_1_0.h"
@@ -14,7 +15,8 @@ namespace TiD
 
 TiDClient::TiDClient()
   : state_(State_ConnectionClosed), socket_(io_service_),
-    input_stream_(0), msg_parser_(0), msg_builder_(0), receive_thread_(0), io_service_thread_(0)
+    input_stream_(0), msg_parser_(0), msg_builder_(0), receive_thread_(0), 
+    io_service_thread_(0), throw_on_error_(0)
 {
   input_stream_ = new InputStreamSocket(socket_);
   msg_parser_   = new TiDMessageParser10();
@@ -134,8 +136,10 @@ void TiDClient::sendMessage(std::string tid_xml_context)
 
 //-----------------------------------------------------------------------------
 
-void TiDClient::startReceiving()
+void TiDClient::startReceiving(bool throw_on_error)
 {
+  throw_on_error_ = throw_on_error;
+
   if(state_ != State_Connected)
     throw(std::runtime_error("TiDClient::startReceiving -- not connected!") );
 
@@ -170,6 +174,9 @@ void TiDClient::receive()
     }
     catch(std::exception& e)
     {
+      if(throw_on_error_)
+        boost::throw_exception(e);
+
       if(state_ == State_Running)
         std::cerr << e.what() << std::endl << ">> ";
       state_ = State_Error;

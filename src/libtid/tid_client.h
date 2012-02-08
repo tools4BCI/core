@@ -26,7 +26,7 @@ class TiDClient
 
     void connect(std::string ip_addr, unsigned int port);
 
-    void startReceiving();
+    void startReceiving( bool throw_on_error );
     void stopReceiving();
 
     void setBufferSize (size_t size);
@@ -71,6 +71,8 @@ class TiDClient
     TiDMessageBuilder*                                msg_builder_;
     boost::thread*                                    receive_thread_;
     boost::thread*                                    io_service_thread_;
+
+    bool                                              throw_on_error_;
 };
 
 //-----------------------------------------------------------------------------
