@@ -263,7 +263,7 @@ bool TPSocket::Connect(const std::string& ip, const std::string& port) {
 	return(conopt == 0);
 }
 		
-size_t TPSocket::Send(const std::string& message) {
+ssize_t TPSocket::Send(const std::string& message) {
 	ssize_t bytes = -1;
 	switch(this->_type) {
 		case TPSocket::TCP:
@@ -282,7 +282,7 @@ size_t TPSocket::Send(const std::string& message) {
 	return bytes;
 }
 	
-size_t TPSocket::Recv(std::string* message) {
+ssize_t TPSocket::Recv(std::string* message) {
 	ssize_t bytes = -1;
 	switch(this->_type) {
 		case TPSocket::TCP:

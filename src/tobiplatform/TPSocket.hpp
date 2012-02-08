@@ -119,13 +119,13 @@ class TPSocket {
 		 * \arg message Message to send
 		 * \return Sent bytes
 		 */
-		size_t Send(const std::string& message);
+		ssize_t Send(const std::string& message);
 		
 		/*! \brief Receives a string from the remote endpoint
 		 * \arg message Buffer for receiving
 		 * \return Received bytes
 		 */
-		size_t Recv(std::string* message);
+		ssize_t Recv(std::string* message);
 		
 		/*! \brief Checks if socket is connected
 		 * \return True if connected, false otherwise
