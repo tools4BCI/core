@@ -6,6 +6,7 @@
 #include "messages/tid_message_builder_1_0.h"
 
 #include <iostream>
+#include <boost/current_function.hpp>
 
 using std::cerr;
 using std::cout;
@@ -21,13 +22,14 @@ TiDConnection::TiDConnection(const TCPConnection::pointer& tcp_conn_handle,
  : tcp_connection_(tcp_conn_handle),
    state_(State_Connected), del_callback_ref_(del_con_cb),
    disp_tid_msg_callback_ref_(disp_msg_cb),
-   input_stream_(0), msg_parser_(0), msg_builder_(0), receive_thread_(0)
+   input_stream_(0), msg_parser_(0), msg_builder_(0), receive_thread_(0),
+   msg_string_send_buffer_(128)
 {
   #ifdef DEBUG
-    std::cout << "TiDConnection: Constructor" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
-  message_buffer_.reserve(TID_MESSAGE_BUFFER_SIZE__IN_BYTE);
+  //message_buffer_.reserve(TID_MESSAGE_BUFFER_SIZE__IN_BYTE);
   std:: string ip = tcp_conn_handle->socket().remote_endpoint().address().to_string();
   int port = tcp_conn_handle->socket().remote_endpoint().port();
   connection_id_ = make_pair(port, ip);
@@ -35,6 +37,9 @@ TiDConnection::TiDConnection(const TCPConnection::pointer& tcp_conn_handle,
   input_stream_ = new InputStreamSocket(tcp_conn_handle->socket());
   msg_parser_   = new TiDMessageParser10();
   msg_builder_  = new TiDMessageBuilder10();
+
+  msg_string_send_buffer_.resize(64);
+  current_xml_str_.reserve(2048);
 }
 
 //-----------------------------------------------------------------------------
@@ -42,7 +47,7 @@ TiDConnection::TiDConnection(const TCPConnection::pointer& tcp_conn_handle,
 TiDConnection::~TiDConnection()
 {
   #ifdef DEBUG
-    std::cout << "TiDConnection: ~TiDConnection" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   close();
@@ -61,8 +66,8 @@ TiDConnection::~TiDConnection()
 
   if(receive_thread_)
   {
-    //    receive_thread_->interrupt();
-    //    receive_thread_->join();
+    receive_thread_->interrupt();
+    //    receive_thread_->join();  // join causes problems if clients aborted the connection
     delete receive_thread_;
     receive_thread_ = 0;
   }
@@ -79,11 +84,15 @@ TiDConnection::~TiDConnection()
 void TiDConnection::run()
 {
   #ifdef DEBUG
-    std::cout << "TiDConnection: run" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   state_ = State_Running;
   receive_thread_ = new boost::thread(&TiDConnection::receive, this );
+  #ifdef WIN32
+    SetPriorityClass(receive_thread_->native_handle(),  REALTIME_PRIORITY_CLASS);
+    SetThreadPriority(receive_thread_->native_handle(), THREAD_PRIORITY_HIGHEST );
+  #endif
 }
 
 //-----------------------------------------------------------------------------
@@ -91,10 +100,18 @@ void TiDConnection::run()
 void TiDConnection::stop()
 {
   #ifdef DEBUG
-    std::cout << "TiDConnection: stop" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
+  if(state_ != State_Running)
+    return;
+
   state_ = State_Stopped;
+
+  boost::system::error_code error;
+  tcp_connection_->socket().shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+  if(error)
+    cerr << "TiDConnection::stop() -- " << error.message() << endl;
 }
 
 //-----------------------------------------------------------------------------
@@ -102,7 +119,7 @@ void TiDConnection::stop()
 void TiDConnection::close()
 {
   #ifdef DEBUG
-    std::cout << "TiDConnection::close [Client @" << connection_id_.second << "]" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   if(state_ == State_ConnectionClosed)
@@ -112,6 +129,9 @@ void TiDConnection::close()
 
   tcp_connection_->socket().shutdown(boost::asio::ip::tcp::socket::shutdown_both, error);
   tcp_connection_->socket().close(error);
+  //  if(error)
+  //    cerr << "TiDConnection::close() -- " << error.message() << endl;
+
   state_ = State_ConnectionClosed;
 
   del_callback_ref_(connection_id_);
@@ -122,14 +142,15 @@ void TiDConnection::close()
 void TiDConnection::receive()
 {
   #ifdef DEBUG
-    std::cout << "TiDConnection: receive" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   while(state_ == State_Running)
   {
     try
     {
-      disp_tid_msg_callback_ref_( msg_parser_->parseMessage( *input_stream_ ) , connection_id_);
+      msg_parser_->parseMessage(&msg_, input_stream_ );
+      disp_tid_msg_callback_ref_( msg_ , connection_id_);
     }
     catch(TiDLostConnection&)
     {
@@ -157,36 +178,76 @@ void TiDConnection::handleWrite(const boost::system::error_code& error,
                                   std::size_t bytes_transferred)
 {
   #ifdef DEBUG
-    std::cout << "TiDConnection: handleWrite" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<"--"<< connection_id_.second << ":" <<connection_id_.first<< std::endl;
   #endif
 
-  if (error)
+  if (error && (state_ == State_Running) )
   {
     cerr << "TiDConnection::handleWrite [Client@" << connection_id_.second << "]: "
          << "error during write - closing connection."
          << "--> " << error.message() << endl;
-    close();
+    stop();
 
     // No new asynchronous operations are started. This means that all shared_ptr
     // references to the connection object will disappear and the object will be
     // destroyed automatically after this handler returns. The connection class's
     // destructor closes the socket.
-    return;
   }
+  else if(state_ == State_Running && !msg_string_send_buffer_.empty())
+    msg_string_send_buffer_.pop_front();
 
 }
+
 //-----------------------------------------------------------------------------
 
 void TiDConnection::sendMsg(IDMessage& msg)
 {
   #ifdef DEBUG
-    std::cout << "TiDConnection: sendMsg" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
-  std::string str( msg_builder_->buildTiDMessage(msg) );
-  boost::asio::async_write(tcp_connection_->socket(), boost::asio::buffer(str),
-                           boost::bind(&TiDConnection::handleWrite, this,
-                                       boost::asio::placeholders::error, str.size()) );
+  if(msg_string_send_buffer_.full())
+  {
+    cerr << "TiDConnection::sendMsg [Client@" << connection_id_.second << "]: "
+         << "Performance warning -- TiD biffer size too small --> resizing now!" << endl;
+    msg_string_send_buffer_.resize( msg_string_send_buffer_.size() *2 );
+  }
+
+  #ifdef TIMING_TEST
+    double abs_diff_1 = msg.absolute.Toc();
+    double rel_diff_1 = msg.relative.Toc();
+  #endif
+
+  msg_builder_->buildTiDMessage(msg, current_xml_str_);
+  msg_string_send_buffer_.push_back( current_xml_str_ );
+
+  boost::asio::async_write(tcp_connection_->socket(),
+                           boost::asio::buffer( msg_string_send_buffer_.back() ),
+                           boost::bind(&TiDConnection::handleWrite, this->shared_from_this(),
+                                       boost::asio::placeholders::error,
+                                       boost::asio::placeholders::bytes_transferred) );
+  #ifdef TIMING_TEST
+    double abs_diff_2 = msg.absolute.Toc();
+    double rel_diff_2 = msg.relative.Toc();
+    std::cout << "  ** TIMING TEST ** -- abs/rel time-diff:  " << abs_diff_1 <<"/"<< rel_diff_1;
+    std::cout << ";  " << abs_diff_2 <<"/"<< rel_diff_2;
+    std::cout << std::endl << std::flush;
+  #endif
+}
+
+//-----------------------------------------------------------------------------
+
+void TiDConnection::sendMsg(const std::string& xml_string)
+{
+  #ifdef DEBUG
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+  #endif
+
+  boost::asio::async_write(tcp_connection_->socket(),
+                           boost::asio::buffer( xml_string ),
+                           boost::bind(&TiDConnection::handleWrite, this->shared_from_this(),
+                                       boost::asio::placeholders::error,
+                                       boost::asio::placeholders::bytes_transferred) );
 }
 
 //-----------------------------------------------------------------------------

@@ -30,6 +30,7 @@
 
 // Boost
 #include <boost/bind.hpp>
+#include <boost/current_function.hpp>
 
 // local
 #include "tcp_server.h"
@@ -41,11 +42,11 @@ using boost::uint32_t;
 
 //-----------------------------------------------------------------------------
 
-TCPServer::TCPServer(boost::asio::io_service& io_service)
-  : io_service_(io_service), acceptor_(io_service)
+TCPServer::TCPServer()
+  : acceptor_(io_service_)
 {
   #ifdef DEBUG
-    std::cout << "TCPConnection: Constructor" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 }
 
@@ -54,16 +55,27 @@ TCPServer::TCPServer(boost::asio::io_service& io_service)
 TCPServer::~TCPServer()
 {
   #ifdef DEBUG
-    std::cout << "TCPConnection: ~TCPServer" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
+
+  io_service_.stop();
+
+  if(io_service_thread_)
+  {
+    io_service_thread_->interrupt();
+    io_service_thread_->join();
+
+    delete(io_service_thread_);
+    io_service_thread_ = 0;
+  }
 }
 
 //-----------------------------------------------------------------------------
 
 void TCPServer::bind(uint16_t port)
-{  
+{
   #ifdef DEBUG
-    std::cout << "TCPServer: bind(uint16_t port)" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), port);
@@ -77,7 +89,7 @@ void TCPServer::bind(uint16_t port)
 void TCPServer::bind(const std::string& address, uint16_t port)
 {
   #ifdef DEBUG
-    std::cout << "TCPServer: bind(const std::string& address, uint16_t port)" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   // Open the acceptor with the option to reuse the address (i.e. SO_REUSEADDR).
@@ -96,11 +108,17 @@ void TCPServer::bind(const std::string& address, uint16_t port)
 void TCPServer::listen()
 {
   #ifdef DEBUG
-    std::cout << "TCPServer: listen" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   acceptor_.listen();
   startAccept();
+
+  io_service_thread_ = new boost::thread(boost::bind(&boost::asio::io_service::run, &io_service_));
+  #ifdef WIN32
+    SetPriorityClass(io_service_thread_->native_handle(),  REALTIME_PRIORITY_CLASS);
+    SetThreadPriority(io_service_thread_->native_handle(), THREAD_PRIORITY_HIGHEST );
+  #endif
 }
 
 //-----------------------------------------------------------------------------
@@ -108,7 +126,7 @@ void TCPServer::listen()
 void TCPServer::startAccept()
 {
   #ifdef DEBUG
-    std::cout << "TCPServer: startAccept" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   TCPConnection::pointer new_connection = TCPConnection::create(io_service_);

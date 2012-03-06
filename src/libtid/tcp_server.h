@@ -33,6 +33,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/asio.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/thread/thread.hpp>
 
 #include "tcp_connection.h"
 
@@ -52,7 +53,7 @@ class TCPServer
      * @brief Constructor
      * @param io_service
      */
-    TCPServer(boost::asio::io_service& io_service);
+    TCPServer();
     virtual ~TCPServer();
 
     /**
@@ -65,12 +66,11 @@ class TCPServer
      */
     void bind(const std::string& address, boost::uint16_t port);
 
+  protected:
     /**
      * @brief Starts listening
      */
     void listen();
-
-  protected:
     /**
      * @brief Accept a new connection
      */
@@ -84,8 +84,9 @@ class TCPServer
           const boost::system::error_code& error) = 0;
 
   protected:
-    boost::asio::io_service&       io_service_; ///<
-    boost::asio::ip::tcp::acceptor acceptor_;   ///<
+    boost::asio::io_service         io_service_; ///<
+    boost::asio::ip::tcp::acceptor  acceptor_;   ///<
+    boost::thread*                  io_service_thread_;
 };
 
 } // Namespace TiD

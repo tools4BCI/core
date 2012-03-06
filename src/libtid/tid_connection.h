@@ -10,9 +10,12 @@
 #include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "tcp_server.h"
 
-class IDMessage;
+#include "tcp_server.h"
+#include "tobiid/IDMessage.hpp"
+//#include "misc/databuffer.h"
+
+
 
 namespace TiD
 {
@@ -32,88 +35,96 @@ namespace TiD
 */
 
 typedef boost::function< void(const std::pair<int, std::string>&) > deleteConnectionCallback;
-typedef boost::function< void( IDMessage, const std::pair<int, std::string>& ) > dispatchTiDMessageCallback;
+typedef boost::function< void( IDMessage&, const std::pair<int, std::string>& ) > dispatchTiDMessageCallback;
 
 class TiDConnection : public boost::enable_shared_from_this<TiDConnection>
 {
-public:
+  friend class TimedTiDConnection;
 
-  /**
-   * @brief Control Connection Handle
-   */
-  typedef boost::shared_ptr<TiDConnection> pointer;
-  typedef std::pair<int, std::string> ConnectionID;
+  public:
 
-  /**
-   * @brief Creates a new ControlConnection
-   * @return Handle pointing to the new control connection
-   * @throws
-   */
-  static pointer create(const TCPConnection::pointer& tcp_conn_handle,
-                        deleteConnectionCallback del_con_cb, dispatchTiDMessageCallback disp_msg_cb)
-  {
-    return pointer(new TiDConnection(tcp_conn_handle, del_con_cb, disp_msg_cb));
-  }
+    /**
+     * @brief Control Connection Handle
+     */
+    typedef boost::shared_ptr<TiDConnection> pointer;
+    typedef std::pair<int, std::string> ConnectionID;
 
-  virtual ~TiDConnection();   /// Destructor
+    /**
+     * @brief Creates a new ControlConnection
+     * @return Handle pointing to the new control connection
+     * @throws
+     */
+    static pointer create(const TCPConnection::pointer& tcp_conn_handle,
+                          deleteConnectionCallback del_con_cb, dispatchTiDMessageCallback disp_msg_cb)
+    {
+      return pointer(new TiDConnection(tcp_conn_handle, del_con_cb, disp_msg_cb));
+    }
 
+    virtual ~TiDConnection();   /// Destructor
 
+    void run();
+    void stop();
 
-  void run();
-  void stop();
+    ConnectionID getID()
+      { return(connection_id_); }
 
-  ConnectionID getID()
-    { return(connection_id_); }
+    /**
+     * @brief Sends a TiD message to the client
+     */
+    void sendMsg(IDMessage& msg);
 
-  /**
-   * @brief Sends a TiD message to the client
-   */
-  void sendMsg(IDMessage& msg);
+    /**
+     * @brief Sends a TiD xml string to the client
+     */
+    void sendMsg(const std::string& xml_string);
 
-private:
-  /// @brief Constructs a connection with the given io_service.
-  TiDConnection(const TCPConnection::pointer& tcp_conn_handle,
-                deleteConnectionCallback del_con_cb, dispatchTiDMessageCallback disp_msg_cb);
+  private:
+    /// @brief Constructs a connection with the given io_service.
+    TiDConnection(const TCPConnection::pointer& tcp_conn_handle,
+                  deleteConnectionCallback del_con_cb, dispatchTiDMessageCallback disp_msg_cb);
 
-private:
-  void receive();
+    virtual void receive();
 
-  /**
-   * @brief Handle completion of a write operation.
-   */
-  void handleWrite(const boost::system::error_code& e,
-      std::size_t bytes_transferred);
+    /**
+     * @brief Handle completion of a write operation.
+     */
+    void handleWrite(const boost::system::error_code& e,
+        std::size_t bytes_transferred);
 
-  /**
-   * @brief Closes the connection
-   */
-  void close();
+    /**
+     * @brief Closes the connection
+     */
+    void close();
 
-private:
-  static const int TID_MESSAGE_BUFFER_SIZE__IN_BYTE  =  16384; // ... 16kB
-  ConnectionID                             connection_id_;
-  TCPConnection::pointer                   tcp_connection_; ///<
+  private:
+    //static const int TID_MESSAGE_BUFFER_SIZE__IN_BYTE  =  16384; // ... 16kB
+    ConnectionID                             connection_id_;
+    TCPConnection::pointer                   tcp_connection_; ///<
 
-  enum ConnectionState
-  {
-    State_Connected,
-    State_Running,
-    State_Stopped,
-    State_ConnectionClosed
-  };
+    enum ConnectionState
+    {
+      State_Connected,
+      State_Running,
+      State_Stopped,
+      State_ConnectionClosed
+    };
 
-  ConnectionState                          state_;                    ///<
+    ConnectionState                          state_;                    ///<
 
-  deleteConnectionCallback                 del_callback_ref_;
-  dispatchTiDMessageCallback               disp_tid_msg_callback_ref_;
+    deleteConnectionCallback                 del_callback_ref_;
+    dispatchTiDMessageCallback               disp_tid_msg_callback_ref_;
 
-  std::vector<boost::uint8_t>              message_buffer_;
+    //std::vector<boost::uint8_t>              message_buffer_;
 
-  InputStream*                             input_stream_;
-  TiDMessageParser*                        msg_parser_;
-  TiDMessageBuilder*                       msg_builder_;
+    InputStream*                             input_stream_;
+    TiDMessageParser*                        msg_parser_;
+    TiDMessageBuilder*                       msg_builder_;
+    IDMessage                                msg_;
 
-  boost::thread*                           receive_thread_;
+    boost::thread*                           receive_thread_;
+    std::string                              current_xml_str_;
+    boost::circular_buffer<std::string>      msg_string_send_buffer_;
+    //tobiss::DataBuffer<std::string>          msg_string_send_buffer_;
 
 };
 

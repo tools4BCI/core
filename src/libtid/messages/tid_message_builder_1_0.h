@@ -23,22 +23,24 @@ class TiDMessageBuilder10 : public TiDMessageBuilder
 
     virtual ~TiDMessageBuilder10()
     {
+      #ifdef DEBUG
+        std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+      #endif
       if(serializer_)
         delete serializer_;
     }
 
-    virtual std::string buildTiDMessage (IDMessage& message)
+    virtual void buildTiDMessage (IDMessage& message, std::string& xml_string)
     {
+      #ifdef DEBUG
+        std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+      #endif
       serializer_->SetMessage(&message);
-      std::string msg_buffer;
-      serializer_->Serialize(&msg_buffer);
-
-      return( msg_buffer );
+      serializer_->Serialize(&xml_string);
     }
 
   private:
-    IDMessage                       msg_;
-    IDSerializerRapid*               serializer_;
+    IDSerializerRapid*              serializer_;
 };
 
 }

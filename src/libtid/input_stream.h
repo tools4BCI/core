@@ -11,8 +11,8 @@ class InputStream
 {
   public:
     virtual ~InputStream () {}
-    virtual std::string readUntil (char delimiter) = 0;
-    virtual std::string readUntil (std::string delimiter) = 0;
+    virtual void readUntil (char delimiter, std::string& str) = 0;
+    virtual void readUntil (std::string delimiter, std::string& str) = 0;
     virtual std::string readString (unsigned int length) = 0;
     virtual char readCharacter () = 0;
 };

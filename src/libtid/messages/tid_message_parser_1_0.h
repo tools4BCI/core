@@ -4,6 +4,8 @@
 #include "tid_message_parser.h"
 #include <tobiid/IDSerializerRapid.hpp>
 
+#include <boost/thread/mutex.hpp>
+
 namespace TiD
 {
 
@@ -12,23 +14,15 @@ class TiDMessageParser10 : public TiDMessageParser
 public:
     TiDMessageParser10();
     virtual ~TiDMessageParser10 ();
-    virtual IDMessage parseMessage (InputStream& stream) const;
-
-
-//    virtual void  getMessages (std::vector<TiDMessage>& messages);
+    virtual void parseMessage (IDMessage* msg, InputStream* stream);
 
 private:
     static unsigned const               MAX_LINE_LENGTH_;
 
     IDSerializerRapid*                  serializer_;
+    std::string                         xml_string_;
 
-//    std::string readVersion (InputStream& stream) const;
-//    std::pair<std::string, std::string> readCommandAndParameter (InputStream& stream) const;
-//    std::string readContent (InputStream& stream) const;
-//    std::pair<std::string, std::string> getPair (std::string const& str) const;
-
-//    bool                                             running_;
-//    std::vector<TiDMessage>                          messages_;
+    boost::mutex                        mutex_;
 };
 
 }

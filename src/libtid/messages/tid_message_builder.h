@@ -14,7 +14,7 @@ class TiDMessageBuilder
 public:
     virtual ~TiDMessageBuilder () {}
 
-    virtual std::string buildTiDMessage (IDMessage& message) = 0;
+    virtual void buildTiDMessage (IDMessage& message, std::string& xml_string) = 0;
 };
 
 

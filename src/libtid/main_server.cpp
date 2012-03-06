@@ -1,9 +1,6 @@
 
 #include <iostream>
 
-#include <boost/asio.hpp>
-#include <boost/thread.hpp>
-
 #include "tid_server.h"
 
 using namespace TiD;
@@ -11,16 +8,10 @@ using namespace std;
 
 int main()
 {
-  boost::asio::io_service io;
 
-  TiDServer test_server(io);
-
-
+  TiDServer test_server;
   test_server.bind (9001);
-  test_server.listen ();
-
-  boost::thread* io_service_thread_ = new boost::thread(boost::bind(&boost::asio::io_service::run, &io));
-
+  test_server.start();
   string str;
   cout << endl << ">>";
 
@@ -32,17 +23,7 @@ int main()
       cout << "Command '" << str << "' not recognized!" << endl << ">>";
   }
 
-  io.stop();
-
-  cout << " Joining ... " << endl;
-
-  io_service_thread_->interrupt();
-  io_service_thread_->join();
-
-  cout << "   done ... " << endl;
-
-  delete(io_service_thread_);
-  cout << "   deleted ... " << endl;
+  test_server.stop();
 
   return 0;
 }

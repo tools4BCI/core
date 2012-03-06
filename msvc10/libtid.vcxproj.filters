@@ -79,5 +79,8 @@
     <ClInclude Include="..\src\libtid\tcp_connection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\libtid\misc\databuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -6,8 +6,7 @@
 // local
 
 #include "tobiid/IDMessage.hpp"
-
-//#include "messages/tid_message.h"
+#include "messages/tid_message_builder_1_0.h"
 
 using std::cout;
 using std::cerr;
@@ -19,14 +18,16 @@ namespace TiD
 
 //-----------------------------------------------------------------------------
 
-TiDServer::TiDServer(boost::asio::io_service& io_service)
-  : TCPServer(io_service), running_(1)
+TiDServer::TiDServer()
+  : running_(0)
 {
   #ifdef DEBUG
-    std::cout << "TiDServer: Constructor" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   messages_.reserve(100);
+  msg_builder_  = new TiDMessageBuilder10();
+  current_xml_string_.reserve(2048);
 }
 
 //-----------------------------------------------------------------------------
@@ -34,13 +35,37 @@ TiDServer::TiDServer(boost::asio::io_service& io_service)
 TiDServer::~TiDServer ()
 {
   #ifdef DEBUG
-    std::cout << "TiDServer: ~TiDServer" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
-  running_ = 0;
+  if(running_)
+    stop();
+}
+
+//-----------------------------------------------------------------------------
+
+void TiDServer::start()
+{
+  #ifdef DEBUG
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+  #endif
+  listen();
+  running_ = true;
+}
+
+//-----------------------------------------------------------------------------
+
+void TiDServer::stop()
+{
+  #ifdef DEBUG
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+  #endif
+  running_ = false;
+
   for(TiDConnHandlers::iterator it( connections_.begin() );
       it != connections_.end(); it++)
   {
+//    it->second->socket()
     it->second->stop();
   }
   erase_mutex_.lock();
@@ -56,7 +81,7 @@ TiDServer::~TiDServer ()
 bool TiDServer::newMessagesAvailable()
 {
   #ifdef DEBUG
-    std::cout << "TiDServer: newMessagesAvailable" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   bool available = false;
@@ -72,7 +97,7 @@ bool TiDServer::newMessagesAvailable()
 void TiDServer::getLastMessages(std::vector<IDMessage>& messages)
 {
   #ifdef DEBUG
-    std::cout << "TiDServer: getLastMessages" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   dispatch_mutex_.lock();
@@ -87,7 +112,7 @@ void TiDServer::handleAccept(const TCPConnection::pointer& new_connection,
       const boost::system::error_code& error)
 {
   #ifdef DEBUG
-    std::cout << "TiDServer: handleAccept" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   if (error)
@@ -96,6 +121,23 @@ void TiDServer::handleAccept(const TCPConnection::pointer& new_connection,
     return;
   }
 
+  if(!running_)
+    return;
+
+  boost::asio::socket_base::send_buffer_size send_buffer_option(SOCKET_BUFFER_SIZE);
+  new_connection->socket().set_option(send_buffer_option);
+
+  boost::asio::socket_base::receive_buffer_size recv_buffer_option(SOCKET_BUFFER_SIZE);
+  new_connection->socket().set_option(recv_buffer_option);
+
+  boost::asio::ip::tcp::no_delay delay_option(true);
+  new_connection->socket().set_option(delay_option);
+
+  boost::asio::socket_base::linger linger_option( (SOCKET_LINGER_TIMEOUT >0),
+                                                    SOCKET_LINGER_TIMEOUT);
+  new_connection->socket().set_option(linger_option);
+
+  erase_mutex_.lock();
   deleteConnectionCallback del_con_cb = boost::bind( &TiDServer::clientHasDisconnected, this, _1);
   dispatchTiDMessageCallback disp_msg_cb = boost::bind( &TiDServer::dispatchMsg, this, _1, _2);
 
@@ -110,6 +152,7 @@ void TiDServer::handleAccept(const TCPConnection::pointer& new_connection,
 
   connection->run();
   startAccept();
+  erase_mutex_.unlock();
 }
 
 //-----------------------------------------------------------------------------
@@ -117,12 +160,13 @@ void TiDServer::handleAccept(const TCPConnection::pointer& new_connection,
 void TiDServer::clientHasDisconnected(const TiDConnection::ConnectionID& id)
 {
   #ifdef DEBUG
-    std::cout << "TiDServer: clientHasDisconnected" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   if(!running_)
     return;
 
+  dispatch_mutex_.lock();
   erase_mutex_.lock();
   std::cout << "  ** TiD Server: Connection to client @";
   cout << id.second << ":" << id.first << " has been closed.";
@@ -130,25 +174,33 @@ void TiDServer::clientHasDisconnected(const TiDConnection::ConnectionID& id)
   std::cout << " -- Connected clients: " << connections_.size() << std::endl << std::flush;
 
   erase_mutex_.unlock();
+  dispatch_mutex_.unlock();
 }
 
 //-----------------------------------------------------------------------------
 
-void TiDServer::dispatchMsg(IDMessage msg, const TiDConnection::ConnectionID& src_id)
+void TiDServer::dispatchMsg(IDMessage& msg, const TiDConnection::ConnectionID& src_id)
 {
   #ifdef DEBUG
-    std::cout << "TiDServer: dispatchMsg" << std::endl;
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
+  if(!running_)
+    return;
+
+  // TODO: Increase speed with multithreaded dispathing!
+
   dispatch_mutex_.lock();
-  messages_.push_back(msg);
+
+  msg_builder_->buildTiDMessage(msg, current_xml_string_);
 
   for(TiDConnHandlers::iterator it( connections_.begin() );
       it != connections_.end(); it++)
   {
     if(src_id.first != it->first.first )
-      it->second->sendMsg(msg);
+      it->second->sendMsg(current_xml_string_);
   }
+  messages_.push_back(msg);
   dispatch_mutex_.unlock();
 }
 

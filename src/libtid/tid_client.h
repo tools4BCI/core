@@ -7,6 +7,8 @@
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 
+#include "tobiid/IDMessage.hpp"
+
 //-----------------------------------------------------------------------------
 
 class IDMessage;
@@ -20,18 +22,23 @@ class TiDMessageBuilder;
 
 class TiDClient
 {
+  friend class TimedTiDClient;
+
   public:
     TiDClient();
     virtual ~TiDClient();
 
     void connect(std::string ip_addr, unsigned int port);
+    void disconnect();
 
     void startReceiving( bool throw_on_error );
     void stopReceiving();
 
     void setBufferSize (size_t size);
 
-    void sendMessage(std::string tid_xml_context);
+    void sendMessage(std::string& tid_xml_context);
+    void sendMessage(IDMessage& msg);
+
     bool newMessagesAvailable();
     void getLastMessagesContexts( std::vector< IDMessage >& messages  );
 
@@ -39,7 +46,7 @@ class TiDClient
     /**
      * @brief Handle completion of a receive operation.
      */
-    void receive();
+    virtual void receive();
 
     /**
      * @brief Handle completion of a write operation.
@@ -47,7 +54,7 @@ class TiDClient
     void handleWrite(const boost::system::error_code& e,
         std::size_t bytes_transferred);
 
-    void disconnect();
+
 
     enum ConnectionState
     {
@@ -59,7 +66,9 @@ class TiDClient
     };
 
     ConnectionState                                   state_;
-    std::vector <IDMessage>                         messages_;
+    IDMessage                                         msg_;
+    std::string                                       xml_string_;
+    std::vector <IDMessage>                           messages_;
 
     boost::asio::io_service                           io_service_;
 //    boost::asio::io_service& io_service_;
@@ -73,6 +82,11 @@ class TiDClient
     boost::thread*                                    io_service_thread_;
 
     bool                                              throw_on_error_;
+
+  #ifdef LPT_TEST
+    private:
+      bool  lpt_flag_;
+  #endif
 };
 
 //-----------------------------------------------------------------------------

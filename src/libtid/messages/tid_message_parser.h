@@ -23,7 +23,7 @@ class TiDMessageParser
 
     //-------------------------------------------------------------------------
     /// @throw exceptions if error occurs
-    virtual IDMessage parseMessage (InputStream& stream) const = 0;
+    virtual void parseMessage (IDMessage* msg, InputStream* stream) = 0;
     //    virtual void  getMessages (std::vector<TiDMessage>& messages) = 0;
 
 };

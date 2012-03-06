@@ -23,22 +23,28 @@ int main()
     IDMessage message1(IDMessage::FamilyBiosig, 781);
     IDMessage message2(IDMessage::FamilyBiosig, 782);
     IDMessage message3(IDMessage::FamilyBiosig, 783);
-    message1.SetDescription("feedback");
-    message2.SetDescription("feedback");
-    message3.SetDescription("feedback");
+//    message1.SetDescription("feedback");
+//    message2.SetDescription("feedback");
+//    message3.SetDescription("feedback");
     message1.SetBlockIdx(98);
     message2.SetBlockIdx(99);
     message3.SetBlockIdx(100);
+    message1.absolute.Tic();
+    message2.absolute.Tic();
+    message2.absolute.Tic();
 
     IDMessage message4(IDMessage::FamilyBiosig, 901);
     IDMessage message5(IDMessage::FamilyBiosig, 902);
     IDMessage message6(IDMessage::FamilyBiosig, 903);
-    message4.SetDescription("classifier");
-    message5.SetDescription("classifier");
-    message6.SetDescription("classifier");
+//    message4.SetDescription("classifier");
+//    message5.SetDescription("classifier");
+//    message6.SetDescription("classifier");
     message4.SetBlockIdx(98);
     message5.SetBlockIdx(99);
     message6.SetBlockIdx(100);
+    message4.absolute.Tic();
+    message5.absolute.Tic();
+    message6.absolute.Tic();
 
     messages.push_back(message1);
     messages.push_back(message2);
@@ -48,28 +54,31 @@ int main()
     messages.push_back(message6);
 
 
-    client.connect(std::string("10.0.2.15"), 9001);
-    client.startReceiving(true);
+    client.connect(std::string("127.0.0.1"), 9001);
+    client.startReceiving(false);
 
-    string str;
+    string str;//("a");
     cout << endl << ">>";
 
     unsigned int msg_count = 0;
     std::string buffer;
     while(cin >> str)
+//    while(str != "q")
     {
       if(str == "q" || str == "quit" || str == "exit")
         break;
       else if(str == "s" || str == "send")
       {
-        IDSerializerRapid serializer( &messages.at(msg_count) );
+        //IDSerializerRapid serializer( &messages.at(msg_count) );
         //        messages.at(msg_count).Dump();
-        serializer.Serialize(&buffer);
+        // serializer.Serialize(&buffer);
 
-        client.sendMessage( buffer );
-        buffer.clear();
+        client.sendMessage( messages.at(msg_count) );
+        //buffer.clear();
         if(++msg_count == messages.size())
           msg_count = 0;
+
+        cout << ">> " << endl;
       }
       else if(str == "r" )
       {
@@ -86,6 +95,43 @@ int main()
           msgs[n].Dump();
         }
 
+        cout << ">> " << endl;
+      }
+      else if(str == "a" )  // auto send 100 msgs
+      {
+        for(unsigned int j = 0; j < 10; j++)
+        {
+          for(unsigned int m = 0; m < 10; m++)
+          {
+            messages[msg_count].absolute.Tic();
+            client.sendMessage( messages[msg_count] );
+            if(++msg_count == messages.size())
+              msg_count = 0;
+            #ifdef WIN32
+              Sleep(100);
+            #else
+              usleep(100000);
+            #endif
+          }
+
+          std::vector<IDMessage> msgs;
+          client.getLastMessagesContexts(msgs);
+          cout << "Received messages: " << msgs.size() << endl;
+
+          // IDMessage recv_message;
+          //          IDSerializerRapid recv_serializer;
+          for(unsigned int n = 0; n < msgs.size(); n++)
+          {
+            cout << "Msg Nr: " << n  << endl;
+            //            recv_serializer.SetMessage(&msgs[n]);
+            msgs[n].Dump();
+          }
+          //          #ifdef WIN32
+          //            Sleep(100);
+          //          #else
+          //            usleep(100000);
+          //          #endif
+        }
         cout << ">> " << endl;
       }
       else

@@ -9,7 +9,8 @@
 #define TID_SERVER_H
 
 // Boost
-#include <boost/thread/mutex.hpp>
+#include <boost/asio.hpp>
+#include <boost/thread.hpp>
 #include <boost/cstdint.hpp>
 
 #include "tcp_server.h"
@@ -28,8 +29,12 @@ class IDMessage;
 namespace TiD
 {
 
+class TiDMessageBuilder;
+
 class TiDServer : public TCPServer
 {
+  friend class TimedTiDServer;
+
   public:
 
     typedef std::map<TiDConnection::ConnectionID, TiDConnection::pointer>     TiDConnHandlers;
@@ -39,7 +44,7 @@ class TiDServer : public TCPServer
      * @param
      * @throw
      */
-    TiDServer(boost::asio::io_service& io_service);
+    TiDServer();
     /**
    * @brief Destructor
    */
@@ -47,6 +52,8 @@ class TiDServer : public TCPServer
 
     bool newMessagesAvailable();
     void getLastMessages(std::vector<IDMessage>& messages);
+    void start();
+    void stop();
 
   protected:
     /**
@@ -58,17 +65,20 @@ class TiDServer : public TCPServer
 
     void clientHasDisconnected(const TiDConnection::ConnectionID& id);
 
-    void dispatchMsg(IDMessage msg, const TiDConnection::ConnectionID& src_id);
+    void dispatchMsg(IDMessage& msg, const TiDConnection::ConnectionID& src_id);
 
   private:
 
     bool running_;
 
-    TiDConnHandlers         connections_;  ///< list holding handlers for each connected client
-    boost::mutex            dispatch_mutex_;
-    boost::mutex            erase_mutex_;
+    TiDConnHandlers             connections_;  ///< list holding handlers for each connected client
+    boost::mutex                dispatch_mutex_;
+    boost::mutex                erase_mutex_;
+    boost::asio::io_service     io_sevice_;
+    std::vector< IDMessage >    messages_;
 
-    std::vector< IDMessage >  messages_;
+    TiDMessageBuilder*          msg_builder_;
+    std::string                 current_xml_string_;
 
 };
 

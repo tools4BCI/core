@@ -28,12 +28,16 @@
 
 #include <string>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/asio.hpp>
 
+#include <boost/asio.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/circular_buffer.hpp>
+#include <boost/enable_shared_from_this.hpp>
 namespace TiD
 {
+
+static const int SOCKET_BUFFER_SIZE = 4194304;
+static const int SOCKET_LINGER_TIMEOUT = 1;
 
 //-----------------------------------------------------------------------------
 
@@ -60,7 +64,6 @@ class TCPConnection : public boost::enable_shared_from_this<TCPConnection>
 
     static std::string endpointToString(const boost::asio::ip::tcp::endpoint& endpoint);
 
-  public:
     /**
      * @brief The socket associated with this connection
      */
@@ -72,9 +75,7 @@ class TCPConnection : public boost::enable_shared_from_this<TCPConnection>
     /**
      * @brief Constructor
      */
-    TCPConnection(boost::asio::io_service& io_service) :
-        socket_(io_service)
-      {    }
+    TCPConnection(boost::asio::io_service& io_service);
 
   private:
     boost::asio::ip::tcp::socket socket_;
