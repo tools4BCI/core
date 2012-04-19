@@ -1,5 +1,5 @@
-#ifndef TID_CLIENT_TIMING_TEST_H
-#define TID_CLIENT_TIMING_TEST_H
+#ifndef TIMED_TID_CLIENT_H
+#define TIMED_TID_CLIENT_H
 
 #include <boost/chrono.hpp>
 
@@ -18,8 +18,13 @@ class TimedTiDClient : public TiD::TiDClient
   public:
     TimedTiDClient()
       : send_start_time_(boost::chrono::high_resolution_clock::now()),
-        recv_start_time_(boost::chrono::high_resolution_clock::now())
+        recv_start_time_(boost::chrono::high_resolution_clock::now()),
+        nr_received_msgs_(0), last_frame_nr_(0)
     {
+      #ifdef DEBUG
+        std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+      #endif
+
       timed_input_stream_ =  new TimedInputStreamSocket(socket_);
       recv_diffs_.reserve(NR_TID_MESSAGES);
       recv_timepoints_.reserve(NR_TID_MESSAGES);
@@ -27,6 +32,10 @@ class TimedTiDClient : public TiD::TiDClient
 
     virtual ~TimedTiDClient()
     {
+      #ifdef DEBUG
+        std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+      #endif
+
       if(timed_input_stream_)
       {
         delete timed_input_stream_;
@@ -56,8 +65,10 @@ class TimedTiDClient : public TiD::TiDClient
       sendMessage(msg);
     }
 
-    std::vector<double>& getRecvDiffValues()
+    std::vector<double> getRecvDiffValues()
     {
+      //      std::cout << "   -->" << BOOST_CURRENT_FUNCTION << " - received msgs: " << nr_received_msgs_;
+      //      std::cout << "/" << messages_.size() << std::endl;
       return(recv_diffs_);
     }
 
@@ -68,8 +79,15 @@ class TimedTiDClient : public TiD::TiDClient
 
     void clearRecvTimingValues()
     {
+      timing_mutex_.lock();
+
+      nr_received_msgs_ = 0;
+
       recv_diffs_.clear();
       recv_timepoints_.clear();
+      recv_diffs_.reserve(NR_TID_MESSAGES);
+      recv_timepoints_.reserve(NR_TID_MESSAGES);
+      timing_mutex_.unlock();
     }
 
     //-----------------------------------------------------------------------------
@@ -77,7 +95,11 @@ class TimedTiDClient : public TiD::TiDClient
   private:
     virtual void receive()
     {
-      //std::cout << "    " << BOOST_CURRENT_FUNCTION <<  std::endl;
+      #ifdef DEBUG
+        std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+      #endif
+
+      nr_received_msgs_ = 0;
 
       while(state_ == State_Running)
       {
@@ -87,6 +109,11 @@ class TimedTiDClient : public TiD::TiDClient
 
           mutex_.lock();
           messages_.push_back(msg_);
+//          nr_received_msgs_++;
+//          if( (last_frame_nr_+1) != msg_.GetBlockIdx() )
+//            std::cerr << "Lost a TiD msg -- last/current: " << last_frame_nr_ << "/" << msg_.GetBlockIdx() << std::endl;
+
+//          last_frame_nr_ = msg_.GetBlockIdx();
           mutex_.unlock();
         }
         catch(std::exception& e)
@@ -103,8 +130,11 @@ class TimedTiDClient : public TiD::TiDClient
         recv_start_time_ = timed_input_stream_->getStartTime();
         recv_diff_ = recv_stop_time_ - recv_start_time_;
 
+        timing_mutex_.lock();
+
         recv_diffs_.push_back(recv_diff_.count());
         recv_timepoints_.push_back(recv_stop_time_);
+        timing_mutex_.unlock();
 
         //std::cout << recv_diff_ << " -- " << recv_diffs_.size() << std::endl;
       }
@@ -126,6 +156,11 @@ class TimedTiDClient : public TiD::TiDClient
     std::vector<boost::chrono::high_resolution_clock::time_point>    recv_timepoints_;
 
     TimedInputStreamSocket*                                timed_input_stream_;
+    boost::mutex                                           timing_mutex_;
+
+    unsigned int                                           nr_received_msgs_;
+    unsigned int                                           last_frame_nr_;
+
 };
 
 } // TiD

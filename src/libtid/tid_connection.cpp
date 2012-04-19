@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <boost/current_function.hpp>
+#include <boost/asio/error.hpp>
 
 using std::cerr;
 using std::cout;
@@ -38,7 +39,7 @@ TiDConnection::TiDConnection(const TCPConnection::pointer& tcp_conn_handle,
   msg_parser_   = new TiDMessageParser10();
   msg_builder_  = new TiDMessageBuilder10();
 
-  msg_string_send_buffer_.resize(64);
+  msg_string_send_buffer_.set_capacity(2048);
   current_xml_str_.reserve(2048);
 }
 
@@ -49,6 +50,9 @@ TiDConnection::~TiDConnection()
   #ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
+
+//    std::cout << "   -->  " << BOOST_CURRENT_FUNCTION << " -- sent msgs: " << nr_sent_msgs_;
+//    std::cout << "   ***  " << " msg buffer size: " << msg_string_send_buffer_.size() << std::endl;
 
   close();
 
@@ -109,9 +113,13 @@ void TiDConnection::stop()
   state_ = State_Stopped;
 
   boost::system::error_code error;
-  tcp_connection_->socket().shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-  if(error)
-    cerr << "TiDConnection::stop() -- " << error.message() << endl;
+  tcp_connection_->socket().shutdown(boost::asio::ip::tcp::socket::shutdown_both, error);
+  if(error == boost::asio::error::bad_descriptor)
+    return;
+  if(error == boost::asio::error::not_connected)
+    return;
+  else if(error)
+    cerr << BOOST_CURRENT_FUNCTION << " -- " << error.message() << endl;
 }
 
 //-----------------------------------------------------------------------------
@@ -184,8 +192,7 @@ void TiDConnection::handleWrite(const boost::system::error_code& error,
   if (error && (state_ == State_Running) )
   {
     cerr << "TiDConnection::handleWrite [Client@" << connection_id_.second << "]: "
-         << "error during write - closing connection."
-         << "--> " << error.message() << endl;
+         << "-- error-msg: " << error.message() << " --> closing connection." << endl;
     stop();
 
     // No new asynchronous operations are started. This means that all shared_ptr
@@ -193,8 +200,12 @@ void TiDConnection::handleWrite(const boost::system::error_code& error,
     // destroyed automatically after this handler returns. The connection class's
     // destructor closes the socket.
   }
-  else if(state_ == State_Running && !msg_string_send_buffer_.empty())
+  else if(state_ == State_Running && (!msg_string_send_buffer_.empty()) )
+  {
     msg_string_send_buffer_.pop_front();
+  }
+  if(!msg_string_send_buffer_.empty())
+    std::cerr << "Still msgs in the buffer -- nr buffered msgs: " << msg_string_send_buffer_.size()  << std::endl;
 
 }
 
@@ -226,12 +237,11 @@ void TiDConnection::sendMsg(IDMessage& msg)
                            boost::bind(&TiDConnection::handleWrite, this->shared_from_this(),
                                        boost::asio::placeholders::error,
                                        boost::asio::placeholders::bytes_transferred) );
-  #ifdef TIMING_TEST
-    double abs_diff_2 = msg.absolute.Toc();
-    double rel_diff_2 = msg.relative.Toc();
-    std::cout << "  ** TIMING TEST ** -- abs/rel time-diff:  " << abs_diff_1 <<"/"<< rel_diff_1;
-    std::cout << ";  " << abs_diff_2 <<"/"<< rel_diff_2;
-    std::cout << std::endl << std::flush;
+
+  #ifndef WIN32
+    int i = 1;
+    setsockopt( tcp_connection_->socket().native_handle(), IPPROTO_TCP,
+                TCP_QUICKACK, (void *)&i, sizeof(i));
   #endif
 }
 
@@ -248,6 +258,13 @@ void TiDConnection::sendMsg(const std::string& xml_string)
                            boost::bind(&TiDConnection::handleWrite, this->shared_from_this(),
                                        boost::asio::placeholders::error,
                                        boost::asio::placeholders::bytes_transferred) );
+
+  #ifndef WIN32
+    int i = 1;
+    setsockopt( tcp_connection_->socket().native_handle(), IPPROTO_TCP,
+                TCP_QUICKACK, (void *)&i, sizeof(i));
+  #endif
+
 }
 
 //-----------------------------------------------------------------------------

@@ -35,12 +35,14 @@ class TiDClient
     void stopReceiving();
 
     void setBufferSize (size_t size);
+    void reserveNrOfMsgs (size_t expected_nr_of_msgs);
 
     void sendMessage(std::string& tid_xml_context);
     void sendMessage(IDMessage& msg);
 
     bool newMessagesAvailable();
     void getLastMessagesContexts( std::vector< IDMessage >& messages  );
+    void clearMessages();
 
   private:
     /**
@@ -71,7 +73,7 @@ class TiDClient
     std::vector <IDMessage>                           messages_;
 
     boost::asio::io_service                           io_service_;
-//    boost::asio::io_service& io_service_;
+
     boost::asio::ip::tcp::socket                      socket_;
     boost::mutex                                      mutex_;
 
@@ -80,6 +82,7 @@ class TiDClient
     TiDMessageBuilder*                                msg_builder_;
     boost::thread*                                    receive_thread_;
     boost::thread*                                    io_service_thread_;
+//    boost::thread*                                    io_service_thread_2_;
 
     bool                                              throw_on_error_;
 

@@ -46,8 +46,7 @@ unix {
             -L../build_x86/src/tobiid/.libs -ltobiid
     }
 
-    contains( DEFINES, TIMING_TEST )::
-      {
+    contains( DEFINES, TIMING_TEST )::{
         LIBS += -lboost_chrono
       }
 }

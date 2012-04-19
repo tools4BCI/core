@@ -12,7 +12,15 @@ TCPConnection::~TCPConnection()
   #ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
-  socket_.close();
+
+  boost::system::error_code error;
+  socket_.close(error);
+  if(error == boost::asio::error::bad_descriptor)
+    return;
+  if(error == boost::asio::error::not_connected)
+    return;
+  else if(error)
+    std::cerr << BOOST_CURRENT_FUNCTION << " -- " << error << std::endl;
 }
 
 //-----------------------------------------------------------------------------

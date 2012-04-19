@@ -20,7 +20,7 @@
 namespace TiD
 {
 
-static const int SOCKET_BUFFER_SIZE = 4194304;
+static const int SOCKET_BUFFER_SIZE = 16384;
 
 //-----------------------------------------------------------------------------
 
@@ -39,15 +39,6 @@ TiDClient::TiDClient()
 
   messages_.reserve(100);
   xml_string_.reserve(2048);
-
-  #ifdef LPT_TEST
-    lpt_flag_ = 0;
-    if(!LptDriverInstall())
-      std::cerr << "Installing LptTools lpt driver failed (do you have access rights for the lpt-port?)." << std::endl;
-
-    if(!LptInit())
-      std::cerr << "Initializing lpt driver failed (do you have access rights for the lpt-port?)." << std::endl;
-  #endif
 }
 
 //-----------------------------------------------------------------------------
@@ -75,10 +66,19 @@ TiDClient::~TiDClient()
 
   if(io_service_thread_)
   {
+
     io_service_thread_->join();
     delete io_service_thread_;
     io_service_thread_ = 0;
   }
+
+  //  if(io_service_thread_2_)
+  //  {
+  //    io_service_thread_2_->join();
+  //    delete io_service_thread_2_;
+  //    io_service_thread_2_ = 0;
+  //  }
+
 
   if(receive_thread_)
   {
@@ -105,10 +105,10 @@ void TiDClient::connect(std::string ip_addr, unsigned int port)
 
   boost::system::error_code ec;
 
-  if(state_ != State_ConnectionClosed)
+  if(socket_.is_open())
   {
     std::stringstream ex_str;
-    ex_str << "TiDClient: Already connected!" << ip_addr << ":" << port;
+    ex_str << "TiDClient: Already connected!" << socket_.remote_endpoint().address().to_string();
     throw(std::invalid_argument( ex_str.str() ));
   }
 
@@ -122,12 +122,17 @@ void TiDClient::connect(std::string ip_addr, unsigned int port)
 
   boost::asio::ip::tcp::no_delay delay(true);
   socket_.set_option(delay);
-  boost::asio::socket_base::linger linger(true, 0);
+  boost::asio::socket_base::linger linger(false, 0);
   socket_.set_option(linger);
   boost::asio::socket_base::send_buffer_size send_buffer_option(SOCKET_BUFFER_SIZE);
   socket_.set_option(send_buffer_option);
   boost::asio::socket_base::receive_buffer_size recv_buffer_option(SOCKET_BUFFER_SIZE);
   socket_.set_option(recv_buffer_option);
+  #ifndef WIN32
+    int i = 1;
+    setsockopt( socket_.native_handle(), IPPROTO_TCP,
+              TCP_QUICKACK, (void *)&i, sizeof(i));
+  #endif
 }
 
 //-----------------------------------------------------------------------------
@@ -142,10 +147,28 @@ void TiDClient::disconnect()
     return;
 
   boost::system::error_code ec;  //ignored
+
+  socket_.cancel(ec);
+  unsigned int nr_disconnect_retries = 0;
+  ec.clear();
+
+  do
+  {
   socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
   socket_.close(ec);
+  if(ec)
+  {
+    std::cerr << BOOST_CURRENT_FUNCTION << " -- " << ec.message() << std::endl;
+    boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+  }
+
+  }
+  while(ec && (nr_disconnect_retries < 10) ) ;
 
   state_ = State_ConnectionClosed;
+
+  //  std::cout << "   -->" << BOOST_CURRENT_FUNCTION << " - sent msgs: " << nr_sent_msgs_;
+  //  std::cout << std::endl;
 }
 
 //-----------------------------------------------------------------------------
@@ -165,6 +188,13 @@ void TiDClient::setBufferSize(size_t size)
 
 //-----------------------------------------------------------------------------
 
+void TiDClient::reserveNrOfMsgs (size_t expected_nr_of_msgs)
+{
+  messages_.reserve(expected_nr_of_msgs);
+}
+
+//-----------------------------------------------------------------------------
+
 void TiDClient::sendMessage(std::string& tid_xml_context)
 {
   #ifdef DEBUG
@@ -175,6 +205,11 @@ void TiDClient::sendMessage(std::string& tid_xml_context)
                            boost::bind(&TiDClient::handleWrite, this,
                                        boost::asio::placeholders::error,
                                        boost::asio::placeholders::bytes_transferred ));
+  #ifndef WIN32
+    int i = 1;
+    setsockopt( socket_.native_handle(), IPPROTO_TCP,
+              TCP_QUICKACK, (void *)&i, sizeof(i));
+  #endif
 }
 
 //-----------------------------------------------------------------------------
@@ -185,40 +220,18 @@ void TiDClient::sendMessage(IDMessage& msg)
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
-  #ifdef TIMING_TEST
-    msg.absolute.Tic();
-    msg.relative.Tic();
-  #endif
-
-  #ifdef LPT_TEST
-    int port_state = LptPortIn(LPT1,0);
-    if(!lpt_flag_)
-    {
-      lpt_flag_ = 1;
-      LptPortOut(LPT1, 0, port_state | 0x01);
-    }
-    else
-    {
-      lpt_flag_ = 0;
-      LptPortOut(LPT1, 0, port_state & ~0x01);
-    }
-  #endif
-
   msg_builder_->buildTiDMessage(msg, xml_string_);
-
-  #ifdef TIMING_TEST
-    double abs_diff = msg.absolute.Toc();
-    double rel_diff = msg.relative.Toc();
-    std::cout << "  ** TIMING TEST ** -- time to bild msg -- abs/rel time-diff:  " << abs_diff <<"/"<< rel_diff;
-    std::cout << std::endl << std::flush;
-  #endif
 
   boost::asio::async_write(socket_, boost::asio::buffer(xml_string_),
                            boost::bind(&TiDClient::handleWrite, this,
                                        boost::asio::placeholders::error,
                                        boost::asio::placeholders::bytes_transferred ));
-
   xml_string_.clear();
+  #ifndef WIN32
+    int i = 1;
+    setsockopt( socket_.native_handle(), IPPROTO_TCP,
+              TCP_QUICKACK, (void *)&i, sizeof(i));
+  #endif
 }
 
 //-----------------------------------------------------------------------------
@@ -238,6 +251,10 @@ void TiDClient::startReceiving(bool throw_on_error)
   receive_thread_ = new boost::thread(&TiDClient::receive, this);
   io_service_thread_ = new boost::thread(boost::bind(&boost::asio::io_service::run,
                                                      &this->io_service_));
+
+  //  io_service_thread_2_ = new boost::thread(boost::bind(&boost::asio::io_service::run,
+  //                                                     &this->io_service_));
+
   #ifdef WIN32
     SetPriorityClass(receive_thread_->native_handle(),  REALTIME_PRIORITY_CLASS);
     SetThreadPriority(receive_thread_->native_handle(), THREAD_PRIORITY_HIGHEST );
@@ -255,6 +272,8 @@ void TiDClient::stopReceiving()
   #endif
 
   state_ = State_Stopped;
+  boost::system::error_code error;
+  socket_.cancel(error);
 }
 
 //-----------------------------------------------------------------------------
@@ -270,28 +289,6 @@ void TiDClient::receive()
     try
     {
       msg_parser_->parseMessage(&msg_, input_stream_ );
-
-      #ifdef LPT_TEST
-        int port_state = LptPortIn(LPT1,0);
-        if(!lpt_flag_)
-        {
-          lpt_flag_ = 1;
-          LptPortOut(LPT1, 0, port_state | 0x02);
-        }
-        else
-        {
-          lpt_flag_ = 0;
-          LptPortOut(LPT1, 0, port_state & ~0x02);
-        }
-      #endif
-
-//      #ifdef TIMING_TEST
-        double abs_diff = msg_.absolute.Toc();
-        double rel_diff = msg_.relative.Toc();
-        std::cout << "  ** TIMING TEST ** -- TiDClient::receive() -- abs/rel time-diff:  " << abs_diff <<"/"<< rel_diff;
-        std::cout << std::endl << std::flush;
-//      #endif
-
       mutex_.lock();
       messages_.push_back(msg_);
       mutex_.unlock();
@@ -306,7 +303,6 @@ void TiDClient::receive()
       state_ = State_Error;
       return;
     }
-
   }
 }
 
@@ -351,6 +347,19 @@ bool TiDClient::newMessagesAvailable()
   mutex_.unlock();
 
   return available;
+}
+
+//-----------------------------------------------------------------------------
+
+void TiDClient::clearMessages()
+{
+  #ifdef DEBUG
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+  #endif
+
+  mutex_.lock();
+  messages_.clear();
+  mutex_.unlock();
 }
 
 //-----------------------------------------------------------------------------

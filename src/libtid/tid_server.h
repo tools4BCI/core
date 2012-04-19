@@ -52,8 +52,11 @@ class TiDServer : public TCPServer
 
     bool newMessagesAvailable();
     void getLastMessages(std::vector<IDMessage>& messages);
+    void clearMessages();
+    void reserveNrOfMsgs (size_t expected_nr_of_msgs);
     void start();
     void stop();
+    void update(boost::uint64_t rel_timestamp, boost::uint64_t packet_nr);
 
   protected:
     /**
@@ -80,6 +83,9 @@ class TiDServer : public TCPServer
     TiDMessageBuilder*          msg_builder_;
     std::string                 current_xml_string_;
 
+    boost::uint64_t             current_rel_timestamp_;
+    boost::uint64_t             current_packet_nr_;
+    TCTimeval                   current_timeval_;
 };
 
 } // Namespace TiD

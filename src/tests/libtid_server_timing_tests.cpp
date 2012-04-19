@@ -20,8 +20,12 @@
 */
 
 #include <fstream>
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/thread.hpp>
+#include <boost/asio/basic_deadline_timer.hpp>
+#include <boost/bind.hpp>
+
 
 #include "UnitTest++/UnitTest++.h"
 
@@ -46,6 +50,10 @@ using std::fstream;
 TEST(libTiDServerDispatchTiming)
 {
   std::cout << "Running libTiD server-dispatching timing test" << std::endl;
+  #ifdef SKIP_LIBTID_SERVER_DISPATCH_TEST
+    std::cout << "  --> skipping !!" << std::endl;
+    return;
+  #endif
 
   TiDMessageVectorBuilder msg_builder;
   tobiss::Statistics  stat(true, 100);
@@ -80,7 +88,6 @@ TEST(libTiDServerDispatchTiming)
     server.start();
 
     TiD::TiDClient send_client;
-    send_client.connect("127.0.0.1",9001);
 
     filename = "libtid_server_dispatch-" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +"-reps_summary.txt";
     summary_file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
@@ -89,23 +96,29 @@ TEST(libTiDServerDispatchTiming)
     for(unsigned int cl_ind = 0; cl_ind < nr_clients.size(); cl_ind++ )
     {
       std::cout << "  ... iteration " << cl_ind+1 << " from " << nr_clients.size() << std::endl;
+      send_client.connect("127.0.0.1",9001);
       for(unsigned int n = 0; n < nr_clients[cl_ind]; n++)
       {
         clients_vec.push_back(new TiD::TiDClient );
         clients_vec[n]->connect("127.0.0.1",9001);
       }
 
-      boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+      boost::this_thread::sleep(boost::posix_time::milliseconds(100));
 
       for(unsigned int k= 0; k < description_str_lengths.size(); k++ )
       {
-        std::cout << "    ... sub-iteration " << k+1 << " from " << description_str_lengths.size() << std::endl;
+        std::cout << "    ... sub-iteration " << k+1 << " from " << description_str_lengths.size();
+        std::cout << " (will take at least " << SLEEP_TIME_BETWEEN_MSGS * NR_TID_MESSAGES << ")" << std::endl;
+
+
         msg_builder.generateMsgsVector(NR_TID_MESSAGES, description_str_lengths[k]);
         std::vector<IDMessage>& msgs_vec = msg_builder.getMessagesVector();
 
 
         stat.reset();
         server.clearConnectionDispatchTimings();
+        server.clearMessages();
+        server.reserveNrOfMsgs(NR_TID_MESSAGES);
         boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 
         filename = "libtid_server_dipatch_nr_clients_"
@@ -114,11 +127,28 @@ TEST(libTiDServerDispatchTiming)
             + "nr_reps_" + boost::lexical_cast<std::string>(msgs_vec.size()) +".csv";
         file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
 
+
+        boost::asio::io_service io;
+        boost::posix_time::ptime start_time = boost::posix_time::second_clock::local_time();
+
+        boost::asio::deadline_timer timer(io, boost::posix_time::seconds(60));
+
+        timer.async_wait( boost::bind(TiDHelpers::printElapsedTime, boost::asio::placeholders::error,
+                                      &timer, start_time));
+
+        boost::thread t(boost::bind(&boost::asio::io_service::run, &io));
+        std::cout << "        ";
+        boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+
         for(unsigned int n = 0; n < msgs_vec.size(); n++ )
         {
           send_client.sendMessage(msgs_vec[n]);
           boost::this_thread::sleep(SLEEP_TIME_BETWEEN_MSGS);
         }
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+        io.stop();
+        t.join();
+        std::cout << std::endl;
 
         boost::this_thread::sleep(boost::posix_time::milliseconds(10));
         std::list< std::vector<double> > diff_list = server.getConnectionDispatchTimings();
@@ -138,7 +168,7 @@ TEST(libTiDServerDispatchTiming)
         stat.printAll(summary_file_stream);
         summary_file_stream << std::endl << std::endl;
       }
-      boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+      boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 
       for(unsigned int n = 0; n < nr_clients[cl_ind]; n++)
       {
@@ -146,9 +176,11 @@ TEST(libTiDServerDispatchTiming)
         delete clients_vec[n];
       }
       clients_vec.clear();
+      send_client.disconnect();
+
+      boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 
     }
-    send_client.disconnect();
     boost::this_thread::sleep(boost::posix_time::milliseconds(100));
     server.stop();
 

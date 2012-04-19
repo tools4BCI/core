@@ -26,49 +26,18 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#include "timing_test_helpers.h"
-
 unsigned int NR_TID_MESSAGES = 50;
 unsigned int NR_CLIENTS = 0;
 
-boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(3);
 
+//boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(5);
+//boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(3);
+boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(2);
+//boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(1);
 
+//boost::posix_time::microseconds SLEEP_TIME_BETWEEN_MSGS(500);
 
-//-------------------------------------------------------------------------------------------------
-
-char TiDHelpers::rand_alnum()
-{
-  char c;
-  while (!std::isalnum(c = static_cast<char>(rand())))
-    ;
-  return c;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void TiDHelpers::rand_alnum_str (std::string::size_type sz, std::string& s)
-{
-  s.clear();
-  generate_n (std::back_inserter(s), sz, rand_alnum);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void TiDHelpers::updateFileStream(std::ostream& file_stream, tobiss::Statistics& stat)
-{
-  file_stream << stat.get_mean() << ",";
-
-  file_stream << stat.get_adaptive_mean() << ",";
-  file_stream << stat.get_adaptive_var() << ",";
-
-  file_stream << stat.get_window_mean() << ",";
-  file_stream << stat.get_window_median() << ",";
-  file_stream << stat.get_window_min() << ",";
-  file_stream << stat.get_window_max() << ",";
-  file_stream << stat.get_window_var() << ",";
-
-}
+boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS_REMOTE(4);
 
 //-------------------------------------------------------------------------------------------------
 
@@ -84,11 +53,23 @@ int main( int argc, const char* argv[] )
     NR_CLIENTS = boost::lexical_cast<unsigned int>(argv[2]);
   }
 
+  #ifdef WIN32
+    SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
+  #endif
 
     srand (time(NULL));
     std::cout << std::endl << "Build on " << __DATE__ << " at " << __TIME__ << std::endl;
-    std::cout << "  ...  running " << NR_TID_MESSAGES << " messages on " << NR_CLIENTS << " clients." << std::endl<< std::endl;
+    std::cout << "  ...  running " << NR_TID_MESSAGES << " messages on " << NR_CLIENTS << " clients ";
+    std::cout << "with " << SLEEP_TIME_BETWEEN_MSGS << " between the messages." << std::endl<< std::endl;
 
     return UnitTest::RunAllTests();
 }
+
+//-------------------------------------------------------------------------------------------------
+
+//#ifdef WIN32
+//  SetPriorityClass( ptr->native_handle(), REALTIME_PRIORITY_CLASS);
+//  SetThreadPriority(ptr->native_handle(), THREAD_PRIORITY_HIGHEST );
+//  SetPriorityClass(GetCurrentProcess(),   REALTIME_PRIORITY_CLASS);
+//#endif
 

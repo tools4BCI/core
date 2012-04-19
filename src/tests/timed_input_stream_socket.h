@@ -7,33 +7,74 @@
 #include "libtid/input_stream_socket.h"
 #include "libtid/tid_exceptions.h"
 
+namespace TiD
+{
+
 class TimedInputStreamSocket : public TiD::InputStreamSocket
 {
   public:
     TimedInputStreamSocket(boost::asio::ip::tcp::socket& socket)
       : InputStreamSocket(socket), socket_(socket)
     {
-
+      #ifdef DEBUG
+        std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+      #endif
     }
 
-    virtual void readUntil (std::string delimiter, std::string& str)
+    virtual void readUntil (std::string delimiter, std::string* str)
     {
+      #ifdef DEBUG
+        std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+      #endif
+
+      str_buffer_.reserve(4096);
+      tmp_str_.reserve(4096);
+
+      if(str_buffer_.size())
+      {
+        str_buffer_.erase(0, last_pos_+delimiter.size());
+
+        size_t pos = str_buffer_.find(delimiter);
+        if(pos != std::string::npos)
+        {
+          start_time_ = boost::chrono::high_resolution_clock::now();
+          *str = str_buffer_.substr(0, pos+delimiter.size() );
+          last_pos_ = pos;
+          return;
+        }
+      }
+
+      std::istream is(&stream_buffer_);
+
       boost::asio::read_until (socket_, stream_buffer_, delimiter,error_ );
+      if(error_)
+        throw TiDLostConnection ("InputStreamSocket::readUntil error read_until: "
+                                 + std::string (error_.category().name()) + error_.message());
+
       start_time_ = boost::chrono::high_resolution_clock::now();
 
-      if(error_)
+      if(str_buffer_.size())
       {
-        str_buffer_.clear();
-        throw TiD::TiDLostConnection ("InputStreamSocket::readUntil error read_until: "
-                                      + std::string (error_.category().name()) + error_.message());
+        std::getline(is,tmp_str_);
+        str_buffer_.append(tmp_str_);
       }
-      std::istream is(&stream_buffer_);
-      std::getline(is, str);
-      is.get();
+      else
+        std::getline(is,str_buffer_);
 
+      size_t pos = str_buffer_.find(delimiter);
+      if(pos != std::string::npos)
+      {
+        *str = str_buffer_.substr(0, pos+delimiter.size() );
+        last_pos_ = pos;
+      }
     }
 
-    virtual ~TimedInputStreamSocket() {};
+    virtual ~TimedInputStreamSocket()
+    {
+      #ifdef DEBUG
+        std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+      #endif
+    };
 
     boost::chrono::high_resolution_clock::time_point getStartTime()
     {
@@ -51,5 +92,6 @@ class TimedInputStreamSocket : public TiD::InputStreamSocket
 
 };
 
+}
 
 #endif // TIMED_INPUT_STREAM_SOCKET_CPP

@@ -29,8 +29,19 @@ TiDMessageParser10::TiDMessageParser10()
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
+
+  // FIXXXXXME
+  // Bad hack to get around varying performance of tobiid
   serializer_ = new IDSerializerRapid();
   xml_string_.reserve(2048);
+
+  for(unsigned int n = 0; n < 10; n++)
+  {
+    IDMessage msg;
+    serializer_->SetMessage(&msg);
+    std::string str = "<tobiid version=\"0.0.2.1\" description=\"7Qfa4c51JsIJi0U6pUPLRQgWxRGmA97RIapdgMNll65AHCGV0f\" frame=\"64\" family=\"biosig\" event=\"6000\" timestamp=\"1330691458,821096\" reference=\"1330691458,821096\"/>";
+    serializer_->Deserialize(&str);
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -54,7 +65,9 @@ void TiDMessageParser10::parseMessage (IDMessage* msg, InputStream* stream)
   #endif
 
   xml_string_.clear();
-  stream->readUntil(TiDMessageTags10::XML_END_STRING, xml_string_);
+
+  stream->readUntil(TiDMessageTags10::XML_END_STRING, &xml_string_);
+//  xml_string_ = "<tobiid version=\"0.0.2.1\" description=\"7Qfa4c51JsIJi0U6pUPLRQgWxRGmA97RIapdgMNll65AHCGV0f\" frame=\"64\" family=\"biosig\" event=\"6000\" timestamp=\"1330691458,821096\" reference=\"1330691458,821096\"/>";
 
   try
   {

@@ -19,6 +19,23 @@ class TiDMessageBuilder10 : public TiDMessageBuilder
     TiDMessageBuilder10()
     {
       serializer_ = new IDSerializerRapid();
+
+      // FIXXXXXME
+      // Bad hack to get around varying performance of tobiid
+
+      IDMessage msg(IDMessage::FamilyBiosig,10000);
+      msg.SetDescription( "dhsfkjhfku84ewrkhfkjdhg7sfkhkshdfkjflaruihhdfskjhf74zkshgfksdhfsrfz7erfsdfkksdfh" );
+      msg.SetBlockIdx(10000);
+      msg.absolute.Tic();
+      msg.relative.Tic();
+
+      for(unsigned int n = 0; n < 10; n++)
+      {
+        std::string str;
+        serializer_->SetMessage(&msg);
+        serializer_->Serialize(&str);
+      }
+
     }
 
     virtual ~TiDMessageBuilder10()

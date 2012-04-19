@@ -44,7 +44,12 @@ using namespace std;
 
 TEST(tobiidSerializeTiming)
 {
-  std::cout << "Running serialization timing test" << std::endl;
+  std::cout << "Running tobiid serialization timing test" << std::endl;
+  #ifdef SKIP_TOBIID_SERIALIZE_TEST
+    std::cout << "  --> skipping !!" << std::endl;
+    return;
+  #endif
+
   srand (time(NULL));
   std::vector<IDMessage> messages;
   messages.reserve(NR_TID_MESSAGES);
@@ -99,6 +104,7 @@ TEST(tobiidSerializeTiming)
         + "nr_reps_" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +".csv";
     file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
     boost::this_thread::sleep(boost::posix_time::milliseconds(2));
+
     for(unsigned int n = 0; n < messages.size(); n++)
     {
       start_time = boost::chrono::high_resolution_clock::now();
@@ -124,7 +130,11 @@ TEST(tobiidSerializeTiming)
 
 TEST(tobiidDeSerializeTiming)
 {
-  std::cout << "Running deserialization timing test" << std::endl;
+  std::cout << "Running tobiid deserialization timing test" << std::endl;
+  #ifdef SKIP_TOBIID_DESERIALIZE_TEST
+    std::cout << "  --> skipping !!" << std::endl;
+    return;
+  #endif
 
   srand (time(NULL));
   std::string xml_str_to_serialize;

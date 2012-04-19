@@ -36,6 +36,7 @@
 #include "tid_message_vector_builder.h"
 #include "statistics.h"
 #include "timing_test_helpers.h"
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 using std::fstream;
 
@@ -47,6 +48,11 @@ extern boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS;
 TEST(libTiDClientSendTiming)
 {
   std::cout << "Running libTiD client-send timing test" << std::endl;
+  #ifdef SKIP_LIBTID_CLIENT_SEND_TEST
+    std::cout << "  --> skipping !!" << std::endl;
+    return;
+  #endif
+
 
   TiD::TimedTiDClient client;
   TiDMessageVectorBuilder msg_builder;
@@ -107,6 +113,10 @@ TEST(libTiDClientSendTiming)
 TEST(libTiDClientReceiveTiming)
 {
   std::cout << "Running libTiD client-receive timing test" << std::endl;
+  #ifdef SKIP_LIBTID_CLIENT_RECV_TEST
+    std::cout << "  --> skipping !!" << std::endl;
+    return;
+  #endif
 
   TiDMessageVectorBuilder msg_builder;
   tobiss::Statistics  stat(true, 100);
@@ -130,12 +140,7 @@ TEST(libTiDClientReceiveTiming)
     test_server.start();
 
     TiD::TiDClient send_client;
-    send_client.connect("127.0.0.1",9001);
-
     TiD::TimedTiDClient recv_client;
-    recv_client.connect("127.0.0.1",9001);
-    recv_client.startReceiving(0);
-    boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 
     filename = "libtid_recv_client-" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +"-reps_summary.txt";
     summary_file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
@@ -143,13 +148,41 @@ TEST(libTiDClientReceiveTiming)
 
     for(unsigned int k= 0; k < description_str_lengths.size(); k++ )
     {
-      std::cout << "  ... iteration " << k+1 << " from " << description_str_lengths.size() << std::endl;
+      std::cout << "  ... iteration " << k+1 << " from " << description_str_lengths.size();
+      std::cout << " (will take at least " << SLEEP_TIME_BETWEEN_MSGS * NR_TID_MESSAGES << ")" << std::endl;
+
+      try
+      {
+        send_client.connect("127.0.0.1",9001);
+      }
+      catch(std::exception& e)
+      {
+        std::cerr << " *** Exception caught: " << e.what() << std::endl;
+        throw;
+      }
+      boost::this_thread::sleep(boost::posix_time::milliseconds(50));
+      try
+      {
+        recv_client.connect("127.0.0.1",9001);
+      }
+      catch(std::exception& e)
+      {
+        std::cerr << " *** Exception caught: " << e.what() << std::endl;
+        throw;
+      }
+      recv_client.reserveNrOfMsgs(NR_TID_MESSAGES);
+      recv_client.startReceiving(0);
+      boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+
       msg_builder.generateMsgsVector(NR_TID_MESSAGES, description_str_lengths[k]);
       std::vector<IDMessage>& msgs_vec = msg_builder.getMessagesVector();
 
       stat.reset();
       recv_client.clearRecvTimingValues();
-      boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+      recv_client.clearMessages();
+      test_server.clearMessages();
+      test_server.reserveNrOfMsgs(NR_TID_MESSAGES);
+      boost::this_thread::sleep(boost::posix_time::milliseconds(100));
 
       filename = "libtid_recv_client_desc_len_" + boost::lexical_cast<std::string>(description_str_lengths[k])
           + "nr_reps_" + boost::lexical_cast<std::string>(msgs_vec.size()) +".csv";
@@ -161,8 +194,18 @@ TEST(libTiDClientReceiveTiming)
         send_client.sendMessage(msgs_vec[n]);
         boost::this_thread::sleep(SLEEP_TIME_BETWEEN_MSGS);
       }
+      boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
 
-      std::vector<double>& diffs = recv_client.getRecvDiffValues();
+      std::vector<double> diffs = recv_client.getRecvDiffValues();
+
+      std::cout << "   ... Timing differences vector size: " << diffs.size() << std::endl;
+
+      boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+      recv_client.stopReceiving();
+      recv_client.disconnect();
+      boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+      send_client.disconnect();
+      boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 
       for(unsigned int n = 0; n < diffs.size(); n++)
       {
@@ -176,19 +219,12 @@ TEST(libTiDClientReceiveTiming)
 
       summary_file_stream << "Desc-len: "<< boost::lexical_cast<std::string>(description_str_lengths[k]) << std::endl << std::endl;
       stat.printAll(summary_file_stream);
-      summary_file_stream << std::endl << std::endl;
-
+      summary_file_stream << std::endl << std::endl << std::flush;
       boost::this_thread::sleep(boost::posix_time::milliseconds(10));
     }
-
-    recv_client.stopReceiving();
-
-    recv_client.disconnect();
-    send_client.disconnect();
-    boost::this_thread::sleep(boost::posix_time::milliseconds(10));
     test_server.stop();
+    boost::this_thread::sleep(boost::posix_time::milliseconds(100));
 
-    boost::this_thread::sleep(boost::posix_time::milliseconds(10));
   }
   catch(std::exception& e)
   {

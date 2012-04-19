@@ -126,6 +126,7 @@ class TiDConnection : public boost::enable_shared_from_this<TiDConnection>
     boost::circular_buffer<std::string>      msg_string_send_buffer_;
     //tobiss::DataBuffer<std::string>          msg_string_send_buffer_;
 
+
 };
 
 //-----------------------------------------------------------------------------

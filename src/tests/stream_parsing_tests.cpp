@@ -94,6 +94,8 @@ TEST(delimiterParsingTest)
 
   multi_xml_msg.resize(multi_xml_msg.size());
 
+
+  //<tobiid version=\"0.0.2.1\" description=\"7Qfa4c51JsIJi0U6pUPLRQgWxRGmA97RIapdgMNll65AHCGV0f\" frame=\"64\" family=\"biosig\" event=\"6000\" timestamp=\"1330691458,821096\" reference=\"1330691458,821096\"/>
   //string multi_xml_msg = ("<tobiid version=\"0.0.2.1\" description=\"7Qfa4c51JsIJi0U6pUPLRQgWxRGmA97RIapdgMNll65AHCGV0f\" frame=\"64\" family=\"biosig\" event=\"6000\" timestamp=\"1330691458,821096\" reference=\"1330691458,821096\"/><tobiid version=\"0.0.2.1\" description=\"83DMO8w9F9yXs3jUJvqPemMB4bKawnSn7VDLu0i7Mh7vleXV6a\" frame=\"65\" family=\"biosig\" event=\"5009\" timestamp=\"1330691458,821109\" reference=\"1330691458,821110\"/><tobiid version=\"0.0.2.1\" description=\"9lxWeD9Br78dKxgQKqh4vdymzH4IPRjj3j9X6TSh2MyNfKnbq9\" frame=\"66\" family=\"biosig\" event=\"659");
   //  multi_xml_msg = ("1096\" reference=\"1330691458,821096\"/><tobiid version=\"0.0.2.1\" description=\"83DMO8w9F9yXs3jUJvqPemMB4bKawnSn7VDLu0i7Mh7vleXV6a\" frame=\"65\" family=\"biosig\" event=\"5009\" timestamp=\"1330691458,821109\" reference=\"1330691458,821110\"/><tobiid version=\"0.0.2.1\" description=\"9lxWeD9Br78dKxgQKqh4vdymzH4IPRjj3j9X6TSh2MyNfKnbq9\" frame=\"66\" family=\"biosig\" event=\"659");
   stringstream ss_stream(stringstream::in | stringstream::out);
