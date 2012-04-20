@@ -86,7 +86,7 @@ contains( HARDWARE_PLATFORM, x86_64 )::{
   }else::{
     message(Building 32 bit )
     LIBS += lib/x86/libtid.a \
-            ../build_x86/src/tobicore/.libs/libtobicore.a \
             ../build_x86/src/tobiid/.libs/libtobiid.a \
+            ../build_x86/src/tobicore/.libs/libtobicore.a \
             -lUnitTest++
   }
