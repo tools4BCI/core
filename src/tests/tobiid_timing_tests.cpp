@@ -44,6 +44,7 @@ using namespace std;
 
 TEST(tobiidSerializeTiming)
 {
+  boost::this_thread::sleep(boost::posix_time::milliseconds(200));
   std::cout << "Running tobiid serialization timing test" << std::endl;
   #ifdef SKIP_TOBIID_SERIALIZE_TEST
     std::cout << "  --> skipping !!" << std::endl;
@@ -130,6 +131,7 @@ TEST(tobiidSerializeTiming)
 
 TEST(tobiidDeSerializeTiming)
 {
+  boost::this_thread::sleep(boost::posix_time::milliseconds(200));
   std::cout << "Running tobiid deserialization timing test" << std::endl;
   #ifdef SKIP_TOBIID_DESERIALIZE_TEST
     std::cout << "  --> skipping !!" << std::endl;

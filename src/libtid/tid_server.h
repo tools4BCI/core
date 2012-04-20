@@ -34,6 +34,7 @@ class TiDMessageBuilder;
 class TiDServer : public TCPServer
 {
   friend class TimedTiDServer;
+  friend class LPTTiDServer;
 
   public:
 

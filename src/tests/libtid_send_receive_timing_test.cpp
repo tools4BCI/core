@@ -47,7 +47,8 @@ using std::fstream;
 
 TEST(libTiDLocalHostSendReceiveTimingTest)
 {
-  std::cout << "Running libTiD send and receive timing test" << std::endl;
+  boost::this_thread::sleep(boost::posix_time::milliseconds(200));
+  std::cout << "Running libTiD localhost send and receive timing test" << std::endl;
   #ifdef SKIP_LIBTID_LOCALHOST_SEND_RECEIVE_TEST
     std::cout << "  --> skipping !!" << std::endl;
     return;
@@ -86,19 +87,21 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
     test_server.start();
 
     TiD::TimedTiDClient send_client;
-    send_client.connect("127.0.0.1",9001);
 
-    filename = "libtid_send_and_receive_timing-" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +"-reps_summary.txt";
+    filename = "libtid_localhost_send_and_receive_timing-" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +"-reps_summary.txt";
     summary_file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
     summary_file_stream << "All values are in microseconds:" << std::endl << std::endl;
 
     for(unsigned int cl_ind = 0; cl_ind < nr_clients.size(); cl_ind++ )
     {
+      send_client.connect("127.0.0.1",9001);
+      boost::this_thread::sleep(boost::posix_time::milliseconds(10));
       std::cout << "  ... iteration " << cl_ind+1 << " from " << nr_clients.size() << std::endl;
       for(unsigned int n = 0; n < nr_clients[cl_ind]; n++)
       {
         clients_vec.push_back(new TiD::TiDClient );
         clients_vec[n]->connect("127.0.0.1",9001);
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
       }
 
       boost::this_thread::sleep(boost::posix_time::milliseconds(10));
@@ -113,7 +116,7 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
         std::cout << "    ... sub-iteration " << k+1 << " from " << description_str_lengths.size();
         std::cout << " (will take at least " << SLEEP_TIME_BETWEEN_MSGS * NR_TID_MESSAGES << ")" << std::endl;
 
-        msg_builder.generateMsgsVector(NR_TID_MESSAGES, description_str_lengths[0]);  // << Hardcoded value
+        msg_builder.generateMsgsVector(NR_TID_MESSAGES, description_str_lengths[k]);  // << Hardcoded value
         std::vector<IDMessage>& msgs_vec = msg_builder.getMessagesVector();
 
         stat.reset();
@@ -122,7 +125,7 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
         boost::this_thread::sleep(boost::posix_time::milliseconds(200));
 
 
-        filename = "libtid_send_and_receive_timing_nr_clients_"
+        filename = "libtid_localhost_send_and_receive_timing_nr_clients_"
             + boost::lexical_cast<std::string>(nr_clients[cl_ind])
             + "_desc_len_" + boost::lexical_cast<std::string>(description_str_lengths[k])
             + "nr_reps_" + boost::lexical_cast<std::string>(msgs_vec.size()) +".csv";
@@ -181,11 +184,11 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
       clients_vec.clear();
       recv_client.stopReceiving();
       recv_client.disconnect();
+      send_client.disconnect();
 
       boost::this_thread::sleep(boost::posix_time::milliseconds(10));
     }
 
-    send_client.disconnect();
     boost::this_thread::sleep(boost::posix_time::milliseconds(10));
     test_server.stop();
 
@@ -204,7 +207,8 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
 
 TEST(libTiDRemoteSendReceiveTimingTest)
 {
-  std::cout << "Running libTiD send and receive timing test" << std::endl;
+  boost::this_thread::sleep(boost::posix_time::milliseconds(200));
+  std::cout << "Running libTiD remote send and receive timing test" << std::endl;
   #ifdef SKIP_LIBTID_REMOTE_SEND_RECEIVE_TEST
     std::cout << "  --> skipping !!" << std::endl;
     return;
@@ -226,7 +230,7 @@ TEST(libTiDRemoteSendReceiveTimingTest)
   std::vector<unsigned int> nr_clients;
   if(NR_CLIENTS == 0)
   {
-    nr_clients.push_back(2);
+    nr_clients.push_back(0);
     nr_clients.push_back(5);
     nr_clients.push_back(10);
     nr_clients.push_back(50);
@@ -240,34 +244,36 @@ TEST(libTiDRemoteSendReceiveTimingTest)
   {
 
     TiD::TimedTiDClient send_client;
-    send_client.connect("192.168.1.11",9001);
 
-    filename = "libtid_send_and_receive_timing-" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +"-reps_summary.txt";
+    filename = "libtid_remote_send_and_receive_timing-" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +"-reps_summary.txt";
     summary_file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
     summary_file_stream << "All values are in microseconds:" << std::endl << std::endl;
 
     for(unsigned int cl_ind = 0; cl_ind < nr_clients.size(); cl_ind++ )
     {
+      send_client.connect("192.168.1.11",9001);
+      boost::this_thread::sleep(boost::posix_time::milliseconds(10));
       std::cout << "  ... iteration " << cl_ind+1 << " from " << nr_clients.size() << std::endl;
       for(unsigned int n = 0; n < nr_clients[cl_ind]; n++)
       {
         clients_vec.push_back(new TiD::TiDClient );
-        clients_vec[n]->connect("127.0.0.1",9001);
+        clients_vec[n]->connect("192.168.1.11",9001);
+        boost::this_thread::sleep(boost::posix_time::milliseconds(5));
       }
 
       boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 
       TiD::TimedTiDClient recv_client;
-      recv_client.connect("127.0.0.1",9001);
+      recv_client.connect("192.168.1.11",9001);
       recv_client.startReceiving(0);
       boost::this_thread::sleep(boost::posix_time::milliseconds(100));
 
       for(unsigned int k= 0; k < description_str_lengths.size(); k++ )
       {
         std::cout << "    ... sub-iteration " << k+1 << " from " << description_str_lengths.size();
-        std::cout << " (will take at least " << SLEEP_TIME_BETWEEN_MSGS * NR_TID_MESSAGES << ")" << std::endl;
+        std::cout << " (will take at least " << SLEEP_TIME_BETWEEN_MSGS_REMOTE * NR_TID_MESSAGES << ")" << std::endl;
 
-        msg_builder.generateMsgsVector(NR_TID_MESSAGES, description_str_lengths[0]);  // << Hardcoded value
+        msg_builder.generateMsgsVector(NR_TID_MESSAGES, description_str_lengths[k]);  // << Hardcoded value
         std::vector<IDMessage>& msgs_vec = msg_builder.getMessagesVector();
 
         stat.reset();
@@ -276,7 +282,7 @@ TEST(libTiDRemoteSendReceiveTimingTest)
         boost::this_thread::sleep(boost::posix_time::milliseconds(200));
 
 
-        filename = "libtid_send_and_receive_timing_nr_clients_"
+        filename = "libtid_remote_send_and_receive_timing_nr_clients_"
             + boost::lexical_cast<std::string>(nr_clients[cl_ind])
             + "_desc_len_" + boost::lexical_cast<std::string>(description_str_lengths[k])
             + "nr_reps_" + boost::lexical_cast<std::string>(msgs_vec.size()) +".csv";
@@ -334,11 +340,11 @@ TEST(libTiDRemoteSendReceiveTimingTest)
       clients_vec.clear();
       recv_client.stopReceiving();
       recv_client.disconnect();
+      send_client.disconnect();
 
       boost::this_thread::sleep(boost::posix_time::milliseconds(10));
     }
 
-    send_client.disconnect();
     boost::this_thread::sleep(boost::posix_time::milliseconds(10));
   }
   catch(std::exception& e)

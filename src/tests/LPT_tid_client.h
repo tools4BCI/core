@@ -26,13 +26,12 @@ class LPTTiDClient : public TiD::TiDClient
       #endif
     }
 
-    double sendLPTMessage(std::string& tid_xml_context)
+    void sendLPTMessage(std::string& tid_xml_context)
     {
-
       sendMessage(tid_xml_context);
     }
 
-    double sendLPTMessage(IDMessage& msg)
+    void sendLPTMessage(IDMessage& msg)
     {
       sendMessage(msg);
     }

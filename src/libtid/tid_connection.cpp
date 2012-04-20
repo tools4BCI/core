@@ -191,7 +191,9 @@ void TiDConnection::handleWrite(const boost::system::error_code& error,
 
   if (error && (state_ == State_Running) )
   {
-    cerr << "TiDConnection::handleWrite [Client@" << connection_id_.second << "]: "
+    cerr << "TiDConnection::handleWrite [Peer@" << connection_id_.second <<":"<< connection_id_.first;
+    cerr << " -- self: " << tcp_connection_->socket().local_endpoint().address().to_string();
+    cerr << ":" << tcp_connection_->socket().local_endpoint().port() << "]: "
          << "-- error-msg: " << error.message() << " --> closing connection." << endl;
     stop();
 

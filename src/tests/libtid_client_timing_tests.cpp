@@ -47,6 +47,7 @@ extern boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS;
 
 TEST(libTiDClientSendTiming)
 {
+  boost::this_thread::sleep(boost::posix_time::milliseconds(200));
   std::cout << "Running libTiD client-send timing test" << std::endl;
   #ifdef SKIP_LIBTID_CLIENT_SEND_TEST
     std::cout << "  --> skipping !!" << std::endl;
@@ -112,6 +113,7 @@ TEST(libTiDClientSendTiming)
 
 TEST(libTiDClientReceiveTiming)
 {
+  boost::this_thread::sleep(boost::posix_time::milliseconds(200));
   std::cout << "Running libTiD client-receive timing test" << std::endl;
   #ifdef SKIP_LIBTID_CLIENT_RECV_TEST
     std::cout << "  --> skipping !!" << std::endl;

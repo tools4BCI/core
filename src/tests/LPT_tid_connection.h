@@ -23,11 +23,6 @@ class LPTTiDConnection : public TiDConnection
       #ifdef DEBUG
         std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
       #endif
-      if(timed_input_stream_)
-      {
-        delete timed_input_stream_;
-        timed_input_stream_ = 0;
-      }
     }
 
   static pointer create(const TCPConnection::pointer& tcp_conn_handle,

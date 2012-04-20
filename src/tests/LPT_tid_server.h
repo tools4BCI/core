@@ -65,8 +65,10 @@ class LPTTiDServer : public TiD::TiDServer
 
     connections_.insert(make_pair(id, connection));
 
-    std::cout << "  ** TiD Server: Client @" << id.second << ":" << id.first << " has connected.";
+    std::cout << "  ** LPT TiD Server: Client @" << id.second << ":" << id.first << " has connected.";
     std::cout << " -- Connected clients: " << connections_.size() << std::endl;
+    std::cout << "   ### Clearing all messages (! ###" << std::endl;
+    clearMessages();
 
     connection->run();
     startAccept();

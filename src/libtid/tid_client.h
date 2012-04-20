@@ -20,9 +20,10 @@ class InputStream;
 class TiDMessageParser;
 class TiDMessageBuilder;
 
-class TiDClient
+class TiDClient : public boost::enable_shared_from_this<TiDClient>
 {
   friend class TimedTiDClient;
+  friend class LPTTiDClient;
 
   public:
     TiDClient();

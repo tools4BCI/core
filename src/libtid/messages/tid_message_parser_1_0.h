@@ -2,9 +2,10 @@
 #define TID_MESSAGE_PARSER_1_0_H
 
 #include "tid_message_parser.h"
-#include <tobiid/IDSerializerRapid.hpp>
 
 #include <boost/thread/mutex.hpp>
+
+class IDSerializerRapid;
 
 namespace TiD
 {
@@ -20,7 +21,7 @@ private:
     static unsigned const               MAX_LINE_LENGTH_;
 
     IDSerializerRapid*                  serializer_;
-    std::string                         xml_string_;
+    std::string*                         xml_string_;
 
     boost::mutex                        mutex_;
 };

@@ -40,6 +40,7 @@ typedef boost::function< void( IDMessage&, const std::pair<int, std::string>& ) 
 class TiDConnection : public boost::enable_shared_from_this<TiDConnection>
 {
   friend class TimedTiDConnection;
+  friend class LPTTiDConnection;
 
   public:
 
@@ -47,7 +48,7 @@ class TiDConnection : public boost::enable_shared_from_this<TiDConnection>
      * @brief Control Connection Handle
      */
     typedef boost::shared_ptr<TiDConnection> pointer;
-    typedef std::pair<int, std::string> ConnectionID;
+    typedef std::pair<int, std::string> ConnectionID;   // port,ip
 
     /**
      * @brief Creates a new ControlConnection

@@ -49,6 +49,7 @@ using std::fstream;
 
 TEST(libTiDServerDispatchTiming)
 {
+  boost::this_thread::sleep(boost::posix_time::milliseconds(200));
   std::cout << "Running libTiD server-dispatching timing test" << std::endl;
   #ifdef SKIP_LIBTID_SERVER_DISPATCH_TEST
     std::cout << "  --> skipping !!" << std::endl;
@@ -71,7 +72,7 @@ TEST(libTiDServerDispatchTiming)
   std::vector<unsigned int> nr_clients;
   if(NR_CLIENTS == 0)
   {
-    nr_clients.push_back(2);
+    nr_clients.push_back(1);
     nr_clients.push_back(5);
     nr_clients.push_back(10);
     nr_clients.push_back(50);
@@ -101,6 +102,7 @@ TEST(libTiDServerDispatchTiming)
       {
         clients_vec.push_back(new TiD::TiDClient );
         clients_vec[n]->connect("127.0.0.1",9001);
+        clients_vec[n]->startReceiving(0);
       }
 
       boost::this_thread::sleep(boost::posix_time::milliseconds(100));

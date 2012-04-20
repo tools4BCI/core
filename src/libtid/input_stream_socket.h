@@ -5,8 +5,6 @@
 #include "tid_exceptions.h"
 
 #include <boost/asio.hpp>
-#include <boost/thread/condition_variable.hpp>
-
 #include <string>
 
 namespace TiD
@@ -22,7 +20,11 @@ class InputStreamSocket : public InputStream
     InputStreamSocket (boost::asio::ip::tcp::socket& socket);
     virtual ~InputStreamSocket ();
 
-    virtual void readUntil (std::string delimiter, std::string* str);
+    virtual void readUntil (const std::string& delimiter, std::string* str);
+
+//    virtual void readUntil (std::string* str);
+//    virtual void setDelimiter(const std::string& del);
+
     virtual void fustyReadUntil (std::string delimiter, std::string* str);
 
   private:
@@ -33,16 +35,19 @@ class InputStreamSocket : public InputStream
 
 
   private:
+    std::string*                         str_buffer_;
+    std::string*                         tmp_str_;
+
     boost::asio::ip::tcp::socket&        socket_;
     boost::system::error_code            error_;
 
-    std::string                          str_buffer_;
 
     // just used within the fusty version -- will be removed in future
     boost::asio::streambuf               stream_buffer_;
-    std::string                          tmp_str_;
+
 
     size_t                               last_pos_;
+//    std::string                          delimiter_;
 };
 
 }

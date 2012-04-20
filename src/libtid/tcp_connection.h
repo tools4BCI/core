@@ -36,7 +36,7 @@
 namespace TiD
 {
 
-static const int SOCKET_BUFFER_SIZE = 16384;
+static const int SOCKET_BUFFER_SIZE = 65536;
 //4194304;
 static const int SOCKET_LINGER_TIMEOUT = 0;
 

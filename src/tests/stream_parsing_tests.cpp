@@ -73,6 +73,11 @@ TEST(delimiterParsingTest)
 {
 
   std::cout << "Running libTiD delimiter parsing test" << std::endl;
+  #ifdef SKIP_STREAM_PARSING_TEST
+    std::cout << "  --> skipping !!" << std::endl;
+    return;
+  #endif
+
 
   IDSerializerRapid serializer;
   IDSerializerRapid deserializer;
