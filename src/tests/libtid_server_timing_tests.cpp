@@ -72,8 +72,8 @@ TEST(libTiDServerDispatchTiming)
   std::vector<unsigned int> nr_clients;
   if(NR_CLIENTS == 0)
   {
-    nr_clients.push_back(1);
     nr_clients.push_back(5);
+    nr_clients.push_back(1);
     nr_clients.push_back(10);
     nr_clients.push_back(50);
   }
@@ -103,6 +103,7 @@ TEST(libTiDServerDispatchTiming)
         clients_vec.push_back(new TiD::TiDClient );
         clients_vec[n]->connect("127.0.0.1",9001);
         clients_vec[n]->startReceiving(0);
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
       }
 
       boost::this_thread::sleep(boost::posix_time::milliseconds(100));
@@ -169,6 +170,9 @@ TEST(libTiDServerDispatchTiming)
         summary_file_stream << ", Nr Clients: " << nr_clients[cl_ind] << std::endl << std::endl;
         stat.printAll(summary_file_stream);
         summary_file_stream << std::endl << std::endl;
+
+        for(unsigned int n = 0; n < nr_clients[cl_ind]; n++)
+          clients_vec[n]->clearMessages();
       }
       boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 
@@ -176,6 +180,7 @@ TEST(libTiDServerDispatchTiming)
       {
         clients_vec[n]->disconnect();
         delete clients_vec[n];
+        boost::this_thread::sleep(boost::posix_time::milliseconds(100));
       }
       clients_vec.clear();
       send_client.disconnect();

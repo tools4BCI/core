@@ -101,6 +101,7 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
       {
         clients_vec.push_back(new TiD::TiDClient );
         clients_vec[n]->connect("127.0.0.1",9001);
+        clients_vec[n]->startReceiving(0);
         boost::this_thread::sleep(boost::posix_time::milliseconds(10));
       }
 
@@ -162,6 +163,8 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
           }
           recv_client.clearRecvTimingValues();
           recv_client.clearMessages();
+          for(unsigned int n = 0; n < nr_clients[cl_ind]; n++)
+            clients_vec[n]->clearMessages();
         }
         file_stream.unget();
         file_stream << " ";
@@ -180,6 +183,7 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
       {
         clients_vec[n]->disconnect();
         delete clients_vec[n];
+        boost::this_thread::sleep(boost::posix_time::milliseconds(100));
       }
       clients_vec.clear();
       recv_client.stopReceiving();
@@ -192,7 +196,7 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
     boost::this_thread::sleep(boost::posix_time::milliseconds(10));
     test_server.stop();
 
-    boost::this_thread::sleep(boost::posix_time::milliseconds(50));
+    boost::this_thread::sleep(boost::posix_time::milliseconds(100));
   }
   catch(std::exception& e)
   {
@@ -258,7 +262,8 @@ TEST(libTiDRemoteSendReceiveTimingTest)
       {
         clients_vec.push_back(new TiD::TiDClient );
         clients_vec[n]->connect("192.168.1.11",9001);
-        boost::this_thread::sleep(boost::posix_time::milliseconds(5));
+        clients_vec[n]->startReceiving(0);
+        boost::this_thread::sleep(boost::posix_time::milliseconds(20));
       }
 
       boost::this_thread::sleep(boost::posix_time::milliseconds(10));
@@ -318,6 +323,8 @@ TEST(libTiDRemoteSendReceiveTimingTest)
           }
           recv_client.clearRecvTimingValues();
           recv_client.clearMessages();
+          for(unsigned int n = 0; n < nr_clients[cl_ind]; n++)
+            clients_vec[n]->clearMessages();
         }
         file_stream.unget();
         file_stream << " ";
@@ -336,16 +343,17 @@ TEST(libTiDRemoteSendReceiveTimingTest)
       {
         clients_vec[n]->disconnect();
         delete clients_vec[n];
+        boost::this_thread::sleep(boost::posix_time::milliseconds(100));
       }
       clients_vec.clear();
       recv_client.stopReceiving();
       recv_client.disconnect();
       send_client.disconnect();
 
-      boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+      boost::this_thread::sleep(boost::posix_time::milliseconds(50));
     }
 
-    boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+    boost::this_thread::sleep(boost::posix_time::milliseconds(100));
   }
   catch(std::exception& e)
   {
