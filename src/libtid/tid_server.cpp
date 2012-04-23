@@ -201,10 +201,10 @@ void TiDServer::clientHasDisconnected(const TiDConnection::ConnectionID& id)
 
   dispatch_mutex_.lock();
   erase_mutex_.lock();
-  std::cout << "  ** TiD Server: Connection to client @";
-  cout << id.second << ":" << id.first << " has been closed.";
+  //std::cout << "  ** TiD Server: Connection to client @";
+  //cout << id.second << ":" << id.first << " has been closed.";
   connections_.erase(id);
-  std::cout << " -- Connected clients: " << connections_.size() << std::endl << std::flush;
+  //std::cout << " -- Connected clients: " << connections_.size() << std::endl << std::flush;
 
   erase_mutex_.unlock();
   dispatch_mutex_.unlock();

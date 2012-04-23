@@ -55,5 +55,8 @@
     <ClCompile Include="..\src\tests\tobiid_timing_tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\tests\timing_test_helpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

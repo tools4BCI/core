@@ -20,7 +20,7 @@ class InputStream;
 class TiDMessageParser;
 class TiDMessageBuilder;
 
-class TiDClient : public boost::enable_shared_from_this<TiDClient>
+class TiDClient
 {
   friend class TimedTiDClient;
   friend class LPTTiDClient;
@@ -67,6 +67,9 @@ class TiDClient : public boost::enable_shared_from_this<TiDClient>
       State_ConnectionClosed,
       State_Error
     };
+
+    std::string                                       remote_ip_;
+    unsigned int                                      remote_port_;
 
     ConnectionState                                   state_;
     IDMessage                                         msg_;

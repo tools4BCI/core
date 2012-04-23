@@ -90,6 +90,16 @@ class TimedTiDClient : public TiD::TiDClient
       timing_mutex_.unlock();
     }
 
+    bool newReceiveDiffsAvailable()
+    {
+      bool available = false;
+      timing_mutex_.lock();
+      available = recv_diffs_.size();
+      timing_mutex_.unlock();
+
+      return available;
+    }
+
     //-----------------------------------------------------------------------------
 
   private:
