@@ -1,6 +1,7 @@
 
 #include "tcp_connection.h"
 #include <boost/current_function.hpp>
+#include <iostream>
 
 namespace TiD
 {

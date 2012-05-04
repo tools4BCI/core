@@ -70,6 +70,9 @@ class TiDClient
       State_Error
     };
 
+    std::string                                       remote_ip_;
+    unsigned int                                      remote_port_;
+
     ConnectionState                                   state_;
     IDMessage                                         msg_;
     std::string                                       xml_string_;

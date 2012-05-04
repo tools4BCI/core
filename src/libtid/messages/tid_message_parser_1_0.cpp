@@ -11,7 +11,7 @@
 #include <tobiid/IDSerializerRapid.hpp>
 #include <tobicore/TCException.hpp>
 
-#include "messages/tid_message_tags_1_0.h"
+#include "tid_message_tags_1_0.h"
 
 using std::string;
 using std::pair;

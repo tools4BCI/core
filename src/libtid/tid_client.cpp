@@ -25,7 +25,7 @@ static const int SOCKET_BUFFER_SIZE = 65536;
 //-----------------------------------------------------------------------------
 
 TiDClient::TiDClient()
-  : state_(State_ConnectionClosed), socket_(io_service_),
+  : remote_port_(0), state_(State_ConnectionClosed), socket_(io_service_),
     input_stream_(0), msg_parser_(0), msg_builder_(0), receive_thread_(0),
     io_service_thread_(0), io_service_thread_2_(0),
     throw_on_error_(0)
@@ -121,6 +121,8 @@ void TiDClient::connect(std::string ip_addr, unsigned int port)
     throw(std::runtime_error("TiDClient::connect -- " + ec.message()) );
 
   state_ = State_Connected;
+  remote_port_ = port;
+  remote_ip_ = ip_addr;
 
   boost::asio::socket_base::send_buffer_size send_buffer_option(SOCKET_BUFFER_SIZE);
   socket_.set_option(send_buffer_option);
@@ -309,6 +311,20 @@ void TiDClient::receive()
       mutex_.lock();
       messages_.push_back(msg_);
       mutex_.unlock();
+    }
+    catch(TiDLostConnection&)
+    {
+      stopReceiving();
+      std::cerr << "   ***  Connection to TiD Server@" << 
+        remote_ip_ << ":" << remote_port_ << " lost." << std::endl << " >> ";
+      break;
+    }
+    catch(TiDException& e)
+    {
+      if(state_ == State_Running)
+        std::cerr << e.what() << std::endl << ">> ";
+      stopReceiving();
+      break;
     }
     catch(std::exception& e)
     {

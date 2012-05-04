@@ -146,13 +146,13 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
           boost::this_thread::sleep(SLEEP_TIME_BETWEEN_MSGS);
 
 
-          while( !recv_client.newMessagesAvailable())
+          while( !recv_client.newReceiveDiffsAvailable())
             boost::this_thread::sleep(no_msgs_available_sleep_time);
 
           if(recv_client.getRecvTimePoints().size() != 1)
           {
-            std::cerr << "   #####  ERROR -- Something went wrong, received more than 1 TiD msg! (";
-            std::cerr << recv_client.getRecvTimePoints().size() << " msgs -- available: " << recv_client.newMessagesAvailable() << ") #####" << std::endl;
+            std::cerr << "   #####  ERROR localhost test -- Something went wrong, received more than 1 TiD msg! (";
+            std::cerr << recv_client.getRecvTimePoints().size() << " msgs -- newMessagesAvailable: " << recv_client.newMessagesAvailable() << ") #####" << std::endl;
             recv_client.clearRecvTimingValues();
             recv_client.clearMessages();
             n--;
@@ -319,13 +319,13 @@ TEST(libTiDRemoteSendReceiveTimingTest)
           boost::this_thread::sleep(SLEEP_TIME_BETWEEN_MSGS_REMOTE);
 
 
-          while( !recv_client.newMessagesAvailable())
+          while( !recv_client.newReceiveDiffsAvailable())
             boost::this_thread::sleep(no_msgs_available_sleep_time);
 
           if(recv_client.getRecvTimePoints().size() != 1)
           {
-            std::cerr << "   #####  ERROR -- Something went wrong, received more than 1 TiD msg! (";
-            std::cerr << recv_client.getRecvTimePoints().size() << " msgs -- available: " << recv_client.newMessagesAvailable() << ") #####" << std::endl;
+            std::cerr << "   #####  ERROR remote test -- Something went wrong, received more than 1 TiD msg! (";
+            std::cerr << recv_client.getRecvTimePoints().size() << " msgs -- newMessagesAvailable: " << recv_client.newMessagesAvailable() << ") #####" << std::endl;
             recv_client.clearRecvTimingValues();
             recv_client.clearMessages();
             n--;

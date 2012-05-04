@@ -141,7 +141,7 @@ void InputStreamSocket::readUntil (const std::string&  delimiter, std::string* s
   boost::asio::read_until (socket_, stream_buffer_, delimiter,error_ );
   if(error_)
     throw TiDLostConnection ("InputStreamSocket::readUntil error read_until: "
-                             + std::string (error_.category().name()) + error_.message());
+                             + std::string (error_.category().name()) + " " + error_.message());
 
   if(str_buffer_->size())
   {
