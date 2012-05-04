@@ -37,6 +37,7 @@
 
 
 extern unsigned int NR_TID_MESSAGES;
+extern unsigned int STATISTICS_WINDOW_SIZE;
 
 using namespace std;
 
@@ -68,7 +69,7 @@ TEST(tobiidSerializeTiming)
   std::string filename;
 
   IDSerializerRapid serializer;
-  tobiss::Statistics  stat(true, 100);
+  tobiss::Statistics  stat(true, STATISTICS_WINDOW_SIZE );
 
   filename = "tobiid_serialize-" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +"-reps_summary.txt";
   summary_file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
@@ -119,6 +120,26 @@ TEST(tobiidSerializeTiming)
     file_stream << " ";
     file_stream.close();
 
+    filename = "tobiid_serialize_desc_len_" + boost::lexical_cast<std::string>(description_str_lengths[k])
+        + "nr_reps_" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +".raw.csv";
+    file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
+
+    stat.printSampleValues(file_stream);
+
+    file_stream.unget();
+    file_stream << " ";
+    file_stream.close();
+
+    filename = "tobiid_serialize_desc_len_" + boost::lexical_cast<std::string>(description_str_lengths[k])
+        + "nr_reps_" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +".raw.csv";
+    file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
+
+    stat.printSampleValues(file_stream);
+
+    file_stream.unget();
+    file_stream << " ";
+    file_stream.close();
+
     summary_file_stream << "Desc-len: "<< boost::lexical_cast<std::string>(description_str_lengths[k]) << std::endl << std::endl;
     stat.printAll(summary_file_stream);
     summary_file_stream << std::endl << std::endl;
@@ -162,7 +183,7 @@ TEST(tobiidDeSerializeTiming)
   summary_file_stream.precision(12);
   std::string filename;
 
-  tobiss::Statistics  stat(true, 100);
+  tobiss::Statistics  stat(true, STATISTICS_WINDOW_SIZE );
   IDMessage tid_msg;
   IDMessage recv_message;
   IDSerializerRapid recv_serializer;
@@ -222,6 +243,16 @@ TEST(tobiidDeSerializeTiming)
 
       TiDHelpers::updateFileStream(file_stream, stat);
     }
+    file_stream.unget();
+    file_stream << " ";
+    file_stream.close();
+
+    filename = "tobiid_deserialize_desc_len_" + boost::lexical_cast<std::string>(description_str_lengths[k])
+        + "nr_reps_" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +".raw.csv";
+    file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
+
+    stat.printSampleValues(file_stream);
+
     file_stream.unget();
     file_stream << " ";
     file_stream.close();

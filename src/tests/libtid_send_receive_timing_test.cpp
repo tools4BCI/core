@@ -37,6 +37,7 @@
 #include "timed_tid_client.h"
 
 extern unsigned int NR_TID_MESSAGES;
+extern unsigned int STATISTICS_WINDOW_SIZE;
 extern unsigned int NR_CLIENTS;
 extern boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS;
 extern boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS_REMOTE;
@@ -55,7 +56,7 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
   #endif
 
   TiDMessageVectorBuilder msg_builder;
-  tobiss::Statistics  stat(true, 100);
+  tobiss::Statistics  stat(true, STATISTICS_WINDOW_SIZE );
   std::fstream file_stream;
   file_stream.precision(8);
   std::fstream summary_file_stream;
@@ -70,10 +71,11 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
   std::vector<unsigned int> nr_clients;
   if(NR_CLIENTS == 0)
   {
-    nr_clients.push_back(2);
-    nr_clients.push_back(5);
-    nr_clients.push_back(10);
-    nr_clients.push_back(50);
+    // 2 clients are always present --> send and recv client
+    nr_clients.push_back(0);
+    nr_clients.push_back(3);
+    nr_clients.push_back(8);
+    //nr_clients.push_back(50);
   }
   else
     nr_clients.push_back(NR_CLIENTS);
@@ -170,6 +172,18 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
         file_stream << " ";
         file_stream.close();
 
+        filename = "libtid_localhost_send_and_receive_timing_nr_clients_"
+            + boost::lexical_cast<std::string>(nr_clients[cl_ind])
+            + "_desc_len_" + boost::lexical_cast<std::string>(description_str_lengths[k])
+            + "nr_reps_" + boost::lexical_cast<std::string>(msgs_vec.size()) +".raw.csv";
+        file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
+
+        stat.printSampleValues(file_stream);
+
+        file_stream.unget();
+        file_stream << " ";
+        file_stream.close();
+
         summary_file_stream << "Desc-len: "<< boost::lexical_cast<std::string>(description_str_lengths[k]);
         summary_file_stream << ", Nr Clients: " << nr_clients[cl_ind] << std::endl << std::endl;
         stat.printAll(summary_file_stream);
@@ -219,7 +233,7 @@ TEST(libTiDRemoteSendReceiveTimingTest)
   #endif
 
   TiDMessageVectorBuilder msg_builder;
-  tobiss::Statistics  stat(true, 100);
+  tobiss::Statistics  stat(true, STATISTICS_WINDOW_SIZE );
   std::fstream file_stream;
   file_stream.precision(8);
   std::fstream summary_file_stream;
@@ -234,10 +248,11 @@ TEST(libTiDRemoteSendReceiveTimingTest)
   std::vector<unsigned int> nr_clients;
   if(NR_CLIENTS == 0)
   {
-    nr_clients.push_back(0);
-    nr_clients.push_back(5);
-    nr_clients.push_back(10);
-    nr_clients.push_back(50);
+    // 2 clients are always present --> send and recv client
+//    nr_clients.push_back(0);
+//    nr_clients.push_back(3);
+    nr_clients.push_back(8);
+    //nr_clients.push_back(50);
   }
   else
     nr_clients.push_back(NR_CLIENTS);
@@ -326,6 +341,18 @@ TEST(libTiDRemoteSendReceiveTimingTest)
           for(unsigned int n = 0; n < nr_clients[cl_ind]; n++)
             clients_vec[n]->clearMessages();
         }
+        file_stream.unget();
+        file_stream << " ";
+        file_stream.close();
+
+        filename = "libtid_remote_send_and_receive_timing_nr_clients_"
+            + boost::lexical_cast<std::string>(nr_clients[cl_ind])
+            + "_desc_len_" + boost::lexical_cast<std::string>(description_str_lengths[k])
+            + "nr_reps_" + boost::lexical_cast<std::string>(msgs_vec.size()) +".raw.csv";
+        file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
+
+        stat.printSampleValues(file_stream);
+
         file_stream.unget();
         file_stream << " ";
         file_stream.close();

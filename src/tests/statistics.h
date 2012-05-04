@@ -98,6 +98,11 @@ public:
   void printFastStatistics( std::ostream &out = std::cout );
 
   /**
+    * @brief Print all buffered samples to specified stream with a given seperator.
+    */
+  void printSampleValues( std::ostream &out , char separator = ',');
+
+  /**
     * @brief Set everything to initial values.
     */
   void reset( );

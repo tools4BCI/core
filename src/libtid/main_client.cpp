@@ -14,9 +14,11 @@ using namespace TiD;
 
 int main()
 {
+  TiDClient* client = 0;
+
   try
   {
-    TiDClient client;
+    client = new TiDClient;
 
     std::vector<IDMessage> messages;
 
@@ -54,8 +56,8 @@ int main()
     messages.push_back(message6);
 
 
-    client.connect(std::string("127.0.0.1"), 9001);
-    client.startReceiving(false);
+    client->connect(std::string("127.0.0.1"), 9001);
+    client->startReceiving(false);
 
     string str;//("a");
     cout << endl << ">>";
@@ -73,7 +75,7 @@ int main()
         //        messages.at(msg_count).Dump();
         // serializer.Serialize(&buffer);
 
-        client.sendMessage( messages.at(msg_count) );
+        client->sendMessage( messages.at(msg_count) );
         //buffer.clear();
         if(++msg_count == messages.size())
           msg_count = 0;
@@ -83,7 +85,7 @@ int main()
       else if(str == "r" )
       {
         std::vector<IDMessage> msgs;
-        client.getLastMessagesContexts(msgs);
+        client->getLastMessagesContexts(msgs);
         cout << "Received messages: " << msgs.size() << endl;
 
         IDMessage recv_message;
@@ -104,7 +106,7 @@ int main()
           for(unsigned int m = 0; m < 10; m++)
           {
             messages[msg_count].absolute.Tic();
-            client.sendMessage( messages[msg_count] );
+            client->sendMessage( messages[msg_count] );
             if(++msg_count == messages.size())
               msg_count = 0;
             #ifdef WIN32
@@ -115,7 +117,7 @@ int main()
           }
 
           std::vector<IDMessage> msgs;
-          client.getLastMessagesContexts(msgs);
+          client->getLastMessagesContexts(msgs);
           cout << "Received messages: " << msgs.size() << endl;
 
           // IDMessage recv_message;
@@ -138,7 +140,7 @@ int main()
         cout << "Command '" << str << "' not recognized!" << endl << ">>";
     }
 
-    client.stopReceiving();
+    client->stopReceiving();
   }
 //  catch(TiDException& e)
 //  {
@@ -152,6 +154,8 @@ int main()
   {
     std::cerr << "Unknown exception caugth!" << std::endl;
   }
+
+    delete client;
 
   return 0;
 }

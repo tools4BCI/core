@@ -39,6 +39,7 @@
 #include "libtid/tid_client.h"
 
 extern unsigned int NR_TID_MESSAGES;
+extern unsigned int STATISTICS_WINDOW_SIZE;
 extern unsigned int NR_CLIENTS;
 extern boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS;
 
@@ -57,7 +58,7 @@ TEST(libTiDServerDispatchTiming)
   #endif
 
   TiDMessageVectorBuilder msg_builder;
-  tobiss::Statistics  stat(true, 100);
+  tobiss::Statistics  stat(true, STATISTICS_WINDOW_SIZE );
   std::fstream file_stream;
   file_stream.precision(8);
   std::fstream summary_file_stream;
@@ -72,10 +73,10 @@ TEST(libTiDServerDispatchTiming)
   std::vector<unsigned int> nr_clients;
   if(NR_CLIENTS == 0)
   {
-    nr_clients.push_back(5);
     nr_clients.push_back(1);
+    nr_clients.push_back(5);
     nr_clients.push_back(10);
-    nr_clients.push_back(50);
+    //    nr_clients.push_back(50);
   }
   else
     nr_clients.push_back(NR_CLIENTS);
@@ -130,7 +131,6 @@ TEST(libTiDServerDispatchTiming)
             + "nr_reps_" + boost::lexical_cast<std::string>(msgs_vec.size()) +".csv";
         file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
 
-
         boost::asio::io_service io;
         boost::posix_time::ptime start_time = boost::posix_time::second_clock::local_time();
 
@@ -165,6 +165,19 @@ TEST(libTiDServerDispatchTiming)
         file_stream.unget();
         file_stream << " ";
         file_stream.close();
+
+        filename = "libtid_server_dipatch_nr_clients_"
+            + boost::lexical_cast<std::string>(nr_clients[cl_ind])
+            + "_desc_len_" + boost::lexical_cast<std::string>(description_str_lengths[k])
+            + "nr_reps_" + boost::lexical_cast<std::string>(msgs_vec.size()) +".raw.csv";
+        file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
+
+        stat.printSampleValues(file_stream);
+
+        file_stream.unget();
+        file_stream << " ";
+        file_stream.close();
+
 
         summary_file_stream << "Desc-len: "<< boost::lexical_cast<std::string>(description_str_lengths[k]);
         summary_file_stream << ", Nr Clients: " << nr_clients[cl_ind] << std::endl << std::endl;

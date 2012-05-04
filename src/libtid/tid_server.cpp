@@ -42,6 +42,9 @@ TiDServer::~TiDServer ()
 
   if(running_)
     stop();
+
+  if(msg_builder_)
+    delete(msg_builder_);
 }
 
 //-----------------------------------------------------------------------------
@@ -239,6 +242,7 @@ void TiDServer::dispatchMsg(IDMessage& msg, const TiDConnection::ConnectionID& s
   {
     if(src_id.first != it->first.first )
       it->second->sendMsg(current_xml_string_);
+    io_service_.poll();
   }
   messages_.push_back(msg);
   dispatch_mutex_.unlock();

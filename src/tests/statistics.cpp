@@ -145,6 +145,19 @@ void Statistics::printWindowStatistics( std::ostream &out )
 
 //-----------------------------------------------------------------------------
 
+void Statistics::printSampleValues( std::ostream &out , char separator)
+{
+  if(buffer_data_)
+  {
+    std::list<double>::const_iterator it(sample_buffer_.begin());;
+
+    for( ; it != sample_buffer_.end(); std::advance(it, 1) )
+      out << *it << separator;
+  }
+}
+
+//-----------------------------------------------------------------------------
+
 void Statistics::printFastStatistics( std::ostream &out )
 {
   out << "           mean: " << get_mean( ) << std::endl;

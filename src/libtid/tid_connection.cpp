@@ -111,9 +111,16 @@ void TiDConnection::stop()
     return;
 
   state_ = State_Stopped;
+  receive_thread_->interrupt();
 
   boost::system::error_code error;
+  tcp_connection_->socket().cancel(error);
+  error.clear();
+
   tcp_connection_->socket().shutdown(boost::asio::ip::tcp::socket::shutdown_both, error);
+
+  receive_thread_->join();
+
   if(error == boost::asio::error::bad_descriptor)
     return;
   if(error == boost::asio::error::not_connected)
@@ -133,14 +140,14 @@ void TiDConnection::close()
   if(state_ == State_ConnectionClosed)
     return;
 
-  boost::system::error_code error;  // ignored error
+  state_ = State_ConnectionClosed;
 
-  tcp_connection_->socket().shutdown(boost::asio::ip::tcp::socket::shutdown_both, error);
-  tcp_connection_->socket().close(error);
+  boost::system::error_code error;  // ignored error
+  if(tcp_connection_->socket().is_open())
+    tcp_connection_->socket().close(error);
+
   //  if(error)
   //    cerr << "TiDConnection::close() -- " << error.message() << endl;
-
-  state_ = State_ConnectionClosed;
 
   del_callback_ref_(connection_id_);
 }
@@ -169,7 +176,7 @@ void TiDConnection::receive()
     {
       if(state_ == State_Running)
         cerr << e.what() << endl << ">> ";
-      close();
+      state_ = State_Aborted;
       break;
     }
     catch(...)

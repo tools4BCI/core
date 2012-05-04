@@ -41,6 +41,7 @@
 using std::fstream;
 
 extern unsigned int NR_TID_MESSAGES;
+extern unsigned int STATISTICS_WINDOW_SIZE;
 extern boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS;
 
 //-------------------------------------------------------------------------------------------------
@@ -57,7 +58,7 @@ TEST(libTiDClientSendTiming)
 
   TiD::TimedTiDClient client;
   TiDMessageVectorBuilder msg_builder;
-  tobiss::Statistics  stat(true, 100);
+  tobiss::Statistics  stat(true,  STATISTICS_WINDOW_SIZE );
 
   std::fstream file_stream;
   file_stream.precision(8);
@@ -99,6 +100,16 @@ TEST(libTiDClientSendTiming)
     file_stream << " ";
     file_stream.close();
 
+    filename = "libtid_send_client_desc_len_" + boost::lexical_cast<std::string>(description_str_lengths[k])
+        + "nr_reps_" + boost::lexical_cast<std::string>(msgs_vec.size()) +".raw.csv";
+    file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
+
+    stat.printSampleValues(file_stream);
+
+    file_stream.unget();
+    file_stream << " ";
+    file_stream.close();
+
     summary_file_stream << "Desc-len: "<< boost::lexical_cast<std::string>(description_str_lengths[k]) << std::endl << std::endl;
     stat.printAll(summary_file_stream);
     summary_file_stream << std::endl << std::endl;
@@ -121,7 +132,7 @@ TEST(libTiDClientReceiveTiming)
   #endif
 
   TiDMessageVectorBuilder msg_builder;
-  tobiss::Statistics  stat(true, 100);
+  tobiss::Statistics  stat(true, STATISTICS_WINDOW_SIZE );
   std::fstream file_stream;
   file_stream.precision(8);
   std::fstream summary_file_stream;
@@ -214,6 +225,16 @@ TEST(libTiDClientReceiveTiming)
         stat.update( diffs[n] );
         TiDHelpers::updateFileStream(file_stream, stat);
       }
+
+      file_stream.unget();
+      file_stream << " ";
+      file_stream.close();
+
+      filename = "libtid_recv_client_desc_len_" + boost::lexical_cast<std::string>(description_str_lengths[k])
+          + "nr_reps_" + boost::lexical_cast<std::string>(msgs_vec.size()) +".raw.csv";
+      file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
+
+      stat.printSampleValues(file_stream);
 
       file_stream.unget();
       file_stream << " ";

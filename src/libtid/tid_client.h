@@ -20,7 +20,8 @@ class InputStream;
 class TiDMessageParser;
 class TiDMessageBuilder;
 
-class TiDClient : public boost::enable_shared_from_this<TiDClient>
+class TiDClient
+    //: public boost::enable_shared_from_this<TiDClient>
 {
   friend class TimedTiDClient;
   friend class LPTTiDClient;
@@ -57,6 +58,7 @@ class TiDClient : public boost::enable_shared_from_this<TiDClient>
     void handleWrite(const boost::system::error_code& e,
         std::size_t bytes_transferred);
 
+    //void completionHandler(std::string& msg);
 
 
     enum ConnectionState
@@ -83,14 +85,10 @@ class TiDClient : public boost::enable_shared_from_this<TiDClient>
     TiDMessageBuilder*                                msg_builder_;
     boost::thread*                                    receive_thread_;
     boost::thread*                                    io_service_thread_;
-//    boost::thread*                                    io_service_thread_2_;
-
+    boost::thread*                                    io_service_thread_2_;
     bool                                              throw_on_error_;
 
-  #ifdef LPT_TEST
-    private:
-      bool  lpt_flag_;
-  #endif
+    //boost::asio::io_service::strand                   strand_;
 };
 
 //-----------------------------------------------------------------------------

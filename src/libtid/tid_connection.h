@@ -107,7 +107,8 @@ class TiDConnection : public boost::enable_shared_from_this<TiDConnection>
       State_Connected,
       State_Running,
       State_Stopped,
-      State_ConnectionClosed
+      State_ConnectionClosed,
+      State_Aborted
     };
 
     ConnectionState                          state_;                    ///<

@@ -8,22 +8,32 @@ using namespace std;
 
 int main()
 {
-
-  TiDServer test_server;
-  test_server.bind (9001);
-  test_server.start();
-  string str;
-  cout << endl << ">>";
-
-  while(cin >> str)
+  try
   {
-    if(str == "q" || str == "quit" || str == "exit")
-      break;
-    else
-      cout << "Command '" << str << "' not recognized!" << endl << ">>";
-  }
+    TiDServer test_server;
+    test_server.bind (9001);
+    test_server.start();
+    string str;
+    cout << endl << ">>";
 
-  test_server.stop();
+    while(cin >> str)
+    {
+        if(str == "q" || str == "quit" || str == "exit")
+            break;
+        else
+            cout << "Command '" << str << "' not recognized!" << endl << ">>";
+    }
+
+    test_server.stop();
+  }
+  catch(std::exception& e)
+  {
+    cerr << "Exception caught: "<< e.what() <<  endl;
+  }
+  catch(...)
+  {
+    cerr << "Unknown exception caught!"<< endl;
+  }
 
   return 0;
 }

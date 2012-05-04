@@ -27,7 +27,9 @@ static const int SOCKET_BUFFER_SIZE = 65536;
 TiDClient::TiDClient()
   : state_(State_ConnectionClosed), socket_(io_service_),
     input_stream_(0), msg_parser_(0), msg_builder_(0), receive_thread_(0),
-    io_service_thread_(0), throw_on_error_(0)
+    io_service_thread_(0), io_service_thread_2_(0),
+    throw_on_error_(0)
+      //strand_(io_service_)
 {
   #ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
@@ -72,12 +74,12 @@ TiDClient::~TiDClient()
     io_service_thread_ = 0;
   }
 
-  //  if(io_service_thread_2_)
-  //  {
-  //    io_service_thread_2_->join();
-  //    delete io_service_thread_2_;
-  //    io_service_thread_2_ = 0;
-  //  }
+    if(io_service_thread_2_)
+    {
+      io_service_thread_2_->join();
+      delete io_service_thread_2_;
+      io_service_thread_2_ = 0;
+    }
 
 
   if(receive_thread_)
@@ -120,14 +122,15 @@ void TiDClient::connect(std::string ip_addr, unsigned int port)
 
   state_ = State_Connected;
 
-  boost::asio::ip::tcp::no_delay delay(true);
-  socket_.set_option(delay);
-  boost::asio::socket_base::linger linger(false, 0);
-  socket_.set_option(linger);
   boost::asio::socket_base::send_buffer_size send_buffer_option(SOCKET_BUFFER_SIZE);
   socket_.set_option(send_buffer_option);
   boost::asio::socket_base::receive_buffer_size recv_buffer_option(SOCKET_BUFFER_SIZE);
   socket_.set_option(recv_buffer_option);
+  boost::asio::ip::tcp::no_delay delay(true);
+  socket_.set_option(delay);
+  boost::asio::socket_base::linger linger(false, 0);
+  socket_.set_option(linger);
+
   #ifndef WIN32
     int i = 1;
     setsockopt( socket_.native_handle(), IPPROTO_TCP,
@@ -202,9 +205,14 @@ void TiDClient::sendMessage(std::string& tid_xml_context)
   #endif
 
   boost::asio::async_write(socket_, boost::asio::buffer(tid_xml_context),
-                           boost::bind(&TiDClient::handleWrite, this,
+                             boost::bind(&TiDClient::handleWrite, this,
                                        boost::asio::placeholders::error,
                                        boost::asio::placeholders::bytes_transferred ));
+
+  io_service_.reset();
+  io_service_.run_one();
+  io_service_.poll_one();
+
   #ifndef WIN32
     int i = 1;
     setsockopt( socket_.native_handle(), IPPROTO_TCP,
@@ -217,7 +225,7 @@ void TiDClient::sendMessage(std::string& tid_xml_context)
 void TiDClient::sendMessage(IDMessage& msg)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << "  --> " << BOOST_CURRENT_FUNCTION  <<  std::endl;
   #endif
 
   msg_builder_->buildTiDMessage(msg, xml_string_);
@@ -226,6 +234,10 @@ void TiDClient::sendMessage(IDMessage& msg)
                            boost::bind(&TiDClient::handleWrite, this,
                                        boost::asio::placeholders::error,
                                        boost::asio::placeholders::bytes_transferred ));
+  io_service_.reset();
+  io_service_.run_one();
+  io_service_.poll_one();
+
   xml_string_.clear();
   #ifndef WIN32
     int i = 1;
@@ -249,17 +261,22 @@ void TiDClient::startReceiving(bool throw_on_error)
 
   state_ = State_Running;
   receive_thread_ = new boost::thread(&TiDClient::receive, this);
+
   io_service_thread_ = new boost::thread(boost::bind(&boost::asio::io_service::run,
                                                      &this->io_service_));
 
-  //  io_service_thread_2_ = new boost::thread(boost::bind(&boost::asio::io_service::run,
-  //                                                     &this->io_service_));
+  io_service_thread_2_ = new boost::thread(boost::bind(&boost::asio::io_service::run,
+                                                       &this->io_service_));
+
 
   #ifdef WIN32
     SetPriorityClass(receive_thread_->native_handle(),  REALTIME_PRIORITY_CLASS);
     SetThreadPriority(receive_thread_->native_handle(), THREAD_PRIORITY_HIGHEST );
+
     SetPriorityClass(io_service_thread_->native_handle(),  REALTIME_PRIORITY_CLASS);
     SetThreadPriority(io_service_thread_->native_handle(), THREAD_PRIORITY_HIGHEST );
+    SetPriorityClass(io_service_thread_2_->native_handle(),  REALTIME_PRIORITY_CLASS);
+    SetThreadPriority(io_service_thread_2_->native_handle(), THREAD_PRIORITY_HIGHEST );
   #endif
 }
 
@@ -309,15 +326,31 @@ void TiDClient::receive()
 //-----------------------------------------------------------------------------
 
 void TiDClient::handleWrite(const boost::system::error_code &ec,
-                              std::size_t /*bytes_transferred*/)
+                              std::size_t bytes_transferred)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cerr << BOOST_CURRENT_FUNCTION << " -- " << ec.message() <<  std::endl;
   #endif
 
   if(ec)
-    throw(std::runtime_error("TiDClient::handleWrite -- " + ec.message()) );
+      throw(std::runtime_error("TiDClient::handleWrite -- " + ec.message()
+                               + "; transferred: " + boost::lexical_cast<std::string>(bytes_transferred) ) );
 }
+
+//-----------------------------------------------------------------------------
+
+//void TiDClient::completionHandler(std::string& msg)
+//{
+//  std::cerr << BOOST_CURRENT_FUNCTION  <<  " -- "  << msg <<  std::endl << std::flush;
+
+//  boost::asio::async_write(socket_, boost::asio::buffer(msg),
+//                           strand_.wrap( boost::bind(&TiDClient::handleWrite, this,
+//                                                      boost::asio::placeholders::error,
+//                                                      boost::asio::placeholders::bytes_transferred)  ));
+
+////  io_service_.poll_one();
+
+//}
 
 //-----------------------------------------------------------------------------
 

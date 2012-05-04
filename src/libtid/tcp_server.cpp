@@ -43,7 +43,7 @@ using boost::uint32_t;
 //-----------------------------------------------------------------------------
 
 TCPServer::TCPServer()
-  : acceptor_(io_service_)
+  : acceptor_(io_service_),io_service_thread_(0)
 {
   #ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
@@ -78,10 +78,17 @@ void TCPServer::bind(uint16_t port)
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
-  boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), port);
-  acceptor_.open(endpoint.protocol());
-  acceptor_.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
-  acceptor_.bind(endpoint);
+  try
+  {
+    boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), port);
+    acceptor_.open(endpoint.protocol());
+    acceptor_.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
+    acceptor_.bind(endpoint);
+  }
+  catch(boost::system::system_error& e)
+  {
+    throw(std::invalid_argument(std::string(" Error during bind -- ") + e.what() ));
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -91,16 +98,22 @@ void TCPServer::bind(const std::string& address, uint16_t port)
   #ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
-
-  // Open the acceptor with the option to reuse the address (i.e. SO_REUSEADDR).
-  boost::asio::ip::tcp::resolver resolver(io_service_);
-  std::ostringstream ss;
-  ss << port;
-  boost::asio::ip::tcp::resolver::query query(address, ss.str());
-  boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve(query);
-  acceptor_.open(endpoint.protocol());
-  acceptor_.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
-  acceptor_.bind(endpoint);
+  try
+  {
+    // Open the acceptor with the option to reuse the address (i.e. SO_REUSEADDR).
+    boost::asio::ip::tcp::resolver resolver(io_service_);
+    std::ostringstream ss;
+    ss << port;
+    boost::asio::ip::tcp::resolver::query query(address, ss.str());
+    boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve(query);
+    acceptor_.open(endpoint.protocol());
+    acceptor_.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
+    acceptor_.bind(endpoint);
+  }
+  catch(boost::system::system_error& e)
+  {
+    throw(std::invalid_argument(std::string(" Error during bind -- ") + e.what() ));
+  }
 }
 
 //-----------------------------------------------------------------------------

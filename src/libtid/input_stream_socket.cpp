@@ -33,6 +33,9 @@ InputStreamSocket::~InputStreamSocket ()
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
+  boost::system::error_code ec;
+  socket_.close(ec);
+
   if(str_buffer_)
     delete str_buffer_;
   if(tmp_str_)

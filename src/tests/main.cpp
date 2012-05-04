@@ -28,6 +28,7 @@
 
 unsigned int NR_TID_MESSAGES = 50;
 unsigned int NR_CLIENTS = 0;
+unsigned int STATISTICS_WINDOW_SIZE = 5000;
 
 
 //boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(5);
