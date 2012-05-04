@@ -56,7 +56,13 @@ TEST(libTiDClientSendTiming)
   #endif
 
 
+  TiD::TiDServer test_server;
+  test_server.bind (9001);
+  test_server.start();
+
   TiD::TimedTiDClient client;
+  client.connect("127.0.0.1",9001);
+  boost::this_thread::sleep(boost::posix_time::milliseconds(100));
   TiDMessageVectorBuilder msg_builder;
   tobiss::Statistics  stat(true,  STATISTICS_WINDOW_SIZE );
 
