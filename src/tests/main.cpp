@@ -35,8 +35,8 @@ unsigned int STATISTICS_WINDOW_SIZE = 5000;
 #endif
 
 //boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(5);
-//boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(3);
-boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(2);
+boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(3);
+//boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(2);
 //boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(1);
 
 //boost::posix_time::microseconds SLEEP_TIME_BETWEEN_MSGS(500);
@@ -79,3 +79,12 @@ int main( int argc, const char* argv[] )
 //  SetPriorityClass(GetCurrentProcess(),   REALTIME_PRIORITY_CLASS);
 //#endif
 
+//SKIP_TOBIID_SERIALIZE_TEST \
+//SKIP_TOBIID_DESERIALIZE_TEST \
+//SKIP_LIBTID_CLIENT_SEND_TEST \
+//SKIP_LIBTID_CLIENT_RECV_TEST \
+//SKIP_LIBTID_LPT_TEST\
+//SKIP_LIBTID_LOCALHOST_SEND_RECEIVE_TEST\
+//SKIP_LIBTID_REMOTE_SEND_RECEIVE_TEST\
+//SKIP_LIBTID_SERVER_DISPATCH_TEST \
+//SKIP_STREAM_PARSING_TEST

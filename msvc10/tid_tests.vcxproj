@@ -105,7 +105,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;SKIP_LIBTID_LOCALHOST_SEND_RECEIVE_TEST\;SKIP_LIBTID_REMOTE_SEND_RECEIVE_TEST\;SKIP_LIBTID_CLIENT_SEND_TEST;SKIP_LIBTID_CLIENT_RECV_TEST;SKIP_LIBTID_LPT_TEST;SKIP_STREAM_PARSING_TEST;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -122,7 +122,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;SKIP_LIBTID_LOCALHOST_SEND_RECEIVE_TEST\;SKIP_LIBTID_REMOTE_SEND_RECEIVE_TEST\;SKIP_LIBTID_CLIENT_SEND_TEST;SKIP_LIBTID_CLIENT_RECV_TEST;SKIP_LIBTID_LPT_TEST;SKIP_STREAM_PARSING_TEST;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -141,7 +141,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;SKIP_LIBTID_LOCALHOST_SEND_RECEIVE_TEST\;SKIP_LIBTID_REMOTE_SEND_RECEIVE_TEST\;SKIP_LIBTID_CLIENT_SEND_TEST;SKIP_LIBTID_CLIENT_RECV_TEST;SKIP_LIBTID_LPT_TEST;SKIP_STREAM_PARSING_TEST;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -161,7 +161,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;SKIP_LIBTID_LOCALHOST_SEND_RECEIVE_TEST\;SKIP_LIBTID_REMOTE_SEND_RECEIVE_TEST\;SKIP_LIBTID_CLIENT_SEND_TEST;SKIP_LIBTID_CLIENT_RECV_TEST;SKIP_LIBTID_LPT_TEST;SKIP_STREAM_PARSING_TEST;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>

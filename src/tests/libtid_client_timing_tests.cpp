@@ -121,6 +121,9 @@ TEST(libTiDClientSendTiming)
     summary_file_stream << std::endl << std::endl;
   }
 
+  client.disconnect();
+  boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+
   summary_file_stream.close();
 
   std::cout << std::endl << std::endl;

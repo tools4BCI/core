@@ -56,7 +56,7 @@ int main()
     messages.push_back(message6);
 
 
-    client->connect(std::string("127.0.0.1"), 9001);
+    client->connect(std::string("127.0.0.1"), 9101);
     client->startReceiving(false);
 
     string str;//("a");

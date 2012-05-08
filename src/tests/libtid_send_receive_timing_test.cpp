@@ -72,7 +72,7 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
   if(NR_CLIENTS == 0)
   {
     // 2 clients are always present --> send and recv client
-    nr_clients.push_back(0);
+    //nr_clients.push_back(0);
     nr_clients.push_back(3);
     nr_clients.push_back(8);
     //nr_clients.push_back(50);
@@ -84,19 +84,20 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
 
   try
   {
-    TiD::TiDServer test_server;
-    test_server.bind (9001);
-    test_server.start();
-
-    TiD::TimedTiDClient send_client;
-
     filename = "libtid_localhost_send_and_receive_timing-" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +"-reps_summary.txt";
     summary_file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
     summary_file_stream << "All values are in microseconds:" << std::endl << std::endl;
 
     for(unsigned int cl_ind = 0; cl_ind < nr_clients.size(); cl_ind++ )
     {
+      TiD::TiDServer test_server;
+      test_server.bind (9001);
+      test_server.start();
+
+      TiD::TimedTiDClient send_client;
+      boost::this_thread::sleep(boost::posix_time::milliseconds(20));
       send_client.connect("127.0.0.1",9001);
+
       boost::this_thread::sleep(boost::posix_time::milliseconds(10));
       std::cout << "  ... iteration " << cl_ind+1 << " from " << nr_clients.size() << std::endl;
       for(unsigned int n = 0; n < nr_clients[cl_ind]; n++)
@@ -205,12 +206,11 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
       send_client.disconnect();
 
       boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+      boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+      test_server.stop();
+
+      boost::this_thread::sleep(boost::posix_time::milliseconds(100));
     }
-
-    boost::this_thread::sleep(boost::posix_time::milliseconds(10));
-    test_server.stop();
-
-    boost::this_thread::sleep(boost::posix_time::milliseconds(100));
   }
   catch(std::exception& e)
   {
@@ -249,8 +249,8 @@ TEST(libTiDRemoteSendReceiveTimingTest)
   if(NR_CLIENTS == 0)
   {
     // 2 clients are always present --> send and recv client
-//    nr_clients.push_back(0);
-//    nr_clients.push_back(3);
+    nr_clients.push_back(0);
+    nr_clients.push_back(3);
     nr_clients.push_back(8);
     //nr_clients.push_back(50);
   }

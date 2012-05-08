@@ -11,6 +11,7 @@
 #include <tobiid/IDSerializerRapid.hpp>
 #include <tobicore/TCException.hpp>
 
+#include "../tid_exceptions.h"
 #include "tid_message_tags_1_0.h"
 
 using std::string;
@@ -71,10 +72,10 @@ void TiDMessageParser10::parseMessage (IDMessage* msg, InputStream* stream)
   #endif
 
   xml_string_->clear();
-  stream->readUntil(TiDMessageTags10::XML_END_STRING, xml_string_);
 
   try
   {
+    stream->readUntil(TiDMessageTags10::XML_END_STRING, xml_string_);
     serializer_->SetMessage(msg);
     serializer_->Deserialize(xml_string_);
   }
@@ -83,6 +84,10 @@ void TiDMessageParser10::parseMessage (IDMessage* msg, InputStream* stream)
     std::cerr << "TCException caught@ " << BOOST_CURRENT_FUNCTION <<
                  " -- " << e.GetCaller() << "/" << e.GetInfo() <<  std::endl;
     std::cerr << "  --> xml string: "  << *xml_string_ <<  std::endl<< std::flush;
+    throw;
+  }
+  catch(TiDLostConnection&)
+  {
     throw;
   }
   catch(...)

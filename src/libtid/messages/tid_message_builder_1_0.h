@@ -6,8 +6,10 @@
 #include "tid_exceptions.h"
 
 #include <boost/lexical_cast.hpp>
+#include <iostream>
 
 #include <tobiid/IDSerializerRapid.hpp>
+#include <tobicore/TCException.hpp>
 
 namespace TiD
 {
@@ -52,8 +54,19 @@ class TiDMessageBuilder10 : public TiDMessageBuilder
       #ifdef DEBUG
         std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
       #endif
-      serializer_->SetMessage(&message);
-      serializer_->Serialize(&xml_string);
+
+      try
+      {
+        serializer_->SetMessage(&message);
+        serializer_->Serialize(&xml_string);
+      }
+      catch(TCException& e)
+      {
+        std::cerr << "TCException caught@ " << BOOST_CURRENT_FUNCTION <<
+                 " -- " << e.GetCaller() << "/" << e.GetInfo() <<  std::endl;
+        std::cerr << "  --> xml string: "  << xml_string <<  std::endl<< std::flush;
+        throw;
+      }
     }
 
   private:

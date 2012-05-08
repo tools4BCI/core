@@ -181,7 +181,7 @@ void TiDConnection::receive()
     }
     catch(...)
     {
-      cerr << "Caught unknown exception during message parsing!" << endl;
+      cerr <<BOOST_CURRENT_FUNCTION <<  " -- Caught unknown exception while receiving!" << endl;
       throw;
     }
   }
@@ -209,12 +209,12 @@ void TiDConnection::handleWrite(const boost::system::error_code& error,
     // destroyed automatically after this handler returns. The connection class's
     // destructor closes the socket.
   }
-  else if(state_ == State_Running && (!msg_string_send_buffer_.empty()) )
-  {
-    msg_string_send_buffer_.pop_front();
-  }
-  if(!msg_string_send_buffer_.empty())
-    std::cerr << "Still msgs in the buffer -- nr buffered msgs: " << msg_string_send_buffer_.size()  << std::endl;
+  //else if(state_ == State_Running && (!msg_string_send_buffer_.empty()) )
+  //{
+  //  msg_string_send_buffer_.pop_front();
+  //}
+  //if(!msg_string_send_buffer_.empty())
+  //  std::cerr << "Still msgs in the buffer -- nr buffered msgs: " << msg_string_send_buffer_.size()  << std::endl;
 
 }
 
@@ -233,16 +233,11 @@ void TiDConnection::sendMsg(IDMessage& msg)
     msg_string_send_buffer_.resize( msg_string_send_buffer_.size() *2 );
   }
 
-  #ifdef TIMING_TEST
-    double abs_diff_1 = msg.absolute.Toc();
-    double rel_diff_1 = msg.relative.Toc();
-  #endif
-
   msg_builder_->buildTiDMessage(msg, current_xml_str_);
-  msg_string_send_buffer_.push_back( current_xml_str_ );
+  //msg_string_send_buffer_.push_back( current_xml_str_ );
 
   boost::asio::async_write(tcp_connection_->socket(),
-                           boost::asio::buffer( msg_string_send_buffer_.back() ),
+                           boost::asio::buffer( current_xml_str_ ),
                            boost::bind(&TiDConnection::handleWrite, this->shared_from_this(),
                                        boost::asio::placeholders::error,
                                        boost::asio::placeholders::bytes_transferred) );
