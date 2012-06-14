@@ -101,7 +101,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\tobicore\$(Platform)\$(Configuration)\;$(SolutionDir)lib\tobiid\$(Platform)\$(Configuration)\;$(SolutionDir)lib\libtid\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>tobicore.lib;tobiid.lib;libtid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -115,7 +115,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\tobicore\$(Platform)\$(Configuration)\;$(SolutionDir)lib\tobiid\$(Platform)\$(Configuration)\;$(SolutionDir)lib\libtid\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>tobicore.lib;tobiid.lib;libtid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -134,7 +134,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\tobicore\$(Platform)\$(Configuration)\;$(SolutionDir)lib\tobiid\$(Platform)\$(Configuration)\;$(SolutionDir)lib\libtid\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>tobicore.lib;tobiid.lib;libtid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -153,7 +153,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\tobicore\$(Platform)\$(Configuration)\;$(SolutionDir)lib\tobiid\$(Platform)\$(Configuration)\;$(SolutionDir)lib\libtid\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>tobicore.lib;tobiid.lib;libtid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
