@@ -7,10 +7,7 @@ CONFIG += console \
     warn_on \
     exceptions \
     stl
-DESTDIR = tests
 TARGET = tid_test
-OBJECTS_DIR = tmp/tests
-
 CONFIG( debug, debug|release ) {
     DEFINES += DEBUG
 }
@@ -20,7 +17,7 @@ SKIP_TOBIID_SERIALIZE_TEST \
 SKIP_TOBIID_DESERIALIZE_TEST \
 SKIP_LIBTID_CLIENT_SEND_TEST \
 SKIP_LIBTID_CLIENT_RECV_TEST \
-SKIP_LIBTID_LOCALHOST_SEND_RECEIVE_TEST\
+#SKIP_LIBTID_LOCALHOST_SEND_RECEIVE_TEST\
 SKIP_LIBTID_SERVER_DISPATCH_TEST \
 #SKIP_LIBTID_REMOTE_SEND_RECEIVE_TEST\
 SKIP_LIBTID_LPT_TEST\
@@ -79,14 +76,24 @@ LIBS += -lboost_thread \
 HARDWARE_PLATFORM = $$system(uname -m)
 contains( HARDWARE_PLATFORM, x86_64 )::{
     message(Building 64 bit )
+
+    OBJECTS_DIR = tmp/tests/amd64
+    DESTDIR = tests/amd64
+
     LIBS += lib/amd64/libtid.a \
             ../build_amd64/src/tobiid/.libs/libtobiid.a \
             ../build_amd64/src/tobicore/.libs/libtobicore.a \
             -lUnitTest++_64
   }else::{
+
+    OBJECTS_DIR = tmp/tests/x86
+    DESTDIR = tests/x86
+
     message(Building 32 bit )
     LIBS += lib/x86/libtid.a \
             ../build_x86/src/tobiid/.libs/libtobiid.a \
             ../build_x86/src/tobicore/.libs/libtobicore.a \
             -lUnitTest++
   }
+
+

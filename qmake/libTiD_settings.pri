@@ -19,7 +19,6 @@ CONFIG( debug, debug|release ) {
 
 TARGET = tid
 
-OBJECTS_DIR = tmp
 INCLUDEPATH += ../src/libtid \
                ../src
 
@@ -27,7 +26,7 @@ DEPENDPATH += $$INCLUDEPATH
 #INCLUDEPATH += extern/include
 
 unix:QMAKE_CXX = /usr/bin/g++-4.7
-unix:QMAKE_CXXFLAGS_RELEASE = -O3 -mtune=core2
+unix:QMAKE_CXXFLAGS_RELEASE = -O3
 
 unix:QMAKE_CXXFLAGS += -pedantic
 QMAKE_CXXFLAGS_WARN_ON = -Wall \
@@ -38,9 +37,11 @@ QMAKE_CXXFLAGS_WARN_ON = -Wall \
 HARDWARE_PLATFORM = $$system(uname -m)
 contains( HARDWARE_PLATFORM, x86_64 )::{
     message(Building 64 bit )
+    OBJECTS_DIR = tmp/amd64
     DESTDIR = lib/amd64
   }else::{
     message(Building 32 bit )
+    OBJECTS_DIR = tmp/x86
     DESTDIR = lib/x86
   }
 
