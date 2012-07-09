@@ -54,6 +54,7 @@ TiDConnection::~TiDConnection()
 //    std::cout << "   -->  " << BOOST_CURRENT_FUNCTION << " -- sent msgs: " << nr_sent_msgs_;
 //    std::cout << "   ***  " << " msg buffer size: " << msg_string_send_buffer_.size() << std::endl;
 
+  stop();
   close();
 
   if(msg_parser_)

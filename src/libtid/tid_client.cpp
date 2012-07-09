@@ -74,12 +74,12 @@ TiDClient::~TiDClient()
     io_service_thread_ = 0;
   }
 
-    if(io_service_thread_2_)
-    {
-      io_service_thread_2_->join();
-      delete io_service_thread_2_;
-      io_service_thread_2_ = 0;
-    }
+  if(io_service_thread_2_)
+  {
+    io_service_thread_2_->join();
+    delete io_service_thread_2_;
+    io_service_thread_2_ = 0;
+  }
 
 
   if(receive_thread_)
@@ -159,14 +159,14 @@ void TiDClient::disconnect()
 
   do
   {
-  socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
-  socket_.close(ec);
-  if(ec)
-  {
-    std::cerr << BOOST_CURRENT_FUNCTION << " -- " << ec.message() << std::endl;
-    boost::this_thread::sleep(boost::posix_time::milliseconds(10));
-  }
-
+    socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
+    socket_.close(ec);
+    if(ec)
+    {
+      std::cerr << BOOST_CURRENT_FUNCTION << " -- " << ec.message() << std::endl;
+      boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+    }
+    nr_disconnect_retries++;
   }
   while(ec && (nr_disconnect_retries < 10) ) ;
 
@@ -206,6 +206,9 @@ void TiDClient::sendMessage(std::string& tid_xml_context)
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
+  if(!socket_.is_open())
+    return;
+
   boost::asio::async_write(socket_, boost::asio::buffer(tid_xml_context),
                              boost::bind(&TiDClient::handleWrite, this,
                                        boost::asio::placeholders::error,
@@ -229,6 +232,9 @@ void TiDClient::sendMessage(IDMessage& msg)
   #ifdef DEBUG
     std::cout << "  --> " << BOOST_CURRENT_FUNCTION  <<  std::endl;
   #endif
+
+  if(!socket_.is_open())
+    return;
 
   msg_builder_->buildTiDMessage(msg, xml_string_);
 
@@ -256,10 +262,13 @@ void TiDClient::startReceiving(bool throw_on_error)
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
+  stopReceiving();
+
   throw_on_error_ = throw_on_error;
 
-  if(state_ != State_Connected)
-    throw(std::runtime_error("TiDClient::startReceiving -- not connected!") );
+  if(state_ != State_Connected )
+    if( state_ != State_Stopped )
+      throw(std::runtime_error("TiDClient::startReceiving -- not connected!") );
 
   state_ = State_Running;
   receive_thread_ = new boost::thread(&TiDClient::receive, this);
@@ -290,9 +299,43 @@ void TiDClient::stopReceiving()
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
+  if(!socket_.is_open())
+    return;
+
+  if(state_ != State_Running)
+    return;
+
   state_ = State_Stopped;
   boost::system::error_code error;
   socket_.cancel(error);
+  socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_receive, error);
+
+  io_service_.stop();
+
+  if(io_service_thread_)
+  {
+
+    io_service_thread_->join();
+    delete io_service_thread_;
+    io_service_thread_ = 0;
+  }
+
+  if(io_service_thread_2_)
+  {
+    io_service_thread_2_->join();
+    delete io_service_thread_2_;
+    io_service_thread_2_ = 0;
+  }
+
+
+  if(receive_thread_)
+  {
+    receive_thread_->interrupt();
+    receive_thread_->join();
+    delete receive_thread_;
+    receive_thread_ = 0;
+  }
+
 }
 
 //-----------------------------------------------------------------------------
@@ -314,8 +357,8 @@ void TiDClient::receive()
     }
     catch(TiDLostConnection&)
     {
-      stopReceiving();
-      std::cerr << "   ***  Connection to TiD Server@" << 
+//      stopReceiving();
+      std::cerr << "   ***  Connection to TiD Server@" <<
         remote_ip_ << ":" << remote_port_ << " lost." << std::endl << " >> ";
       break;
     }
@@ -323,7 +366,7 @@ void TiDClient::receive()
     {
       if(state_ == State_Running)
         std::cerr << e.what() << std::endl << ">> ";
-      stopReceiving();
+//      stopReceiving();
       break;
     }
     catch(std::exception& e)
@@ -337,6 +380,7 @@ void TiDClient::receive()
       return;
     }
   }
+  state_ = State_Error;
 }
 
 //-----------------------------------------------------------------------------

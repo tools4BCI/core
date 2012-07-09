@@ -12,7 +12,7 @@ int main()
   {
     TiDServer test_server;
     test_server.bind (9101);
-  test_server.reserveNrOfMsgs(10000000);
+    test_server.reserveNrOfMsgs(10000000);
     test_server.start();
     string str;
     cout << endl << ">>";
