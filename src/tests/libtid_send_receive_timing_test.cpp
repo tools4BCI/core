@@ -92,11 +92,11 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
     {
       TiD::TiDServer test_server;
       test_server.bind (9001);
-      test_server.reserveNrOfMsgs(10000000);
+      test_server.reserveNrOfMsgs(1000000);
       test_server.start();
 
       TiD::TimedTiDClient send_client;
-      send_client.reserveNrOfMsgs(10000000);
+      send_client.reserveNrOfMsgs(1000000);
       boost::this_thread::sleep(boost::posix_time::milliseconds(20));
       send_client.connect("127.0.0.1",9001);
 
@@ -105,7 +105,7 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
       for(unsigned int n = 0; n < nr_clients[cl_ind]; n++)
       {
         clients_vec.push_back(new TiD::TiDClient );
-        clients_vec[n]->reserveNrOfMsgs(10000000);
+        clients_vec[n]->reserveNrOfMsgs(1000000);
         clients_vec[n]->connect("127.0.0.1",9001);
         clients_vec[n]->startReceiving(0);
         boost::this_thread::sleep(boost::posix_time::milliseconds(10));
@@ -114,7 +114,7 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
       boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 
       TiD::TimedTiDClient recv_client;
-      recv_client.reserveNrOfMsgs(10000000);
+      recv_client.reserveNrOfMsgs(1000000);
       recv_client.connect("127.0.0.1",9001);
       recv_client.startReceiving(0);
       boost::this_thread::sleep(boost::posix_time::milliseconds(100));
@@ -260,9 +260,9 @@ TEST(libTiDRemoteSendReceiveTimingTest)
   if(NR_CLIENTS == 0)
   {
     // 2 clients are always present --> send and recv client
-//    nr_clients.push_back(0);
-//    nr_clients.push_back(3);
-    nr_clients.push_back(8);
+    nr_clients.push_back(0);
+    nr_clients.push_back(3);
+//    nr_clients.push_back(8);
     //nr_clients.push_back(50);
   }
   else
@@ -274,7 +274,7 @@ TEST(libTiDRemoteSendReceiveTimingTest)
   {
 
     TiD::TimedTiDClient send_client;
-    send_client.reserveNrOfMsgs(10000000);
+    send_client.reserveNrOfMsgs(1000000);
 
     filename = "libtid_remote_send_and_receive_timing-" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +"-reps_summary.txt";
     summary_file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
@@ -282,14 +282,14 @@ TEST(libTiDRemoteSendReceiveTimingTest)
 
     for(unsigned int cl_ind = 0; cl_ind < nr_clients.size(); cl_ind++ )
     {
-      send_client.connect("192.168.1.12",9001);
+      send_client.connect("192.168.1.11",9001);
       boost::this_thread::sleep(boost::posix_time::milliseconds(10));
       std::cout << "  ... iteration " << cl_ind+1 << " from " << nr_clients.size() << std::endl;
       for(unsigned int n = 0; n < nr_clients[cl_ind]; n++)
       {
         clients_vec.push_back(new TiD::TiDClient );
-        clients_vec[n]->reserveNrOfMsgs(10000000);
-        clients_vec[n]->connect("192.168.1.12",9001);
+        clients_vec[n]->reserveNrOfMsgs(1000000);
+        clients_vec[n]->connect("192.168.1.11",9001);
         clients_vec[n]->startReceiving(0);
         boost::this_thread::sleep(boost::posix_time::milliseconds(20));
       }
@@ -297,8 +297,8 @@ TEST(libTiDRemoteSendReceiveTimingTest)
       boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 
       TiD::TimedTiDClient recv_client;
-      recv_client.reserveNrOfMsgs(10000000);
-      recv_client.connect("192.168.1.12",9001);
+      recv_client.reserveNrOfMsgs(1000000);
+      recv_client.connect("192.168.1.11",9001);
       recv_client.startReceiving(0);
       boost::this_thread::sleep(boost::posix_time::milliseconds(100));
 
@@ -325,7 +325,7 @@ TEST(libTiDRemoteSendReceiveTimingTest)
 
         boost::chrono::high_resolution_clock::time_point  start_time;
         boost::chrono::duration<double, boost::micro>     recv_diff;
-        boost::posix_time::microsec no_msgs_available_sleep_time = boost::posix_time::microseconds(5);
+        boost::posix_time::microsec no_msgs_available_sleep_time = boost::posix_time::microseconds(3);
 
         for(unsigned int n = 0; n < msgs_vec.size(); n++ )
         {

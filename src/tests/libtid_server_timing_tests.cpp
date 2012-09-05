@@ -66,16 +66,16 @@ TEST(libTiDServerDispatchTiming)
   std::string filename;
 
   std::vector<unsigned int> description_str_lengths;
-  description_str_lengths.push_back(5);
-  description_str_lengths.push_back(20);
+//  description_str_lengths.push_back(5);
+//  description_str_lengths.push_back(20);
   description_str_lengths.push_back(100);
 
   std::vector<unsigned int> nr_clients;
   if(NR_CLIENTS == 0)
   {
-    nr_clients.push_back(1);
+//    nr_clients.push_back(1);
     nr_clients.push_back(5);
-    nr_clients.push_back(10);
+//    nr_clients.push_back(10);
     //    nr_clients.push_back(50);
   }
   else
@@ -122,7 +122,7 @@ TEST(libTiDServerDispatchTiming)
         stat.reset();
         server.clearConnectionDispatchTimings();
         server.clearMessages();
-        server.reserveNrOfMsgs(NR_TID_MESSAGES);
+        server.reserveNrOfMsgs(NR_TID_MESSAGES/10);
         boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 
         filename = "libtid_server_dipatch_nr_clients_"
@@ -159,6 +159,10 @@ TEST(libTiDServerDispatchTiming)
 
         for(unsigned int n = 0; n < diffs.size(); n++)
         {
+          for(unsigned int m = 0; m < nr_clients[cl_ind]; m++)
+            clients_vec[m]->clearMessages();
+
+          server.clearMessages();
           stat.update( diffs[n] );
           TiDHelpers::updateFileStream(file_stream, stat);
         }

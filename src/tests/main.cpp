@@ -39,12 +39,12 @@ unsigned int STATISTICS_WINDOW_SIZE = 5000;
 //boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(2);
 //boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(1);
 
-//boost::posix_time::microseconds SLEEP_TIME_BETWEEN_MSGS(500);
-boost::posix_time::microseconds SLEEP_TIME_BETWEEN_MSGS(250);
+boost::posix_time::microseconds SLEEP_TIME_BETWEEN_MSGS(500);
+//boost::posix_time::microseconds SLEEP_TIME_BETWEEN_MSGS(250);
 //boost::posix_time::microseconds SLEEP_TIME_BETWEEN_MSGS(100);
 
 //boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS_REMOTE(1);
-boost::posix_time::microseconds SLEEP_TIME_BETWEEN_MSGS_REMOTE(500);
+boost::posix_time::microseconds SLEEP_TIME_BETWEEN_MSGS_REMOTE(250);
 
 //-------------------------------------------------------------------------------------------------
 

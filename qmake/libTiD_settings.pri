@@ -26,7 +26,7 @@ DEPENDPATH += $$INCLUDEPATH
 #INCLUDEPATH += extern/include
 
 unix:QMAKE_CXX = /usr/bin/g++-4.7
-unix:QMAKE_CXXFLAGS_RELEASE = -O3
+unix:QMAKE_CXXFLAGS_RELEASE = -O3 -mtune=core2
 
 unix:QMAKE_CXXFLAGS += -pedantic
 QMAKE_CXXFLAGS_WARN_ON = -Wall \
