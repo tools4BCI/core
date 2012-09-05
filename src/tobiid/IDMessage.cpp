@@ -30,105 +30,113 @@ std::string IDMessage::TxtFamilyBiosig("FamilyBiosig");
 std::string IDMessage::TxtFamilyCustom("FamilyCustom");
 
 IDMessage::IDMessage(void) {
-	this->Init();
+  this->Init();
 }
 
 IDMessage::~IDMessage(void) {
 }
 
 IDMessage::IDMessage(IDMessage* const other) {
-	this->Init();
-	this->Copy(other);
+  this->Init();
+  this->Copy(other);
 }
 
 IDMessage::IDMessage(IDFtype familyType, IDevent event) {
-	this->Init();
-	this->_familyType = familyType;
-	this->_event = event;
-	this->_description = "unset";
+  this->Init();
+  this->_familyType = familyType;
+  this->_event = event;
+  this->_description = "unset";
 }
 
 void IDMessage::Copy(IDMessage* const other) {
-	TCBlock::SetBlockIdx(other->GetBlockIdx());
-	this->_event = other->GetEvent();
-	this->_familyType = other->GetFamilyType();
-	this->_description = other->GetDescription();
+  TCBlock::SetBlockIdx(other->GetBlockIdx());
+  this->_event = other->GetEvent();
+  this->_familyType = other->GetFamilyType();
+  this->_description = other->GetDescription();
 }
 
 void IDMessage::Init(void) {
-	TCBlock::SetBlockIdx(-1);
-	this->_familyType = IDMessage::FamilyUndef;
-	this->_event = IDMessage::EventNull;
+  TCBlock::SetBlockIdx(-1);
+  this->_familyType = IDMessage::FamilyUndef;
+  this->_event = IDMessage::EventNull;
 }
 
 std::string IDMessage::GetDescription(void) const {
-	return this->_description;
+  return this->_description;
 }
 
 void IDMessage::SetDescription(const std::string& description) {
-	this->_description = description;
+  this->_description = description;
+}
+
+std::string IDMessage::GetSource(void) const {
+  return this->_description;
+}
+
+void IDMessage::SetSource(const std::string& description) {
+  this->_description = description;
 }
 
 IDFvalue IDMessage::GetFamily(void) const {
-	IDFvalue fvalue;
-	switch(this->_familyType) {
-		case IDMessage::FamilyBiosig:
-			fvalue.assign(IDTYPES_FAMILY_BIOSIG);
-			break;
-		case IDMessage::FamilyCustom:
-			fvalue.assign(IDTYPES_FAMILY_CUSTOM);
-			break;
-		case IDMessage::FamilyUndef:
-		default:
-			fvalue.assign(IDTYPES_FAMILY_UNDEF);
-			break;
-	}
-	return fvalue;
+  IDFvalue fvalue;
+  switch(this->_familyType) {
+    case IDMessage::FamilyBiosig:
+      fvalue.assign(IDTYPES_FAMILY_BIOSIG);
+      break;
+    case IDMessage::FamilyCustom:
+      fvalue.assign(IDTYPES_FAMILY_CUSTOM);
+      break;
+    case IDMessage::FamilyUndef:
+    default:
+      fvalue.assign(IDTYPES_FAMILY_UNDEF);
+      break;
+  }
+  return fvalue;
 }
 
 bool IDMessage::SetFamilyType(const IDFtype type) {
-	if(type < IDMessage::FamilyUndef || type > IDMessage::FamilyCustom)
-		return false;
-	this->_familyType = type;
-	return true;
+  if(type < IDMessage::FamilyUndef || type > IDMessage::FamilyCustom)
+    return false;
+  this->_familyType = type;
+  return true;
 }
-		
+
 bool IDMessage::SetFamilyType(const std::string& type) {
-	if(type.compare(IDMessage::TxtFamilyUndef) == 0) 
-		this->_familyType = IDMessage::FamilyUndef;
-	else if(type.compare(IDMessage::TxtFamilyBiosig) == 0) 
-		this->_familyType = IDMessage::FamilyBiosig;
-	else if(type.compare(IDMessage::TxtFamilyCustom) == 0) 
-		this->_familyType = IDMessage::FamilyCustom;
-	else
-		return false;
-	return true;
+  if(type.compare(IDMessage::TxtFamilyUndef) == 0)
+    this->_familyType = IDMessage::FamilyUndef;
+  else if(type.compare(IDMessage::TxtFamilyBiosig) == 0)
+    this->_familyType = IDMessage::FamilyBiosig;
+  else if(type.compare(IDMessage::TxtFamilyCustom) == 0)
+    this->_familyType = IDMessage::FamilyCustom;
+  else
+    return false;
+  return true;
 }
 
 IDFtype IDMessage::GetFamilyType(void) const {
-	return this->_familyType;
+  return this->_familyType;
 }
 
 void IDMessage::SetEvent(const IDevent event) {
-	this->_event = event;
+  this->_event = event;
 }
 
 IDevent IDMessage::GetEvent(void) const {
-	return this->_event;
+  return this->_event;
 }
 
 void IDMessage::Dump(void) const {
-	printf("[IDMessage::Dump] TOBI iD message for frame %d [%s]\n",
-			TCBlock::GetBlockIdx(), this->GetDescription().c_str());
-	IDFvalue fvalue = this->GetFamily();
-	printf(" + Event family  %d/%s\n", this->GetFamilyType(), fvalue.c_str());
-	printf(" + Event value   %d\n", this->GetEvent());
+  printf("[IDMessage::Dump] TOBI iD message for frame %d [%s]\n",
+      TCBlock::GetBlockIdx(), this->GetDescription().c_str());
+  IDFvalue fvalue = this->GetFamily();
+  printf(" + Event family  %d/%s\n", this->GetFamilyType(), fvalue.c_str());
+  printf(" + Event value   %d\n", this->GetEvent());
 
 }
-		
+
 const IDFtype IDMessage::FamilyType(IDFvalue family) {
-	if(family.compare(IDTYPES_FAMILY_BIOSIG) == 0)
-		return IDMessage::FamilyBiosig;
-	else
-		return IDMessage::FamilyUndef;
+  if(family.compare(IDTYPES_FAMILY_BIOSIG) == 0)
+    return IDMessage::FamilyBiosig;
+  else
+    return IDMessage::FamilyUndef;
 }

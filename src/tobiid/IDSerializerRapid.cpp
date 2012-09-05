@@ -31,131 +31,182 @@
 using namespace std;
 #endif
 using namespace rapidxml;
-		
-IDSerializerRapid::IDSerializerRapid(IDMessage* const message, const bool indent, 
-		const bool declaration) 
-	: IDSerializer(message) {
-	this->_indent = indent;
-	this->_declaration = declaration;
+
+IDSerializerRapid::IDSerializerRapid(IDMessage* const message, const bool indent,
+    const bool declaration)
+  : IDSerializer(message) {
+  this->_indent = indent;
+  this->_declaration = declaration;
 }
-		
+
+//-----------------------------------------------------------------------------
+
 IDSerializerRapid::~IDSerializerRapid(void) {
 }
-	
+
+//-----------------------------------------------------------------------------
+
 std::string* IDSerializerRapid::Serialize(std::string* buffer) {
-	if(buffer == NULL)
-		return NULL;
-	if(IDSerializer::message == NULL)
-		throw TCException("iD message not set, cannot serialize");
+  if(buffer == NULL)
+    return NULL;
+  if(IDSerializer::message == NULL)
+    throw TCException("iD message not set, cannot serialize");
 
-	buffer->clear();
-	
-	// XML document and buffers 
-	xml_document<> doc;
-	std::string xml_as_string;
-	std::string xml_no_indent;
-	
-	// XML declaration
-	if(this->_declaration) {
-		xml_node<>* decl = doc.allocate_node(node_declaration);
-		decl->append_attribute(doc.allocate_attribute("version", "1.0"));
-		decl->append_attribute(doc.allocate_attribute("encoding", "utf-8"));
-		doc.append_node(decl);
-	}
-	
-	char cacheFidx[16], cacheEvent[128];
-	TCTools::itoa(IDSerializer::message->GetBlockIdx(), cacheFidx);
-	TCTools::itoa(IDSerializer::message->GetEvent(), cacheEvent);
-	IDFvalue fvalue = IDSerializer::message->GetFamily();
-	
-	std::string timestamp, reference;
-	IDSerializer::message->absolute.Get(&timestamp);
-	IDSerializer::message->relative.Get(&reference);
+  buffer->clear();
 
-	// Root node
-	xml_node<>* root = doc.allocate_node(node_element, IDMESSAGE_ROOTNODE);
-	root->append_attribute(doc.allocate_attribute(IDMESSAGE_VERSIONNODE,
-				IDMESSAGE_VERSION));
-	root->append_attribute(doc.allocate_attribute(IDMESSAGE_DESCRIPTIONNODE,
-				IDSerializer::message->_description.c_str()));
-	root->append_attribute(doc.allocate_attribute(IDMESSAGE_FRAMENODE, 
-				cacheFidx));
-	root->append_attribute(doc.allocate_attribute(IDMESSAGE_FAMILYNODE, 
-				fvalue.c_str()));
-	root->append_attribute(doc.allocate_attribute(IDMESSAGE_EVENTNODE, 
-				cacheEvent));
-	root->append_attribute(doc.allocate_attribute(IDMESSAGE_TIMESTAMPNODE, 
-				timestamp.c_str()));
-	root->append_attribute(doc.allocate_attribute(IDMESSAGE_REFERENCENODE, 
-				reference.c_str()));
-	doc.append_node(root);
-	
-	if(this->_indent) 
-		print(std::back_inserter(*buffer), doc);
-	else
-		print(std::back_inserter(*buffer), doc, print_no_indenting);
+  // XML document and buffers
+  xml_document<> doc;
+  std::string xml_as_string;
+  std::string xml_no_indent;
 
-	return buffer;
+  // XML declaration
+  if(this->_declaration) {
+    xml_node<>* decl = doc.allocate_node(node_declaration);
+    decl->append_attribute(doc.allocate_attribute("version", "1.0"));
+    decl->append_attribute(doc.allocate_attribute("encoding", "utf-8"));
+    doc.append_node(decl);
+  }
+
+  char cacheFidx[16], cacheEvent[128];
+  TCTools::itoa(IDSerializer::message->GetBlockIdx(), cacheFidx);
+  TCTools::itoa(IDSerializer::message->GetEvent(), cacheEvent);
+  IDFvalue fvalue = IDSerializer::message->GetFamily();
+
+  std::string timestamp, reference;
+  IDSerializer::message->absolute.Get(&timestamp);
+  IDSerializer::message->relative.Get(&reference);
+
+  // Root node
+  xml_node<>* root = doc.allocate_node(node_element, IDMESSAGE_ROOTNODE);
+  root->append_attribute(doc.allocate_attribute(IDMESSAGE_VERSIONNODE,
+        IDMESSAGE_VERSION));
+  root->append_attribute(doc.allocate_attribute(IDMESSAGE_DESCRIPTIONNODE,
+        IDSerializer::message->_description.c_str()));
+  root->append_attribute(doc.allocate_attribute(IDMESSAGE_FRAMENODE_2,
+        cacheFidx));
+  root->append_attribute(doc.allocate_attribute(IDMESSAGE_FAMILYNODE,
+        fvalue.c_str()));
+  root->append_attribute(doc.allocate_attribute(IDMESSAGE_EVENTNODE,
+        cacheEvent));
+  root->append_attribute(doc.allocate_attribute(IDMESSAGE_TIMESTAMPNODE_2,
+        timestamp.c_str()));
+  root->append_attribute(doc.allocate_attribute(IDMESSAGE_REFERENCENODE_2,
+        reference.c_str()));
+  doc.append_node(root);
+
+  if(this->_indent)
+    print(std::back_inserter(*buffer), doc);
+  else
+    print(std::back_inserter(*buffer), doc, print_no_indenting);
+
+  return buffer;
 }
 
-std::string* IDSerializerRapid::Deserialize(std::string* const buffer) {
-	xml_document<> doc;
-	std::string cache;
-	std::vector<char> xml_copy(buffer->begin(), buffer->end());
+//-----------------------------------------------------------------------------
+
+std::string* IDSerializerRapid::Deserialize(std::string* const buffer)
+{
+  xml_document<> doc;
+  std::string cache;
+  std::vector<char> xml_copy(buffer->begin(), buffer->end());
     xml_copy.push_back('\0');
     doc.parse<parse_declaration_node | parse_no_data_nodes>(&xml_copy[0]);
-	
-	xml_node<>* rootnode = doc.first_node(IDMESSAGE_ROOTNODE);
-	if(rootnode == NULL) 
-		throw TCException("iD root node not found",      
-												                       #ifdef _WIN32  
-															                         __FUNCSIG__       
-												                       #else          
-                                                       __PRETTY_FUNCTION__ 
-												                       #endif 
-    );
-	
-	/* Check version */
-	cache = rootnode->first_attribute(IDMESSAGE_VERSIONNODE)->value();
-	if(cache.compare(IDMESSAGE_VERSION) != 0) {
-		std::string info("iD version mismatch: ");
-		info.append(IDMESSAGE_VERSION);
-		info.append("/");
-		info.append(cache);
-		throw TCException(info,      
-												    #ifdef _WIN32  
-															      __FUNCSIG__       
-												    #else          
-                                    __PRETTY_FUNCTION__ 
-												    #endif 
-    );
-	}
-	
-	// Get frame number
-	cache.clear();
-	cache = rootnode->first_attribute(IDMESSAGE_FRAMENODE)->value();
-	IDSerializer::message->SetBlockIdx(atol(cache.c_str()));
-	
-	// Get timestamp
-	cache.clear();
-	cache = rootnode->first_attribute(IDMESSAGE_TIMESTAMPNODE)->value();
-	IDSerializer::message->absolute.Set(cache);
-	cache.clear();
-	cache = rootnode->first_attribute(IDMESSAGE_REFERENCENODE)->value();
-	IDSerializer::message->relative.Set(cache);
-	
-	cache = rootnode->first_attribute(IDMESSAGE_DESCRIPTIONNODE)->value();
-	IDSerializer::message->SetDescription(cache);
 
-	cache = rootnode->first_attribute(IDMESSAGE_FAMILYNODE)->value();
-	if(cache.compare(IDTYPES_FAMILY_BIOSIG) == 0) 
-		IDSerializer::message->SetFamilyType(IDMessage::FamilyBiosig);
-	else	
-		IDSerializer::message->SetFamilyType(IDMessage::FamilyUndef);
+  xml_node<>* rootnode = doc.first_node(IDMESSAGE_ROOTNODE);
+  if(rootnode == NULL)
+    throw TCException("iD root node not found",
+                                               #ifdef _WIN32
+                                                       __FUNCSIG__
+                                               #else
+                                                       __PRETTY_FUNCTION__
+                                               #endif
+    );
 
-	cache.clear();
-	cache = rootnode->first_attribute(IDMESSAGE_EVENTNODE)->value();
-	IDSerializer::message->SetEvent(atoi(cache.c_str()));
-	
-	return buffer;
+  /* Check version */
+  cache = rootnode->first_attribute(IDMESSAGE_VERSIONNODE)->value();
+  if(cache.compare(IDMESSAGE_VERSION_SUPPORTED)  )
+  {
+    // Get frame number
+    cache.clear();
+    cache = rootnode->first_attribute(IDMESSAGE_FRAMENODE)->value();
+    IDSerializer::message->SetBlockIdx(atol(cache.c_str()));
+
+    // Get timestamp
+    cache.clear();
+    cache = rootnode->first_attribute(IDMESSAGE_TIMESTAMPNODE)->value();
+    IDSerializer::message->absolute.Set(cache);
+    cache.clear();
+    cache = rootnode->first_attribute(IDMESSAGE_REFERENCENODE)->value();
+    IDSerializer::message->relative.Set(cache);
+
+    cache = rootnode->first_attribute(IDMESSAGE_DESCRIPTIONNODE)->value();
+    IDSerializer::message->SetDescription(cache);
+
+    cache = rootnode->first_attribute(IDMESSAGE_FAMILYNODE)->value();
+    if(cache.compare(IDTYPES_FAMILY_BIOSIG) == 0)
+      IDSerializer::message->SetFamilyType(IDMessage::FamilyBiosig);
+    else
+      IDSerializer::message->SetFamilyType(IDMessage::FamilyUndef);
+
+    cache.clear();
+    cache = rootnode->first_attribute(IDMESSAGE_EVENTNODE)->value();
+    IDSerializer::message->SetEvent(atoi(cache.c_str()));
+
+    return buffer;
+  }
+  else if( cache.compare(IDMESSAGE_VERSION) )
+  {
+    // Get frame number
+    cache.clear();
+    cache = rootnode->first_attribute(IDMESSAGE_FRAMENODE_2)->value();
+    IDSerializer::message->SetBlockIdx(atol(cache.c_str()));
+
+    // Get timestamp
+    cache.clear();
+    cache = rootnode->first_attribute(IDMESSAGE_TIMESTAMPNODE_2)->value();
+    IDSerializer::message->absolute.Set(cache);
+    cache.clear();
+    cache = rootnode->first_attribute(IDMESSAGE_REFERENCENODE_2)->value();
+    IDSerializer::message->relative.Set(cache);
+
+    cache = rootnode->first_attribute(IDMESSAGE_DESCRIPTIONNODE)->value();
+    IDSerializer::message->SetDescription(cache);
+
+    cache = rootnode->first_attribute(IDMESSAGE_FAMILYNODE)->value();
+    if(cache.compare(IDTYPES_FAMILY_BIOSIG) == 0)
+      IDSerializer::message->SetFamilyType(IDMessage::FamilyBiosig);
+    else
+      IDSerializer::message->SetFamilyType(IDMessage::FamilyUndef);
+
+    cache.clear();
+    cache = rootnode->first_attribute(IDMESSAGE_EVENTNODE)->value();
+    IDSerializer::message->SetEvent(atoi(cache.c_str()));
+
+    if(rootnode->first_attribute(IDMESSAGE_SOURCENODE))
+    {
+      cache.clear();
+      cache = rootnode->first_attribute(IDMESSAGE_SOURCENODE)->value();
+      IDSerializer::message->SetSource(cache);
+    }
+
+    return buffer;
+  }
+  else
+  {
+    std::string info("iD version mismatch: ");
+    info.append(IDMESSAGE_VERSION);
+    info.append("/");
+    info.append(cache);
+    throw TCException(info,
+                            #ifdef _WIN32
+                                    __FUNCSIG__
+                            #else
+                                    __PRETTY_FUNCTION__
+                            #endif
+    );
+  }
+
+
 }
+
+//-----------------------------------------------------------------------------
