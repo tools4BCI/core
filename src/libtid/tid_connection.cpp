@@ -176,7 +176,14 @@ void TiDConnection::receive()
     catch(TiDException& e)
     {
       if(state_ == State_Running)
-        cerr << e.what() << endl << ">> ";
+        cerr << "TiDException caught -- " << e.what() << endl << ">> ";
+      state_ = State_Aborted;
+      break;
+    }
+    catch(TCException& e)
+    {
+      if(state_ == State_Running)
+        cerr << "TCException caught -- " << e.GetCaller() << "" << e.GetInfo() << endl << ">> ";
       state_ = State_Aborted;
       break;
     }

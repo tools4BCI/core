@@ -1,11 +1,13 @@
-#include "tid_client.h"
+#include "sdl_tid_client.h"
+
+#include <boost/bind.hpp>
 
 namespace TiD
 {
 
 //-----------------------------------------------------------------------------
 
-TiDClient::TiDClient()
+SDLTiDClient::SDLTiDClient()
   : TiDClientBase(),
     receive_thread_(0), io_service_thread_(0), io_service_thread_2_(0)
 {
@@ -13,41 +15,38 @@ TiDClient::TiDClient()
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
-
 }
 
 //-----------------------------------------------------------------------------
 
-TiDClient::~TiDClient()
+SDLTiDClient::~SDLTiDClient()
 {
   #ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
-  if(io_service_thread_)
-  {
-    delete io_service_thread_;
-    io_service_thread_ = 0;
-  }
+    if(io_service_thread_)
+    {
+      SDL_KillThread(io_service_thread_);
+      io_service_thread_ = 0;
+    }
 
-  if(io_service_thread_2_)
-  {
-    delete io_service_thread_2_;
-    io_service_thread_2_ = 0;
-  }
+    if(io_service_thread_2_)
+    {
+      SDL_KillThread(io_service_thread_2_);
+      io_service_thread_2_ = 0;
+    }
 
-  if(receive_thread_)
-  {
-    receive_thread_->interrupt();
-    delete receive_thread_;
-    receive_thread_ = 0;
-  }
-
+    if(receive_thread_)
+    {
+      SDL_KillThread(receive_thread_);
+      receive_thread_ = 0;
+    }
 }
 
 //-----------------------------------------------------------------------------
 
-void TiDClient::startReceiving(bool throw_on_error)
+void SDLTiDClient::startReceiving(bool throw_on_error)
 {
   #ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
@@ -59,16 +58,21 @@ void TiDClient::startReceiving(bool throw_on_error)
 
   if(state_ != State_Connected )
     if( state_ != State_Stopped )
-      throw(std::runtime_error("TiDClient::startReceiving -- not connected!") );
+      throw(std::runtime_error("SDLTiDClient::startReceiving -- not connected!") );
 
   state_ = State_Running;
-  receive_thread_ = new boost::thread(&TiDClientBase::receive, this);
 
-  io_service_thread_ = new boost::thread(boost::bind(&boost::asio::io_service::run,
-                                                     &this->io_service_));
+  receive_thread_ = SDL_CreateThread(&TiDClientBase::receive, this);
+  if(!receive_thread_)
+    throw(std::runtime_error("SDLTiDClient::startReceiving -- Error creating receive-thread!") );
 
-  io_service_thread_2_ = new boost::thread(boost::bind(&boost::asio::io_service::run,
-                                                       &this->io_service_));
+  io_service_thread_ = SDL_CreateThread(run_io_service, this);
+  if(!io_service_thread_)
+    throw(std::runtime_error("SDLTiDClient::startReceiving -- Error creating io_service-thread Nr. 1!") );
+
+  io_service_thread_2_ = SDL_CreateThread(run_io_service, this);
+  if(!io_service_thread_2_)
+    throw(std::runtime_error("SDLTiDClient::startReceiving -- Error creating io_service-thread Nr. 2!") );
 
 
   #ifdef WIN32
@@ -84,7 +88,7 @@ void TiDClient::startReceiving(bool throw_on_error)
 
 //-----------------------------------------------------------------------------
 
-void TiDClient::stopReceiving()
+void SDLTiDClient::stopReceiving()
 {
   #ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
@@ -106,27 +110,36 @@ void TiDClient::stopReceiving()
   if(io_service_thread_)
   {
 
-    io_service_thread_->join();
-    delete io_service_thread_;
+    SDL_WaitThread(io_service_thread_, NULL);
+    // delete io_service_thread_;
     io_service_thread_ = 0;
   }
 
   if(io_service_thread_2_)
   {
-    io_service_thread_2_->join();
-    delete io_service_thread_2_;
+    SDL_WaitThread(io_service_thread_2_, NULL);
+    // delete io_service_thread_2_;
     io_service_thread_2_ = 0;
   }
 
 
   if(receive_thread_)
   {
-    receive_thread_->interrupt();
-    receive_thread_->join();
-    delete receive_thread_;
+    //receive_thread_->interrupt();
+    SDL_WaitThread(receive_thread_, NULL);
+    // delete receive_thread_;
     receive_thread_ = 0;
   }
 
+}
+
+//-----------------------------------------------------------------------------
+
+int SDLTiDClient::run_io_service(void* instance)
+{
+  SDLTiDClient* i = static_cast<SDLTiDClient*>(instance);
+  i->io_service_.run();
+  return 0;
 }
 
 //-----------------------------------------------------------------------------

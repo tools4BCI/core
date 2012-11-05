@@ -32,7 +32,7 @@ INCLUDEPATH += ../src/libtid \
                ../src/tests
 DEPENDPATH += $$INCLUDEPATH
 
-QMAKE_CXXFLAGS_WARN_ON = -Wall -pedantic
+QMAKE_CXXFLAGS_WARN_ON += -Wall -pedantic
 unix:QMAKE_CXX = /usr/bin/g++-4.7
 unix:QMAKE_CXXFLAGS_RELEASE = -O3 -mtune=core2
 
@@ -60,10 +60,10 @@ HEADERS += \
     tests/timed_tid_client.h \
     tests/timed_tid_server.h \
     tests/timed_tid_connection.h \
-    tests/timing_test_helpers.h \
-    tests/LPT_tid_server.h \
-    tests/LPT_tid_client.h \
-    tests/LPT_tid_connection.h
+    tests/timing_test_helpers.h
+#    tests/LPT_tid_server.h \
+#    tests/LPT_tid_client.h \
+#    tests/LPT_tid_connection.h
 
 # -----------------------------------------------------------------------
 
@@ -71,6 +71,7 @@ HEADERS += \
 LIBS += -lboost_thread \
         -lboost_system \
         -lboost_chrono \
+        -lSDL \
         -L../src/tests/UnitTest++
 
 HARDWARE_PLATFORM = $$system(uname -m)

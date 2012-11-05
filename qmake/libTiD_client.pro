@@ -15,7 +15,7 @@ INCLUDEPATH += ../src/libtid \
 DEPENDPATH += $$INCLUDEPATH
 #INCLUDEPATH += extern/include
 
-QMAKE_CXXFLAGS_WARN_ON = -Wall -pedantic
+QMAKE_CXXFLAGS_WARN_ON += -Wall -pedantic
 
 
 # -----------------------------------------------------------------------
@@ -25,7 +25,7 @@ SOURCES += main_client.cpp
 # -----------------------------------------------------------------------
 
 unix {
-    LIBS += -lboost_thread -lboost_system
+    LIBS += -lboost_thread -lboost_system -lSDL
 
     HARDWARE_PLATFORM = $$system(uname -m)
     contains( HARDWARE_PLATFORM, x86_64 )::{
@@ -35,9 +35,13 @@ unix {
         DESTDIR = bin/amd64
 
         # 64-bit Linux
-        LIBS += -Llib/amd64 -ltid \
-            -L../build_amd64/src/tobicore/.libs -ltobicore\
-            -L../build_amd64/src/tobiid/.libs -ltobiid\
+        LIBS += \
+            -Llib/amd64 -ltid \
+            -Wl,-rpath=$$PWD/lib/amd64 \
+            -L../build_amd64/src/tobicore/.libs -ltobicore \
+            -Wl,-rpath=$$PWD/../build_amd64/src/tobicore/.libs \
+            -L../build_amd64/src/tobiid/.libs -ltobiid \
+            -Wl,-rpath=$$PWD/../build_amd64/src/tobiid/.libs
 
     }else::{
         # 32-bit Linux
@@ -47,8 +51,11 @@ unix {
         DESTDIR = bin/x86
 
         LIBS += -Llib/x86 -ltid \
+            -Wl,-rpath=$$PWD/lib/x86 \
             -L../build_x86/src/tobicore/.libs -ltobicore\
-            -L../build_x86/src/tobiid/.libs -ltobiid
+            -Wl,-rpath=$$PWD/../build_x86/src/tobicore/.libs \
+            -L../build_x86/src/tobiid/.libs -ltobiid \
+            -Wl,-rpath=$$PWD/../build_x86/src/tobiid/.libs \
     }
 
     contains( DEFINES, TIMING_TEST )::{

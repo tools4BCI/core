@@ -1,6 +1,7 @@
 
 #include <iostream>
 
+
 #include "tid_server.h"
 
 using namespace TiD;
@@ -11,7 +12,7 @@ int main()
   try
   {
     TiDServer test_server;
-    test_server.bind (9101);
+    test_server.bind (9100);
     test_server.reserveNrOfMsgs(10000000);
     test_server.start();
     string str;
@@ -21,6 +22,13 @@ int main()
     {
         if(str == "q" || str == "quit" || str == "exit")
             break;
+        else if(str == "r" )
+        {
+          std::vector<IDMessage> msgs;
+          test_server.getLastMessages(msgs);
+
+          std::cout << "Got " << msgs.size() << " messages" << std::endl;
+        }
         else
             cout << "Command '" << str << "' not recognized!" << endl << ">>";
     }

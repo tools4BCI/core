@@ -106,6 +106,15 @@ std::string* IDSerializerRapid::Serialize(std::string* buffer) {
 
 std::string* IDSerializerRapid::Deserialize(std::string* const buffer)
 {
+  if(buffer == NULL)
+    throw TCException("iD buffer-pointer is NULL",
+                                               #ifdef _WIN32
+                                                       __FUNCSIG__
+                                               #else
+                                                       __PRETTY_FUNCTION__
+                                               #endif
+    );
+
   xml_document<> doc;
   std::string cache;
   std::vector<char> xml_copy(buffer->begin(), buffer->end());
@@ -124,7 +133,7 @@ std::string* IDSerializerRapid::Deserialize(std::string* const buffer)
 
   /* Check version */
   cache = rootnode->first_attribute(IDMESSAGE_VERSIONNODE)->value();
-  if(cache.compare(IDMESSAGE_VERSION_SUPPORTED)  )
+  if(cache.compare(IDMESSAGE_VERSION_SUPPORTED) == 0 )
   {
     // Get frame number
     cache.clear();
@@ -154,7 +163,7 @@ std::string* IDSerializerRapid::Deserialize(std::string* const buffer)
 
     return buffer;
   }
-  else if( cache.compare(IDMESSAGE_VERSION) )
+  else if( cache.compare(IDMESSAGE_VERSION)  == 0 )
   {
     // Get frame number
     cache.clear();

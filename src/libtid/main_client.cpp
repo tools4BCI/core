@@ -3,7 +3,8 @@
 #include <iostream>
 #include <sstream>
 
-#include "tid_client.h"
+//#include "tid_client.h"
+#include "sdl_tid_client.h"
 #include "tid_exceptions.h"
 
 #include <tobiid/IDSerializerRapid.hpp>
@@ -14,11 +15,11 @@ using namespace TiD;
 
 int main()
 {
-  TiDClient* client = 0;
+  TiDClientBase* client = 0;
 
   try
   {
-    client = new TiDClient;
+    client = new SDLTiDClient;
 
     std::vector<IDMessage> messages;
 
@@ -56,7 +57,16 @@ int main()
     messages.push_back(message6);
 
 
-    client->connect(std::string("127.0.0.1"), 9101);
+    IDMessage startRecordingMsg(IDMessage::FamilyCustom, 1);
+    startRecordingMsg.SetFamilyType(IDMessage::TxtFamilyCustom);
+    startRecordingMsg.SetDescription("StartRecording");
+
+    IDMessage stopRecordingMsg(IDMessage::FamilyCustom, 1);
+    stopRecordingMsg.SetFamilyType(IDMessage::TxtFamilyCustom);
+    stopRecordingMsg.SetDescription("StopRecording");
+
+
+    client->connect(std::string("127.0.0.1"), 9100);
     client->startReceiving(false);
 
     string str;//("a");
@@ -71,12 +81,8 @@ int main()
         break;
       else if(str == "s" || str == "send")
       {
-        //IDSerializerRapid serializer( &messages.at(msg_count) );
-        //        messages.at(msg_count).Dump();
-        // serializer.Serialize(&buffer);
 
         client->sendMessage( messages.at(msg_count) );
-        //buffer.clear();
         if(++msg_count == messages.size())
           msg_count = 0;
 
@@ -134,6 +140,20 @@ int main()
           //            usleep(100000);
           //          #endif
         }
+        cout << ">> " << endl;
+      }
+      else if(str == "start")
+      {
+        startRecordingMsg.absolute.Tic();
+        startRecordingMsg.Dump();
+        client->sendMessage( startRecordingMsg );
+        cout << ">> " << endl;
+      }
+      else if(str == "stop")
+      {
+        stopRecordingMsg.absolute.Tic();
+        stopRecordingMsg.Dump();
+        client->sendMessage( stopRecordingMsg );
         cout << ">> " << endl;
       }
       else

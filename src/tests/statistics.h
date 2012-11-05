@@ -77,10 +77,10 @@ public:
   /**
     * @brief Print statistics to specified stream (used to keep the former interface consistency).
     */
-  void  print(std::ostream &out = std::cout, bool print_everything = false)
-  {
+  //  void  print(std::ostream &out = std::cout, bool print_everything = false)
+  //  {
 
-  }
+  //  }
 
   /**
     * @brief Print all statistics to specified stream.

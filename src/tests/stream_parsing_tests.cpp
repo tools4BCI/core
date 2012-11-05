@@ -117,7 +117,9 @@ TEST(delimiterParsingTest)
     if( (run = parseIstream(ss_stream, out_str, delimiter)) )
       deserializer.Deserialize(&out_str);
     else
-      ;
+    {
+
+    }
   }
 
   std::cout << " ... successfully" << std::endl << std::endl;
