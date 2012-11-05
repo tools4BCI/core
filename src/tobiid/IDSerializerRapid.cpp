@@ -154,6 +154,8 @@ std::string* IDSerializerRapid::Deserialize(std::string* const buffer)
     cache = rootnode->first_attribute(IDMESSAGE_FAMILYNODE)->value();
     if(cache.compare(IDTYPES_FAMILY_BIOSIG) == 0)
       IDSerializer::message->SetFamilyType(IDMessage::FamilyBiosig);
+    else if(cache.compare(IDTYPES_FAMILY_CUSTOM) == 0)
+      IDSerializer::message->SetFamilyType(IDMessage::FamilyCustom);
     else
       IDSerializer::message->SetFamilyType(IDMessage::FamilyUndef);
 
@@ -184,6 +186,8 @@ std::string* IDSerializerRapid::Deserialize(std::string* const buffer)
     cache = rootnode->first_attribute(IDMESSAGE_FAMILYNODE)->value();
     if(cache.compare(IDTYPES_FAMILY_BIOSIG) == 0)
       IDSerializer::message->SetFamilyType(IDMessage::FamilyBiosig);
+    else if(cache.compare(IDTYPES_FAMILY_CUSTOM) == 0)
+      IDSerializer::message->SetFamilyType(IDMessage::FamilyCustom);
     else
       IDSerializer::message->SetFamilyType(IDMessage::FamilyUndef);
 

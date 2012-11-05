@@ -32,9 +32,13 @@ INCLUDEPATH += ../src/libtid \
                ../src/tests
 DEPENDPATH += $$INCLUDEPATH
 
-QMAKE_CXXFLAGS_WARN_ON += -Wall -pedantic
-unix:QMAKE_CXX = /usr/bin/g++-4.7
-unix:QMAKE_CXXFLAGS_RELEASE = -O3 -mtune=core2
+GCC_4_7_VAR = $$[USE_GCC_4.7]
+
+contains(GCC_4_7_VAR, 1){
+    message( Using GCC 4.7 + optimizations)
+    unix:QMAKE_CXX = /usr/bin/g++-4.7
+    unix:QMAKE_CXXFLAGS_RELEASE = -O3 -mtune=core2
+}
 
 #QMAKE_CXXFLAGS += -fprofile-arcs -ftest-coverage
 #QMAKE_LFLAGS += -fprofile-arcs -ftest-coverage
