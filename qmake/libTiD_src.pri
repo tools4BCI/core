@@ -1,7 +1,6 @@
 
 HEADERS += \
     tid_server.h \
-    tid_SDL_client.h \
     tid_exceptions.h \
     tid_connection.h \
     tcp_connection.h \

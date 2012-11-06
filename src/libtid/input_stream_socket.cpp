@@ -182,41 +182,41 @@ void InputStreamSocket::readUntil (const std::string&  delimiter, std::string* s
 
 //-----------------------------------------------------------------------------
 
-void InputStreamSocket::fustyReadUntil (std::string delimiter, std::string* str)
+void InputStreamSocket::fustyreadUntil (const std::string& delimiter, std::string* str)
 {
   #ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
+  std::istream is(&stream_buffer_);
+
+  if(stream_buffer_.size())
+  {
+//    std::istream is(&stream_buffer_);
+    if(parseIstream(is, str, delimiter) )
+      return;
+  }
+
+  bool read = 1;
+  while(read)
+  {
+    str_buffer_->clear();
+    boost::asio::read_until (socket_, stream_buffer_, delimiter,error_ );
+
+    if(error_)
+      throw TiDLostConnection ("InputStreamSocket::readUntil error read_until: "
+                             + string (error_.category().name()) + error_.message());
+
 //    std::istream is(&stream_buffer_);
 
-//  if(stream_buffer_.size())
-//  {
-////    std::istream is(&stream_buffer_);
-//    if(parseIstream(is, str, delimiter) )
-//      return;
-//  }
-
-//  bool read = 1;
-//  while(read)
-//  {
-//    str_buffer_.clear();
-//    boost::asio::read_until (socket_, stream_buffer_, delimiter,error_ );
-
-//    if(error_)
-//      throw TiDLostConnection ("InputStreamSocket::readUntil error read_until: "
-//                             + string (error_.category().name()) + error_.message());
-
-////    std::istream is(&stream_buffer_);
-
-//    read = !parseIstream(is, &str_buffer_, delimiter);
-//    *str += str_buffer_;
-//  }
+    read = !parseIstream(is, str_buffer_, delimiter);
+    *str += *str_buffer_;
+  }
 }
 
 //-----------------------------------------------------------------------------
 
-bool InputStreamSocket::parseIstream(std::istream& stream, std::string* out_string, std::string& delimiter)
+bool InputStreamSocket::parseIstream(std::istream& stream, std::string* out_string, const std::string& delimiter)
 {
 
   if(stream.eof())

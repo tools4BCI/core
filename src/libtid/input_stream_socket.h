@@ -25,10 +25,10 @@ class InputStreamSocket : public InputStream
 //    virtual void readUntil (std::string* str);
 //    virtual void setDelimiter(const std::string& del);
 
-    virtual void fustyReadUntil (std::string delimiter, std::string* str);
+    virtual void fustyreadUntil (const std::string& delimiter, std::string* str);
 
   private:
-    bool parseIstream(std::istream& stream, std::string* out_string, std::string& delimiter);
+    bool parseIstream(std::istream& stream, std::string* out_string, const std::string& delimiter);
 
   //    void readLineHandler(const boost::system::error_code& ec, std::size_t bytes_transfered);
   //    void readStringHandler(const boost::system::error_code& ec, std::size_t bytes_transfered);
