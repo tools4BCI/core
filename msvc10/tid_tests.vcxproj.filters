@@ -32,6 +32,9 @@
     <ClInclude Include="..\src\tests\timed_tid_server.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\tests\timing_values.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\tests\libtid_client_timing_tests.cpp">

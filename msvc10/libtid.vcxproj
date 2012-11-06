@@ -156,9 +156,11 @@
   <ItemGroup>
     <ClCompile Include="..\src\libtid\input_stream_socket.cpp" />
     <ClCompile Include="..\src\libtid\messages\tid_message_parser_1_0.cpp" />
+    <ClCompile Include="..\src\libtid\sdl_tid_client.cpp" />
     <ClCompile Include="..\src\libtid\tcp_connection.cpp" />
     <ClCompile Include="..\src\libtid\tcp_server.cpp" />
     <ClCompile Include="..\src\libtid\tid_client.cpp" />
+    <ClCompile Include="..\src\libtid\tid_client_base.cpp" />
     <ClCompile Include="..\src\libtid\tid_connection.cpp" />
     <ClCompile Include="..\src\libtid\tid_server.cpp" />
   </ItemGroup>
@@ -173,9 +175,11 @@
     <ClInclude Include="..\src\libtid\messages\tid_message_tags_1_0.h" />
     <ClInclude Include="..\src\libtid\messages\tid_message_types.h" />
     <ClInclude Include="..\src\libtid\misc\databuffer.h" />
+    <ClInclude Include="..\src\libtid\sdl_tid_client.h" />
     <ClInclude Include="..\src\libtid\tcp_connection.h" />
     <ClInclude Include="..\src\libtid\tcp_server.h" />
     <ClInclude Include="..\src\libtid\tid_client.h" />
+    <ClInclude Include="..\src\libtid\tid_client_base.h" />
     <ClInclude Include="..\src\libtid\tid_connection.h" />
     <ClInclude Include="..\src\libtid\tid_exceptions.h" />
     <ClInclude Include="..\src\libtid\tid_server.h" />

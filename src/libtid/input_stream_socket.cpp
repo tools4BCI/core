@@ -116,7 +116,7 @@ InputStreamSocket::~InputStreamSocket ()
 
 //-----------------------------------------------------------------------------
 
-void InputStreamSocket::readUntil (const std::string&  delimiter, std::string* str)
+void InputStreamSocket::fustyreadUntil (const std::string&  delimiter, std::string* str)
 {
   #ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl << std::flush;
@@ -182,7 +182,7 @@ void InputStreamSocket::readUntil (const std::string&  delimiter, std::string* s
 
 //-----------------------------------------------------------------------------
 
-void InputStreamSocket::fustyreadUntil (const std::string& delimiter, std::string* str)
+void InputStreamSocket::readUntil (const std::string& delimiter, std::string* str)
 {
   #ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;

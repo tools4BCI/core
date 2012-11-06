@@ -36,13 +36,14 @@
 #include "tid_message_vector_builder.h"
 #include "statistics.h"
 #include "timing_test_helpers.h"
+#include "timing_values.h"
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 using std::fstream;
 
 extern unsigned int NR_TID_MESSAGES;
 extern unsigned int STATISTICS_WINDOW_SIZE;
-extern boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS;
+//extern boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS;
 
 //-------------------------------------------------------------------------------------------------
 

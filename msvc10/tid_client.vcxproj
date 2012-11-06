@@ -102,7 +102,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\tobicore\$(Platform)\$(Configuration)\;$(SolutionDir)lib\tobiid\$(Platform)\$(Configuration)\;$(SolutionDir)lib\libtid\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tobicore.lib;tobiid.lib;libtid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>tobicore.lib;tobiid.lib;libtid.lib;SDL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -116,7 +116,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\tobicore\$(Platform)\$(Configuration)\;$(SolutionDir)lib\tobiid\$(Platform)\$(Configuration)\;$(SolutionDir)lib\libtid\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tobicore.lib;tobiid.lib;libtid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>tobicore.lib;tobiid.lib;libtid.lib;SDL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -135,7 +135,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\tobicore\$(Platform)\$(Configuration)\;$(SolutionDir)lib\tobiid\$(Platform)\$(Configuration)\;$(SolutionDir)lib\libtid\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tobicore.lib;tobiid.lib;libtid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>tobicore.lib;tobiid.lib;libtid.lib;SDL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -154,7 +154,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\tobicore\$(Platform)\$(Configuration)\;$(SolutionDir)lib\tobiid\$(Platform)\$(Configuration)\;$(SolutionDir)lib\libtid\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tobicore.lib;tobiid.lib;libtid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>tobicore.lib;tobiid.lib;libtid.lib;SDL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

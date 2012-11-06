@@ -3,7 +3,7 @@
 #include <iostream>
 #include <sstream>
 
-//#include "tid_client.h"
+#include "tid_client.h"
 #include "sdl_tid_client.h"
 #include "tid_exceptions.h"
 
@@ -19,7 +19,7 @@ int main()
 
   try
   {
-    client = new SDLTiDClient;
+    client = new TiDClient;
 
     std::vector<IDMessage> messages;
 
@@ -69,13 +69,13 @@ int main()
     client->connect(std::string("127.0.0.1"), 9100);
     client->startReceiving(false);
 
-    string str;//("a");
+    string str("a");
     cout << endl << ">>";
 
     unsigned int msg_count = 0;
     std::string buffer;
-    while(cin >> str)
-//    while(str != "q")
+    //while(cin >> str)
+    while(str != "q")
     {
       if(str == "q" || str == "quit" || str == "exit")
         break;

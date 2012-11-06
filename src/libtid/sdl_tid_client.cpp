@@ -74,16 +74,15 @@ void SDLTiDClient::startReceiving(bool throw_on_error)
   if(!io_service_thread_2_)
     throw(std::runtime_error("SDLTiDClient::startReceiving -- Error creating io_service-thread Nr. 2!") );
 
+  //#ifdef WIN32
+  //  SetPriorityClass(receive_thread_->native_handle(),  REALTIME_PRIORITY_CLASS);
+  //  SetThreadPriority(receive_thread_->native_handle(), THREAD_PRIORITY_HIGHEST );
 
-  #ifdef WIN32
-    SetPriorityClass(receive_thread_->native_handle(),  REALTIME_PRIORITY_CLASS);
-    SetThreadPriority(receive_thread_->native_handle(), THREAD_PRIORITY_HIGHEST );
-
-    SetPriorityClass(io_service_thread_->native_handle(),  REALTIME_PRIORITY_CLASS);
-    SetThreadPriority(io_service_thread_->native_handle(), THREAD_PRIORITY_HIGHEST );
-    SetPriorityClass(io_service_thread_2_->native_handle(),  REALTIME_PRIORITY_CLASS);
-    SetThreadPriority(io_service_thread_2_->native_handle(), THREAD_PRIORITY_HIGHEST );
-  #endif
+  //  SetPriorityClass(io_service_thread_->native_handle(),  REALTIME_PRIORITY_CLASS);
+  //  SetThreadPriority(io_service_thread_->native_handle(), THREAD_PRIORITY_HIGHEST );
+  //  SetPriorityClass(io_service_thread_2_->native_handle(),  REALTIME_PRIORITY_CLASS);
+  //  SetThreadPriority(io_service_thread_2_->native_handle(), THREAD_PRIORITY_HIGHEST );
+  //#endif
 }
 
 //-----------------------------------------------------------------------------

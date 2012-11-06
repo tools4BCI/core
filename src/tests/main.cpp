@@ -24,7 +24,9 @@
 #include <ctime>
 #include <iostream>
 #include <boost/lexical_cast.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
+//#include <boost/chrono.hpp>
+//#include <boost/date_time.hpp>
+#include "timing_values.h"
 
 unsigned int NR_TID_MESSAGES = 50;
 unsigned int NR_CLIENTS = 0;
@@ -34,22 +36,15 @@ unsigned int STATISTICS_WINDOW_SIZE = 5000;
   #include <windows.h>
 #endif
 
-//boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(5);
-//boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(3);
-//boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(2);
-//boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS(1);
 
-boost::posix_time::microseconds SLEEP_TIME_BETWEEN_MSGS(500);
-//boost::posix_time::microseconds SLEEP_TIME_BETWEEN_MSGS(250);
-//boost::posix_time::microseconds SLEEP_TIME_BETWEEN_MSGS(100);
 
-//boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS_REMOTE(1);
-boost::posix_time::microseconds SLEEP_TIME_BETWEEN_MSGS_REMOTE(250);
 
 //-------------------------------------------------------------------------------------------------
 
 int main( int argc, const char* argv[] )
 {
+
+
   if(argc >1)
   {
     NR_TID_MESSAGES = boost::lexical_cast<unsigned int>(argv[1]);

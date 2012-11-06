@@ -34,14 +34,14 @@
 #include "tid_message_vector_builder.h"
 #include "statistics.h"
 #include "timing_test_helpers.h"
-
+#include "timing_values.h"
 #include "timed_tid_server.h"
 #include "libtid/tid_client.h"
 
 extern unsigned int NR_TID_MESSAGES;
 extern unsigned int STATISTICS_WINDOW_SIZE;
 extern unsigned int NR_CLIENTS;
-extern boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS;
+//extern boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS;
 
 
 using std::fstream;
