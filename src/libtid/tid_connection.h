@@ -77,7 +77,7 @@ class TiDConnection : public boost::enable_shared_from_this<TiDConnection>
     /**
      * @brief Sends a TiD xml string to the client
      */
-    void sendMsg(const std::string& xml_string);
+    void sendMsg(const std::string xml_string);
 
 
     /**
@@ -88,7 +88,7 @@ class TiDConnection : public boost::enable_shared_from_this<TiDConnection>
     /**
      * @brief Sends a TiD xml string to the client (async method)
      */
-    void asyncSendMsg(const std::string& xml_string);
+    void asyncSendMsg(const std::string xml_string);
 
 
   private:

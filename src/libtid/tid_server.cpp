@@ -234,9 +234,10 @@ void TiDServer::dispatchMsg(IDMessage& msg, const TiDConnection::ConnectionID& s
     msg.relative.Set(&current_timeval_);
   }
 
-  msg_builder_->buildTiDMessage(msg, current_xml_string_);
-
+  
   dispatch_mutex_.lock();
+  current_xml_string_.clear();
+  msg_builder_->buildTiDMessage(msg, current_xml_string_);
   for(TiDConnHandlers::iterator it( connections_.begin() );
       it != connections_.end(); it++)
   {

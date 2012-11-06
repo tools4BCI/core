@@ -107,9 +107,9 @@ int main()
       }
       else if(str == "a" )  // auto send 100 msgs
       {
-        for(unsigned int j = 0; j < 10; j++)
+        for(unsigned int j = 0; j < 100; j++)
         {
-          for(unsigned int m = 0; m < 10; m++)
+          for(unsigned int m = 0; m < 100; m++)
           {
             messages[msg_count].absolute.Tic();
             client->sendMessage( messages[msg_count] );

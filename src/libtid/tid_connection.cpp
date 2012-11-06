@@ -120,7 +120,7 @@ void TiDConnection::stop()
 
   tcp_connection_->socket().shutdown(boost::asio::ip::tcp::socket::shutdown_both, error);
 
-  receive_thread_->join();
+  //receive_thread_->join();
 
   if(error == boost::asio::error::bad_descriptor)
     return;
@@ -271,7 +271,7 @@ void TiDConnection::sendMsg(IDMessage& msg)
 
 //-----------------------------------------------------------------------------
 
-void TiDConnection::sendMsg(const std::string& xml_string)
+void TiDConnection::sendMsg(const std::string xml_string)
 {
   #ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
@@ -331,7 +331,7 @@ void TiDConnection::asyncSendMsg(IDMessage& msg)
 
 //-----------------------------------------------------------------------------
 
-void TiDConnection::asyncSendMsg(const std::string& xml_string)
+void TiDConnection::asyncSendMsg(const std::string xml_string)
 {
   #ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
