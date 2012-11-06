@@ -187,6 +187,11 @@ void TiDConnection::receive()
       state_ = State_Aborted;
       break;
     }
+    catch(std::exception& e)
+    {
+      cerr <<BOOST_CURRENT_FUNCTION <<  " -- Caught STL exception while receiving: " << e.what() << endl;
+      throw;
+    }
     catch(...)
     {
       cerr <<BOOST_CURRENT_FUNCTION <<  " -- Caught unknown exception while receiving!" << endl;
@@ -241,6 +246,73 @@ void TiDConnection::sendMsg(IDMessage& msg)
     msg_string_send_buffer_.resize( msg_string_send_buffer_.size() *2 );
   }
 
+  boost::system::error_code error;
+  msg_builder_->buildTiDMessage(msg, current_xml_str_);
+  //msg_string_send_buffer_.push_back( current_xml_str_ );
+
+  boost::asio::write(tcp_connection_->socket(), boost::asio::buffer( current_xml_str_ ), error);
+
+  if (error && (state_ == State_Running) )
+  {
+    cerr << "TiDConnection::handleWrite [Peer@" << connection_id_.second <<":"<< connection_id_.first;
+    cerr << " -- self: " << tcp_connection_->socket().local_endpoint().address().to_string();
+    cerr << ":" << tcp_connection_->socket().local_endpoint().port() << "]: "
+         << "-- error-msg: " << error.message() << " --> closing connection." << endl;
+    stop();
+  }
+
+
+  #ifndef WIN32
+    int i = 1;
+    setsockopt( tcp_connection_->socket().native_handle(), IPPROTO_TCP,
+                TCP_QUICKACK, (void *)&i, sizeof(i));
+  #endif
+}
+
+//-----------------------------------------------------------------------------
+
+void TiDConnection::sendMsg(const std::string& xml_string)
+{
+  #ifdef DEBUG
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+  #endif
+
+  boost::system::error_code error;
+  boost::asio::write(tcp_connection_->socket(), boost::asio::buffer( xml_string ), error );
+
+
+  if (error && (state_ == State_Running) )
+  {
+    cerr << "TiDConnection::handleWrite [Peer@" << connection_id_.second <<":"<< connection_id_.first;
+    cerr << " -- self: " << tcp_connection_->socket().local_endpoint().address().to_string();
+    cerr << ":" << tcp_connection_->socket().local_endpoint().port() << "]: "
+         << "-- error-msg: " << error.message() << " --> closing connection." << endl;
+    stop();
+  }
+
+  #ifndef WIN32
+    int i = 1;
+    setsockopt( tcp_connection_->socket().native_handle(), IPPROTO_TCP,
+                TCP_QUICKACK, (void *)&i, sizeof(i));
+  #endif
+
+}
+
+//-----------------------------------------------------------------------------
+
+void TiDConnection::asyncSendMsg(IDMessage& msg)
+{
+  #ifdef DEBUG
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+  #endif
+
+  if(msg_string_send_buffer_.full())
+  {
+    cerr << "TiDConnection::sendMsg [Client@" << connection_id_.second << "]: "
+         << "Performance warning -- TiD biffer size too small --> resizing now!" << endl;
+    msg_string_send_buffer_.resize( msg_string_send_buffer_.size() *2 );
+  }
+
   msg_builder_->buildTiDMessage(msg, current_xml_str_);
   //msg_string_send_buffer_.push_back( current_xml_str_ );
 
@@ -259,7 +331,7 @@ void TiDConnection::sendMsg(IDMessage& msg)
 
 //-----------------------------------------------------------------------------
 
-void TiDConnection::sendMsg(const std::string& xml_string)
+void TiDConnection::asyncSendMsg(const std::string& xml_string)
 {
   #ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;

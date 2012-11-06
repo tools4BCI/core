@@ -180,7 +180,7 @@ void TiDClientBase::reserveNrOfMsgs (size_t expected_nr_of_msgs)
 
 //-----------------------------------------------------------------------------
 
-void TiDClientBase::sendMessage(std::string& tid_xml_context)
+void TiDClientBase::AsyncSendMessage(std::string& tid_xml_context)
 {
   #ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
@@ -207,7 +207,7 @@ void TiDClientBase::sendMessage(std::string& tid_xml_context)
 
 //-----------------------------------------------------------------------------
 
-void TiDClientBase::sendMessage(IDMessage& msg)
+void TiDClientBase::AsyncSendMessage(IDMessage& msg)
 {
   #ifdef DEBUG
     std::cout << "  --> " << BOOST_CURRENT_FUNCTION  <<  std::endl;
@@ -225,6 +225,57 @@ void TiDClientBase::sendMessage(IDMessage& msg)
   io_service_.reset();
   io_service_.run_one();
   io_service_.poll_one();
+
+  xml_string_.clear();
+  #ifndef WIN32
+    int i = 1;
+    setsockopt( socket_.native_handle(), IPPROTO_TCP,
+              TCP_QUICKACK, (void *)&i, sizeof(i));
+  #endif
+}
+
+//-----------------------------------------------------------------------------
+
+void TiDClientBase::sendMessage(std::string& tid_xml_context)
+{
+  #ifdef DEBUG
+    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+  #endif
+
+  if(!socket_.is_open())
+    return;
+
+  boost::system::error_code error;
+  boost::asio::write(socket_, boost::asio::buffer(tid_xml_context), error);
+
+  if(error)
+      throw(std::runtime_error("TiDClient::sendMessage -- " + error.message() ));
+
+  #ifndef WIN32
+    int i = 1;
+    setsockopt( socket_.native_handle(), IPPROTO_TCP,
+              TCP_QUICKACK, (void *)&i, sizeof(i));
+  #endif
+}
+
+//-----------------------------------------------------------------------------
+
+void TiDClientBase::sendMessage(IDMessage& msg)
+{
+  #ifdef DEBUG
+    std::cout << "  --> " << BOOST_CURRENT_FUNCTION  <<  std::endl;
+  #endif
+
+  if(!socket_.is_open())
+    return;
+
+  boost::system::error_code error;
+  msg_builder_->buildTiDMessage(msg, xml_string_);
+
+  boost::asio::write(socket_, boost::asio::buffer(xml_string_), error);
+
+  if(error)
+      throw(std::runtime_error("TiDClient::sendMessage -- " + error.message() ));
 
   xml_string_.clear();
   #ifndef WIN32

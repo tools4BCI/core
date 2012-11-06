@@ -43,6 +43,9 @@ class TiDClientBase
     void sendMessage(std::string& tid_xml_context);
     void sendMessage(IDMessage& msg);
 
+    void AsyncSendMessage(std::string& tid_xml_context);
+    void AsyncSendMessage(IDMessage& msg);
+
     bool newMessagesAvailable();
     void getLastMessagesContexts( std::vector< IDMessage >& messages  );
     void clearMessages();
