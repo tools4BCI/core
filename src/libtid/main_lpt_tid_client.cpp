@@ -65,10 +65,25 @@ void getMessages(TiDClientBase* client)
 
 //-----------------------------------------------------------------------
 
-int main()
+int main(int argc, const char* argv[])
 {
   TiDClientBase* client = 0;
   boost::thread* recv_thread = 0;
+
+  std::string srv_addr("127.0.0.1");
+  int srv_port = 9500;
+
+  if(argc == 1)
+  {
+    cout << "Using default server " << srv_addr << ":" << srv_port << endl;
+  }
+  else if(argc == 3)
+  {
+    srv_addr = argv[1];
+    stringstream conv(argv[2]);
+    conv >> srv_port;
+    cout << "Using server " << srv_addr << ":" << srv_port << endl;
+  }
 
   try
   {
@@ -88,7 +103,7 @@ int main()
     client = new TiDClient;
 
 
-    client->connect(std::string("127.0.0.1"), 9100);
+    client->connect(srv_addr, srv_port);
     client->startReceiving(false);
 
     string str;

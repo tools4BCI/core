@@ -226,6 +226,9 @@ void TiDServer::dispatchMsg(IDMessage& msg, const TiDConnection::ConnectionID& s
 
   // TODO: Maybe increase speed with multithreaded dispatching if needed!
 
+  dispatch_mutex_.lock();
+  messages_.push_back(msg);
+
   if( (msg.GetBlockIdx() == TCBlock::BlockIdxUnset) && current_packet_nr_)
   {
     msg.SetBlockIdx(current_packet_nr_);
@@ -234,8 +237,6 @@ void TiDServer::dispatchMsg(IDMessage& msg, const TiDConnection::ConnectionID& s
     msg.relative.Set(&current_timeval_);
   }
 
-  
-  dispatch_mutex_.lock();
   current_xml_string_.clear();
   msg_builder_->buildTiDMessage(msg, current_xml_string_);
   for(TiDConnHandlers::iterator it( connections_.begin() );
@@ -245,7 +246,6 @@ void TiDServer::dispatchMsg(IDMessage& msg, const TiDConnection::ConnectionID& s
       it->second->sendMsg(current_xml_string_);
     io_service_.poll();
   }
-  messages_.push_back(msg);
   dispatch_mutex_.unlock();
 }
 

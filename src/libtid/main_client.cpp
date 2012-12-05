@@ -13,9 +13,24 @@
 using namespace std;
 using namespace TiD;
 
-int main()
+int main(int argc, const char* argv[])
 {
   TiDClientBase* client = 0;
+
+  std::string srv_addr("127.0.0.1");
+  int srv_port = 9500;
+
+  if(argc == 1)
+  {
+    cout << "Using default server " << srv_addr << ":" << srv_port << endl;
+  }
+  else if(argc == 3)
+  {
+    srv_addr = argv[1];
+    stringstream conv(argv[2]);
+    conv >> srv_port;
+    cout << "Using server " << srv_addr << ":" << srv_port << endl;
+  }
 
   try
   {
@@ -24,14 +39,17 @@ int main()
     std::vector<IDMessage> messages;
 
     IDMessage message1(IDMessage::FamilyBiosig, 781);
+    IDMessage message1_end(IDMessage::FamilyBiosig, 781 + 0x8000);
     IDMessage message2(IDMessage::FamilyBiosig, 782);
+    IDMessage message2_end(IDMessage::FamilyBiosig, 782+ 0x8000);
     IDMessage message3(IDMessage::FamilyBiosig, 783);
+    IDMessage message3_end(IDMessage::FamilyBiosig, 783+ 0x8000);
 //    message1.SetDescription("feedback");
 //    message2.SetDescription("feedback");
 //    message3.SetDescription("feedback");
-    message1.SetBlockIdx(98);
-    message2.SetBlockIdx(99);
-    message3.SetBlockIdx(100);
+//    message1.SetBlockIdx(98);
+//    message2.SetBlockIdx(99);
+//    message3.SetBlockIdx(100);
     message1.absolute.Tic();
     message2.absolute.Tic();
     message2.absolute.Tic();
@@ -39,22 +57,31 @@ int main()
     IDMessage message4(IDMessage::FamilyBiosig, 901);
     IDMessage message5(IDMessage::FamilyBiosig, 902);
     IDMessage message6(IDMessage::FamilyBiosig, 903);
+    IDMessage message4_end(IDMessage::FamilyBiosig, 901 + 0x8000);
+    IDMessage message5_end(IDMessage::FamilyBiosig, 902 + 0x8000);
+    IDMessage message6_end(IDMessage::FamilyBiosig, 903 + 0x8000);
 //    message4.SetDescription("classifier");
 //    message5.SetDescription("classifier");
 //    message6.SetDescription("classifier");
-    message4.SetBlockIdx(98);
-    message5.SetBlockIdx(99);
-    message6.SetBlockIdx(100);
+//    message4.SetBlockIdx(98);
+//    message5.SetBlockIdx(99);
+//    message6.SetBlockIdx(100);
     message4.absolute.Tic();
     message5.absolute.Tic();
     message6.absolute.Tic();
 
     messages.push_back(message1);
+    messages.push_back(message1_end);
     messages.push_back(message2);
+    messages.push_back(message2_end);
     messages.push_back(message3);
+    messages.push_back(message3_end);
     messages.push_back(message4);
+    messages.push_back(message4_end);
     messages.push_back(message5);
+    messages.push_back(message5_end);
     messages.push_back(message6);
+    messages.push_back(message6_end);
 
 
     IDMessage startRecordingMsg(IDMessage::FamilyCustom, 1);
@@ -66,7 +93,7 @@ int main()
     stopRecordingMsg.SetDescription("StopRecording");
 
 
-    client->connect(std::string("127.0.0.1"), 9100);
+    client->connect(srv_addr, srv_port);
     client->startReceiving(false);
 
     string str("a");
@@ -74,8 +101,8 @@ int main()
 
     unsigned int msg_count = 0;
     std::string buffer;
-    //while(cin >> str)
-    while(str != "q")
+    while(cin >> str)
+//    while(str != "q")
     {
       if(str == "q" || str == "quit" || str == "exit")
         break;
