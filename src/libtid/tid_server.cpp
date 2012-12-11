@@ -21,7 +21,8 @@ namespace TiD
 //-----------------------------------------------------------------------------
 
 TiDServer::TiDServer()
-  : running_(0), current_rel_timestamp_(0), current_packet_nr_(0)
+  : running_(0), current_rel_timestamp_(0), current_packet_nr_(0),
+    assume_zero_network_delay_(0)
 {
   #ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
@@ -227,6 +228,10 @@ void TiDServer::dispatchMsg(IDMessage& msg, const TiDConnection::ConnectionID& s
   // TODO: Maybe increase speed with multithreaded dispatching if needed!
 
   dispatch_mutex_.lock();
+
+  if(assume_zero_network_delay_)
+    msg.absolute.Tic();
+
   messages_.push_back(msg);
 
   if( (msg.GetBlockIdx() == TCBlock::BlockIdxUnset) && current_packet_nr_)
@@ -236,6 +241,8 @@ void TiDServer::dispatchMsg(IDMessage& msg, const TiDConnection::ConnectionID& s
     current_timeval_.tv_usec = current_rel_timestamp_ - (current_timeval_.tv_sec * 1000000);
     msg.relative.Set(&current_timeval_);
   }
+
+  
 
   current_xml_string_.clear();
   msg_builder_->buildTiDMessage(msg, current_xml_string_);
@@ -263,6 +270,13 @@ void TiDServer::update(boost::uint64_t rel_timestamp, boost::uint64_t packet_nr)
   current_packet_nr_ = packet_nr;
 
   dispatch_mutex_.unlock();
+}
+
+//-----------------------------------------------------------------------------
+
+void TiDServer::assumeZeroNetworkDelay(bool val)
+{
+  assume_zero_network_delay_ = val;
 }
 
 //-----------------------------------------------------------------------------

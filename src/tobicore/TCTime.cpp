@@ -44,7 +44,7 @@ int gettimeofday(struct timeval* tv, struct timezone * tzp)
 {
  	struct __timeb32 systime;
  	_ftime32_s(&systime);
-  tv->tv_sec = systime.time + (systime.timezone * 60);
+  tv->tv_sec = systime.time;
  	tv->tv_usec = systime.millitm * 1000;
 	return 0;
 }
