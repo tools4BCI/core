@@ -122,13 +122,13 @@ return (bOk==-1)? FALSE:TRUE;
 //	uPorts	: Erste Port-Adresse
 //	uSize	: Anzahl der einzublendenten Ports
 //	Ergibt TRUE wenn die Ports eingeblentet wurden.
-int LptUnmapPorts(unsigned  uPort,unsigned uSize)
-{
-
-	bOk=ioperm(uPort,uSize,1);
-
-return (bOk==-1)? FALSE:TRUE;
-}
+// int LptUnmapPorts(unsigned  uPort,unsigned uSize)
+// {
+// 
+// 	bOk=ioperm(uPort,uSize,1);
+// 
+// return (bOk==-1)? FALSE:TRUE;
+// }
 
 
 //*****************************************************************************
