@@ -29,25 +29,28 @@
 //		LptExit();					// Treiber deinitialisieren
 //
 //	Anmerkung:	Unter NT/Win200/WinXP funktioniert die automatische
-//				Treiber-Installation nur wenn die Datei LPT_Driver.sys
+//				Treiber-Installation nur wenn die Datei LptDriver.sys
 //				im selben Verzeichnis ist wie die Progammdatei (*.exe)
 //				Weiters muss das Programm Administrator-Rechte besitzen
 //				um den Treiber installieren zu können.
-//				Ist das nicht der Fall muss die Datei LPT_Driver.sys
+//				Ist das nicht der Fall muss die Datei LptDriver.sys
 //				von Hand ins Windows-System-Verzeichnis kopiert werden.
 //				(C:\WinNT\system32\drivers)
+//				Bei 64-Bit-Versionen muss LptDriver.x64.sys benutzt werden.
 //
 //				Zum Installiern des Treibers kann die Funktion
 //				LptDriverInstall() benutzt werden, zum Deinstalliern
 //				ist LptDriverRemove() zu verwenden. Beide Funktionen
 //				benötigen Administrator-Rechte. Beim Installieren muss
-//				die Datei LPT_Driver.sys im selben Verzeichnis ist wie
+//				die Datei LptDriver.sys im selben Verzeichnis ist wie
 //				die Progammdatei (*.exe) sein.
 
 
 
 #include	<windows.h>
+#include  <winbase.h>
 #include	<memory.h>
+#include <stdlib.h>
 #include	"LptTools.h"
 
 #define		MAX_LPT_PORTS				4
@@ -60,12 +63,16 @@ static unsigned		uPortSize  [MAX_LPT_PORTS];
 static unsigned		uPortSizeEx[MAX_LPT_PORTS];
 static BOOL			bIsWinNT	= FALSE;
 static BOOL			bIsInit     = FALSE;
+static BOOL			bIs64Bit	= FALSE;
 static BOOL			bUseService = FALSE;
+static BOOL			bMapped     = FALSE;
 static SC_HANDLE	hSCManager  = NULL;
 static HANDLE		hLpt        = INVALID_HANDLE_VALUE;
 
+typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS)(HANDLE, PBOOL);
+typedef BOOL (WINAPI *LPFN_WOW64DISABLE  )(PVOID*);
 
-#ifndef		MAX_PATH					
+#ifndef		MAX_PATH
 #define		MAX_PATH					256
 #endif
 
@@ -73,15 +80,18 @@ static HANDLE		hLpt        = INVALID_HANDLE_VALUE;
 static void LptDetectPorts9x(int &iLptCount,unsigned short *pLptAddress,int iLptMaxPorts,unsigned short *pLptAddressEx,unsigned *pLptLength,unsigned *pLptLengthEx);
 static void LptDetectPortsNT(int &iLptCount,unsigned short *pLptAddress,int iLptMaxPorts,unsigned short *pLptAddressEx,unsigned *pLptLength,unsigned *pLptLengthEx);
 
-#ifndef		CTL_CODE					
+#ifndef		CTL_CODE
 #define		CTL_CODE(DeviceType,Function,Method,Access)	(((DeviceType)<<16)|((Access)<<14)|((Function)<<2)|(Method))
 #endif
 
 // The IOCTL function codes from 0x800 to 0xFFF are for customer use.
+#define		IOCTL_LPT_READ_VERSION		CTL_CODE( 40000, 0x0A00, 0, 0x0001)
 #define		IOCTL_LPT_MAP_PORT			CTL_CODE( 40000, 0x0A02, 0, 0x0000)
 #define		IOCTL_LPT_UNMAP_PORT		CTL_CODE( 40000, 0x0A04, 0, 0x0000)
+#define		IOCTL_LPT_SET_EVENT			CTL_CODE( 40000, 0x0A07, 0, 0x0000)
+#define		IOCTL_LPT_PORT_IO			CTL_CODE( 40000, 0x0A08, 0, 0x0000)
 
-#define		DRIVER_NAME 				"LPT_Driver"
+#define		DRIVER_NAME 				"LptDriver"
 
 typedef struct
 	{
@@ -89,7 +99,106 @@ typedef struct
 	ULONG	uSize;
 	}LPT_MAP_PORT;
 
+typedef	struct
+	{
+	UCHAR	uMajor;
+	UCHAR	uMinor;
+	USHORT	wReserve;
+	CHAR	cName[60];
+	CHAR	cLinkTime[32];
+	}LPT_VERSION;
 
+typedef struct
+	{
+	ULONG	uInterrupt;
+	ULONG	uInterMode;										// LevelSensitive=0 Latched=1
+	ULONG	uInterLevel;
+	ULONG	uInterShare;									// share the IRQ=1
+	ULONG	uAffinity;										// usuallay 0xFFFFFFFF
+	HANDLE	hEvent;
+	}LPT_INTERRUPT;
+
+typedef struct
+	{
+	UCHAR	uMode;											// 0=RD byte 1=RD word 2=RD dword 4=WR byte 5=WR word 6=WR dword
+	UCHAR	uLoop;											// 0=none 1=AND 2=NAND 3=EQU 4=NEQU 5=MASK 6=NMASK 7=MLE 8=MGE
+	USHORT	uPort;											// Port address
+	ULONG	uValue;											// In/Output value
+	}LPT_PORT_IO;
+
+
+//*****************************************************************************
+//*
+//*		LptCheck64
+//*
+//*****************************************************************************
+static void LptCheck64(PVOID &pOld)
+{
+OSVERSIONINFO		sOS;
+
+
+
+	//#if WIN32 || WIN64
+
+	memset(&sOS,NULL, sizeof(OSVERSIONINFO));
+	sOS.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+	GetVersionEx(&sOS);
+	bIsWinNT=(sOS.dwPlatformId==VER_PLATFORM_WIN32_NT);
+
+	if(!bIsWinNT)return;
+
+	#if WIN64
+
+	bIs64Bit = TRUE;
+
+	#else
+
+	LPFN_WOW64DISABLE   Wow64Dir;
+	LPFN_ISWOW64PROCESS IsWow64;
+
+	IsWow64 = (LPFN_ISWOW64PROCESS)GetProcAddress(GetModuleHandle("kernel32"),"IsWow64Process");
+
+    if(IsWow64)
+		{
+        IsWow64(GetCurrentProcess(),&bIs64Bit);
+		Wow64Dir = (LPFN_WOW64DISABLE)GetProcAddress(GetModuleHandle("kernel32"),"Wow64DisableWow64FsRedirection");
+		if(Wow64Dir)
+			{
+			Wow64Dir(&pOld);
+			}
+        }
+
+	#endif
+	//#endif
+
+}
+
+//*****************************************************************************
+//*
+//*		LptExit64
+//*
+//*****************************************************************************
+static void LptExit64(PVOID	&pOld)
+{
+
+	#ifndef _WIN64
+
+	LPFN_WOW64DISABLE   Wow64Dir;
+
+
+	if(bIs64Bit)
+		{
+ 		Wow64Dir = (LPFN_WOW64DISABLE)GetProcAddress(GetModuleHandle("kernel32"),"Wow64RevertWow64FsRedirection");
+
+		if(Wow64Dir)
+			{
+			Wow64Dir(&pOld);
+			}
+        }
+
+	#endif
+
+}
 
 //*****************************************************************************
 //*
@@ -102,14 +211,21 @@ static BOOL LptServiceCreate()
 {
 SC_HANDLE	hSCService;
 char		cPath[MAX_PATH];
-int			iPsOsVersion;
+int			iLen;
 
 
 
 	if(!hSCManager)return FALSE;
 
-	iPsOsVersion=GetSystemDirectory(cPath,sizeof(cPath)-24);
-	strcpy(cPath+iPsOsVersion,"\\Drivers\\" DRIVER_NAME ".sys");
+	iLen = GetSystemDirectory(cPath,sizeof(cPath)-24);
+
+	if(bIs64Bit)
+		{
+		strcpy(cPath+iLen,"\\Drivers\\" DRIVER_NAME ".x64.sys");
+		}
+	else{
+		strcpy(cPath+iLen,"\\Drivers\\" DRIVER_NAME ".sys");
+		}
 
 
 
@@ -159,7 +275,16 @@ int					iLen;
 
 															// Prüfe ob der Treiber im Windows-System-Verzeichnis ist
 	iLen=GetSystemDirectory(cBuffer1,sizeof(cBuffer1));
-	strncpy(cBuffer1+iLen,"\\Drivers\\" DRIVER_NAME ".sys",sizeof(cBuffer1)-iLen);
+
+	if(bIs64Bit)
+		{
+		strncpy(cBuffer1+iLen,"\\Drivers\\" DRIVER_NAME ".x64.sys",sizeof(cBuffer1)-iLen);
+		}
+	else{
+		strncpy(cBuffer1+iLen,"\\Drivers\\" DRIVER_NAME ".sys",sizeof(cBuffer1)-iLen);
+		}
+
+
 	if(!bForceCopy)hFind=FindFirstFile(cBuffer1,&sFind);
 
 	if(hFind==INVALID_HANDLE_VALUE) 							// Treiber neu kopieren
@@ -170,7 +295,14 @@ int					iLen;
 			if(cBuffer2[iLen]=='\\')break;
 			}
 
-		strncpy(cBuffer2+iLen,"\\" DRIVER_NAME ".sys",sizeof(cBuffer2)-iLen);
+		if(bIs64Bit)
+			{
+			strncpy(cBuffer2+iLen,"\\" DRIVER_NAME ".x64.sys",sizeof(cBuffer2)-iLen);
+			}
+		else{
+			strncpy(cBuffer2+iLen,"\\" DRIVER_NAME ".sys",sizeof(cBuffer2)-iLen);
+			}
+
 		CopyFile(cBuffer2,cBuffer1,FALSE);
 		}
 	else{
@@ -181,7 +313,7 @@ int					iLen;
 	if(!hSCManager)
 		{
 																// Nur mit Administrator Rechten
-		hSCManager	   = OpenSCManager(NULL,NULL,	SC_MANAGER_CONNECT |
+		hSCManager	   = OpenSCManager(NULL,NULL,SC_MANAGER_CONNECT |
 									   SC_MANAGER_QUERY_LOCK_STATUS |
 									   SC_MANAGER_ENUMERATE_SERVICE |
 									   SC_MANAGER_CREATE_SERVICE);
@@ -189,7 +321,7 @@ int					iLen;
 																// Wenn keine Administrator Rechte neu versuchen
 		if(!hSCManager && GetLastError()==ERROR_ACCESS_DENIED)
 			{
-			hSCManager = OpenSCManager(NULL,NULL,	SC_MANAGER_CONNECT |
+			hSCManager = OpenSCManager(NULL,NULL,SC_MANAGER_CONNECT |
 									   SC_MANAGER_QUERY_LOCK_STATUS |
 									   SC_MANAGER_ENUMERATE_SERVICE);
 			}
@@ -197,11 +329,11 @@ int					iLen;
 
 	if(!hSCManager)return FALSE;
 
-		hSCService = OpenService(hSCManager,DRIVER_NAME, SERVICE_QUERY_STATUS);
+		hSCService = OpenService(hSCManager,DRIVER_NAME,SERVICE_QUERY_STATUS);
 	if(!hSCService)
 		{
 		LptServiceCreate();
-		hSCService = OpenService(hSCManager,DRIVER_NAME, SERVICE_QUERY_STATUS);
+		hSCService = OpenService(hSCManager,DRIVER_NAME,SERVICE_QUERY_STATUS);
 		}
 
 	if(!hSCService) 											// Wurde das Service geladen
@@ -220,7 +352,7 @@ int					iLen;
 		}
 
 	CloseServiceHandle(hSCService);
-	hSCService = OpenService(hSCManager,DRIVER_NAME, SERVICE_START);
+	hSCService = OpenService(hSCManager,DRIVER_NAME,SERVICE_START);
 	if(hSCService && StartService(hSCService,0,0))				// Service starten
 		{
 		CloseServiceHandle(hSCService);
@@ -256,10 +388,14 @@ int LptDriverInstall()
 BOOL	bCloseScm=FALSE;
 BOOL	bOk;
 HKEY	hKey;
-
+PVOID	pOld=0;
 
 
 	LptDriverRemove();
+
+
+	LptCheck64(pOld);
+
 
 	if(!hSCManager)												// Nur mit Administrator Rechten
 		{
@@ -284,6 +420,8 @@ HKEY	hKey;
 	RegDeleteValue(hKey,"DeleteFlag");
 	RegCloseKey(hKey);
 
+	LptExit64(pOld);
+
 
 
 return bOk;
@@ -301,7 +439,10 @@ int LptDriverRemove()
 SC_HANDLE	hSCService;
 BOOL		bCloseScm=FALSE;
 BOOL		bOk=TRUE;
+LPVOID		pOld=0;
 
+
+	LptCheck64(pOld);
 
 	if(!hSCManager)
 		{
@@ -312,7 +453,7 @@ BOOL		bOk=TRUE;
 									   SC_MANAGER_CREATE_SERVICE);
 
 														// Wenn keine Administrator Rechte neuveruchen
-		if(!hSCManager && GetLastError()==ERROR_ACCESS_DENIED)	
+		if(!hSCManager && GetLastError()==ERROR_ACCESS_DENIED)
 			{
 			hSCManager = OpenSCManager(NULL,NULL,	SC_MANAGER_CONNECT |
 									   SC_MANAGER_QUERY_LOCK_STATUS |
@@ -322,7 +463,11 @@ BOOL		bOk=TRUE;
 		bCloseScm=TRUE;
 		}
 
-	if(!hSCManager)return FALSE;
+	if(!hSCManager)
+		{
+		LptExit64(pOld);
+		return FALSE;
+		}
 
 	hSCService = OpenService(hSCManager,DRIVER_NAME,DELETE);
 
@@ -339,7 +484,15 @@ BOOL		bOk=TRUE;
 	int  iPsOsVersion;
 	char cPath[MAX_PATH];
 	iPsOsVersion=GetSystemDirectory(cPath,sizeof(cPath)-24);
-	strcpy(cPath+iPsOsVersion,"\\Drivers\\" DRIVER_NAME ".sys");
+
+	if(bIs64Bit)
+		{
+		strcpy(cPath+iPsOsVersion,"\\Drivers\\" DRIVER_NAME ".x64.sys");
+		}
+	else{
+		strcpy(cPath+iPsOsVersion,"\\Drivers\\" DRIVER_NAME ".sys");
+		}
+
 	if(!DeleteFile(cPath))bOk=0;
 	*/
 
@@ -348,6 +501,9 @@ BOOL		bOk=TRUE;
 		CloseServiceHandle(hSCManager);
 		hSCManager=NULL;
 		}
+
+
+	LptExit64(pOld);
 
 
 return bOk;
@@ -409,7 +565,7 @@ return TRUE;
 //*****************************************************************************
 // 	Schließen des Treibers
 // 	Ergibt TRUE wenn der Treiber geschlsOsVersionsen wurde.
-// 
+//
 static BOOL LptClose()
 {
 BOOL	bOk;
@@ -513,22 +669,55 @@ return bOk;
 
 //*****************************************************************************
 //*
+//*		LptDriverVersion
+//*
+//*****************************************************************************
+// 	Abfragen der Treiberversion
+// 	Ergibt 0 bei einem Fehler, oder die Versionsnummer (Byte0=Minor Byte1=Major).
+int LptDriverVersion()
+{
+BOOL			bOk;
+DWORD			dwLenght;
+LPT_VERSION		sVersion;
+
+
+
+	if(hLpt==INVALID_HANDLE_VALUE)
+		{
+		return 0;
+		}
+
+	bOk = DeviceIoControl(hLpt,									// Handle to device
+						  IOCTL_LPT_READ_VERSION,				// IO Control code for GetVersion
+						  NULL,									// Buffer to driver.
+						  0,									// Length of buffer in bytes.
+						  &sVersion, 							// Buffer from driver.
+						  sizeof(LPT_VERSION),					// Length of buffer in bytes.
+						  &dwLenght,							// Bytes placed in outbuf.
+						  NULL									// NULL means wait till I/O completes.
+						  );
+
+
+return sVersion.uMajor*256+sVersion.uMinor;
+}
+
+
+//*****************************************************************************
+//*
 //*		LptInit
 //*
 //*****************************************************************************
 // 	Initialisiert den LPT-Port Treiber
 int LptInit()
 {
-OSVERSIONINFO	sOS;
-int				i,iCount;
+int					i,iCount;
+PVOID				pOld=0;
+
 
 
 	if(bIsInit)return 0;
 
-	memset(&sOS, NULL, sizeof(OSVERSIONINFO));
-	sOS.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-	GetVersionEx(&sOS);
-	bIsWinNT=(sOS.dwPlatformId==VER_PLATFORM_WIN32_NT);
+	LptCheck64(pOld);
 
 	LptDetectPorts(iCount,wPortAddr,MAX_LPT_PORTS,wPortAddrEx,uPortSize,uPortSizeEx);
 
@@ -544,16 +733,20 @@ int				i,iCount;
 				return 0;
 				}
 			}
-		
+
+		bMapped = TRUE;
+
 		for(i=0;i<MAX_LPT_PORTS;i++)
 			{
 			if(!wPortAddr  [i])continue;
-			if( uPortSize  [i])LptMapPorts(wPortAddr  [i],uPortSize  [i]);
-			if( uPortSizeEx[i])LptMapPorts(wPortAddrEx[i],uPortSizeEx[i]);
+			if( uPortSize  [i])if(!LptMapPorts(wPortAddr  [i],uPortSize  [i])){bMapped=FALSE;break;}
+			if( uPortSizeEx[i])if(!LptMapPorts(wPortAddrEx[i],uPortSizeEx[i])){bMapped=FALSE;break;}
 			}
 		}
 
 	bIsInit=TRUE;
+
+	LptExit64(pOld);
 
 
 return 1;
@@ -575,12 +768,16 @@ int		i;
 
 	if(bIsWinNT)
 		{
-		for(i=0;i<MAX_LPT_PORTS;i++)
+		if(bMapped)
 			{
-			if(!wPortAddr[i])continue;
-			LptUnmapPorts(wPortAddr[i]	 	 ,4);
-			LptUnmapPorts(wPortAddr[i]+0x0400,4);
+			for(i=0;i<MAX_LPT_PORTS;i++)
+				{
+				if(!wPortAddr[i])continue;
+				LptUnmapPorts(wPortAddr[i]	 	 ,4);
+				LptUnmapPorts(wPortAddr[i]+0x0400,4);
+				}
 			}
+
 		LptClose();
 		}
 
@@ -588,6 +785,60 @@ int		i;
 
 
 return 1;
+}
+
+//*****************************************************************************
+//*
+//*		LptPortAccess
+//*
+//*****************************************************************************
+// 	Indirekter Portzugriff
+//	uMode	: Ist die Zugriffsart
+//					0=WR byte
+//					1=WR word
+//					2=WR dword
+//					4=RD byte
+//					5=RD word
+//					6=RD dword
+// 	uPorts	: Port-Adresse
+// 	uSize	: Anzahl der einzublendenten Ports
+//	uValue	: Ausgabewert
+// 	Ergibt TRUE wenn OK ofer FALSE bei einem Fehler.
+int LptPortAccess(unsigned uMode,unsigned uPort,unsigned &uValue)
+{
+BOOL			bOk;
+DWORD			dwLenght;
+LPT_PORT_IO		sPortData;
+
+
+
+	if(hLpt==INVALID_HANDLE_VALUE)
+		{
+		return -1;
+		}
+
+
+	sPortData.uLoop	 = 0;
+	sPortData.uMode	 = uMode;
+	sPortData.uPort	 = uPort;
+	sPortData.uValue = uValue;
+
+	bOk = DeviceIoControl(hLpt,									// Handle to device
+						  IOCTL_LPT_PORT_IO,					// IO Control code for Write
+						  &sPortData,							// Buffer to driver.  Holds port & data.
+						  sizeof(LPT_PORT_IO), 					// Length of buffer in bytes.
+						  &sPortData,							// Buffer from driver.	 Not used.
+						  sizeof(LPT_PORT_IO),					// Length of buffer in bytes.
+						  &dwLenght,							// Bytes placed in outbuf.	Should be 0.
+						  NULL									// NULL means wait till I/O completes.
+						  );
+
+
+	uValue = sPortData.uValue;
+
+
+
+return bOk;
 }
 
 
@@ -620,9 +871,9 @@ return	wPortAddr[Nr];
 // 	uPort		: Ist der Port-Offset (0-4)
 int LptPortIn(unsigned uNum,unsigned uPort)
 {
-int			iVal,iPort;
 unsigned 	uOffsetEx;
-
+unsigned	uValue;
+int			iPort;
 
 
 	if(uNum>=MAX_LPT_PORTS)return -1;
@@ -651,15 +902,27 @@ unsigned 	uOffsetEx;
 
 	iPort += uPort;
 
+	#if _WIN64
 
-	__asm mov	edx,iPort;
-	__asm xor	eax,eax;
-	__asm in	al,dx;
-	__asm mov	iVal,eax;
+	if(!LptPortAccess(4,iPort,uValue))return -1;
+
+	#else
+
+	if(!bMapped)
+		{
+		if(!LptPortAccess(4,iPort,uValue))return -1;
+		}
+	else{
+		__asm mov	edx   ,iPort;
+		__asm xor	eax   ,eax;
+		__asm in	al    ,dx;
+		__asm mov	uValue,eax;
+		}
+
+	#endif
 
 
-
-return iVal;
+return uValue;
 }
 
 //*****************************************************************************
@@ -704,10 +967,23 @@ unsigned 	uOffsetEx;
 
 	iPort+=uPort;
 
-	__asm mov	edx,iPort;
-	__asm mov	eax,uData;
-	__asm out	dx,al;
+	#if _WIN64
 
+	if(!LptPortAccess(0,iPort,uData))return -1;
+
+	#else
+
+	if(!bMapped)
+		{
+		if(!LptPortAccess(0,iPort,uData))return -1;
+		}
+	else{
+		__asm mov	edx,iPort;
+		__asm mov	eax,uData;
+		__asm out	dx,al;
+		}
+
+	#endif
 
 
 return 0;
@@ -748,13 +1024,13 @@ unsigned 		uLengthEx[16];
 		pLptAddressEx = wAddrEx;
 		if(iLptMaxPorts>16)iLptMaxPorts=16;
 		}
-	
+
 	if(!pLptLength)
 		{
 		pLptLength = uLength;
 		if(iLptMaxPorts>16)iLptMaxPorts=16;
 		}
-	
+
 	if(!pLptLengthEx)
 		{
 		pLptLengthEx = uLengthEx;
@@ -772,7 +1048,7 @@ unsigned 		uLengthEx[16];
 	GetVersionEx(&sOsVersion);
 	bRunningWinNT=(sOsVersion.dwPlatformId==VER_PLATFORM_WIN32_NT);
 
-	
+
 	if(bRunningWinNT)
 			LptDetectPortsNT(iLptCount,pLptAddress,iLptMaxPorts,pLptAddressEx,pLptLength,pLptLengthEx);	// WinNT version
 	else	LptDetectPorts9x(iLptCount,pLptAddress,iLptMaxPorts,pLptAddressEx,pLptLength,pLptLengthEx);	// Win9x version
@@ -788,19 +1064,19 @@ unsigned 		uLengthEx[16];
 //*****************************************************************************
 void LptDetectPorts9x(int &iLptCount,unsigned short *pLptAddress,int iLptMaxPorts,unsigned short *pLptAddressEx,unsigned *pLptLength,unsigned *pLptLengthEx)
 {
-HKEY			hKey; 										
+HKEY			hKey;
 unsigned		uPos;
 FILETIME		sDummyFileTime;
 WORD			wAllocation[64];
 char			cHardwareSubKey[MAX_PATH];
 char			cPortNumberStr [MAX_PATH];
 char			cPortName      [MAX_PATH];
-char			cKeyName       [MAX_PATH];	
-char		  **pKeyList;			
+char			cKeyName       [MAX_PATH];
+char		  **pKeyList;
 BYTE		   *pData;
 DWORD			dwIndex;
 DWORD			dwKeyIndex;
-DWORD			dwKeyCount; 		
+DWORD			dwKeyCount;
 DWORD			dwDataType;
 DWORD			dwDataSize;
 DWORD			dwDummyLength;
@@ -808,18 +1084,18 @@ bool			bHasProblem;
 int				iPortNumber;
 int				iOsVersion;
 int				i;
-								
-					
-								
-
-					
 
 
-	dwDummyLength = MAX_PATH;	
+
+
+
+
+
+	dwDummyLength = MAX_PATH;
 	dwKeyCount	  = 0;
 	iLptCount	  = 0;											// Clear the port count
 
-	
+
 	for(i=0;i<iLptMaxPorts; i++)								// Clear the port array
 		{
 		pLptAddress[i] = 0;
@@ -827,10 +1103,10 @@ int				i;
 
 	RegOpenKeyEx(HKEY_DYN_DATA,"Config Manager\\Enum",0,KEY_ENUMERATE_SUB_KEYS|KEY_QUERY_VALUE,&hKey);
 
-	
+
 	dwDummyLength = MAX_PATH;
 	dwKeyCount    = 0;
-	
+
 	while(RegEnumKeyEx(hKey,dwKeyCount++,cKeyName,&dwDummyLength,NULL,NULL,NULL,&sDummyFileTime)!=ERROR_NO_MORE_ITEMS)
 		{
 		dwDummyLength = MAX_PATH;
@@ -839,7 +1115,7 @@ int				i;
 	pKeyList		= new char*[dwKeyCount];
 	dwDummyLength	= MAX_PATH;
 	dwKeyCount		= 0;
-	
+
 	while(RegEnumKeyEx(hKey,dwKeyCount,cKeyName,&dwDummyLength,NULL,NULL,NULL,&sDummyFileTime)!=ERROR_NO_MORE_ITEMS)
 		{
 		pKeyList[dwKeyCount] = new char[dwDummyLength+1];
@@ -848,18 +1124,18 @@ int				i;
 		dwKeyCount++;
 		}
 
-	
+
 	RegCloseKey(hKey);
 
 	// Cycle through all keys; looking for a string valued subkey called
 	// 'HardWareKey' which is not NULL, and another subkey called 'Problem'
 	// whsOsVersione fields are all valued 0.
-	
+
 	for(dwKeyIndex=0; dwKeyIndex<dwKeyCount; dwKeyIndex++)
 		{
 		bHasProblem = false;								// Is 'Problem' non-zero? Assume it is Ok
 
-		
+
 		strcpy(cKeyName, "Config Manager\\Enum");			// Open the key
 		strcat(cKeyName, "\\");
 		strcat(cKeyName, pKeyList[dwKeyIndex]);
@@ -871,7 +1147,7 @@ int				i;
 
 		// Test for a 0 valued Problem sub-key,
 		// which must only consist of raw data
-		
+
 		RegQueryValueEx(hKey, "Problem", NULL, &dwDataType, NULL, &dwDataSize);
 
 		if(dwDataType == REG_BINARY)
@@ -896,40 +1172,40 @@ int				i;
 
 			delete pData;
 
-			
+
 			dwDataSize = MAX_PATH;								// Now try and read the Hardware sub-key
 
 			RegQueryValueEx(hKey,"HardwareKey",NULL,&dwDataType,(unsigned char*)cHardwareSubKey,&dwDataSize);
-			
+
 			if(dwDataType != REG_SZ)
 				{
 				bHasProblem = true;								// No good
 				}
 
-			
+
 			if(!bHasProblem && strlen(cHardwareSubKey) > 0)		// Do we have no problem, and a non-null Hardware sub-key?
 				{
-				
+
 				RegCloseKey(hKey);								// Now open the key which is "pointed at" by cHardwareSubKey
 
 				strcpy(cKeyName, "Enum\\");
 				strcat(cKeyName, cHardwareSubKey);
-				
+
 				if(RegOpenKeyEx(HKEY_LOCAL_MACHINE, cKeyName, 0, KEY_ENUMERATE_SUB_KEYS|KEY_QUERY_VALUE, &hKey) != ERROR_SUCCESS)
 					{
 					continue;
 					}
 
-				
+
 				dwDataSize = MAX_PATH;
 				RegQueryValueEx(hKey,"PortName",NULL,&dwDataType,(unsigned char*)cPortName,&dwDataSize);
-				
+
 				if(dwDataType != REG_SZ)
 					{
 					strcpy(cPortName, "");						// No good
 					}
 
-				
+
 				if(strstr(cPortName,"LPT")!=NULL)				// Make sure it has LPT in it
 					{
 																// Holds the registry data for the port address allocation
@@ -953,7 +1229,7 @@ int				i;
 
 					dwDataSize = sizeof(wAllocation);
 					RegQueryValueEx(hKey,"Allocation",NULL,&dwDataType,(unsigned char*)wAllocation,&dwDataSize);
-					
+
 					if(dwDataType == REG_BINARY)
 						{
 																// Decode the Allocation data: the port address is present
@@ -970,7 +1246,7 @@ int				i;
 								pLptLengthEx [iPortNumber] = 8;
 								iLptCount++;
 								}
-							
+
 							break;
 							}
 						}
@@ -981,12 +1257,12 @@ int				i;
 		RegCloseKey(hKey);
 		}
 
-	
-	for(uPos=0;uPos<dwKeyCount;uPos++)							// Destroy our key list	
+
+	for(uPos=0;uPos<dwKeyCount;uPos++)							// Destroy our key list
 		{
 		delete pKeyList[uPos];
 		}
-	
+
 	delete pKeyList;
 }
 
@@ -1026,7 +1302,7 @@ int			i;
 
 
 
-	
+
 	for(uIndex=0;uIndex<10;uIndex++)
 		{
 		pLptPortList[uIndex] = 0;
@@ -1045,7 +1321,7 @@ int			i;
 			dwDummyLength = MAX_PATH;
 
 			RegQueryValueEx(hKey, cKeyName, NULL, &dwValueType, NULL, &dwDataSize);
-		
+
 			if(dwValueType==REG_SZ && cKeyName[0]>='0' && cKeyName[0]<='9')
 				{
 				i = cKeyName[0] - '0';
@@ -1068,7 +1344,7 @@ int			i;
 			dwValueCount++;
 			}
 
-		
+
 		RegCloseKey(hKey);
 		}
 
@@ -1088,7 +1364,7 @@ int			i;
 		int		iPos0;
 		int		iPos1;
 		int		iPos2;
-		
+
 		strcpy(cTemp,"SYSTEM\\CurrentControlSet\\Enum\\");
 		iPos0		  = strlen(cTemp);
 		dwDummyLength = MAX_PATH;
@@ -1108,7 +1384,7 @@ int			i;
 			cTemp[iPos1] = '\\';
 			dwCount1     = 0;
 			iPos1++;
-			
+
 			while(RegEnumKey(hKey0,dwCount1,cTemp+iPos1,sizeof(cTemp)-iPos1)!=ERROR_NO_MORE_ITEMS)
 				{
 				dwCount1++;
@@ -1122,22 +1398,22 @@ int			i;
 				cTemp[iPos2] = '\\';
 				dwCount2     = 0;
 				iPos2++;
-				
+
 				while(RegEnumKey(hKey1,dwCount2,cTemp+iPos2,sizeof(cTemp)-iPos2)!=ERROR_NO_MORE_ITEMS)
 					{
-					dwCount2++;	
+					dwCount2++;
 
 					if(RegOpenKeyEx(HKEY_LOCAL_MACHINE,cTemp,0,KEY_ENUMERATE_SUB_KEYS|KEY_QUERY_VALUE,&hKey2) != ERROR_SUCCESS)
 						{
 						continue;
 						}
-					
-					dwDataSize  = sizeof(cValue);	
+
+					dwDataSize  = sizeof(cValue);
 					dwValueType = REG_SZ;
 					cValue[0]   = 0;
 
 					RegQueryValueEx(hKey2,"Class",NULL,&dwValueType,(BYTE*)cValue,&dwDataSize);
-					
+
 
 
 					if(dwValueType!=REG_SZ || stricmp(cValue,"Ports"))
@@ -1146,14 +1422,14 @@ int			i;
 						continue;
 						}
 
-				
+
 					if(RegOpenKeyEx(hKey2,"Device Parameters",0,KEY_ENUMERATE_SUB_KEYS|KEY_QUERY_VALUE,&hKey3) != ERROR_SUCCESS)
 						{
 						RegCloseKey(hKey2);
 						continue;
 						}
 
-					dwDataSize  = sizeof(cValue);	
+					dwDataSize  = sizeof(cValue);
 					dwValueType = REG_SZ;
 					cValue[0]	= 0;
 
@@ -1176,20 +1452,20 @@ int			i;
 
 					uIndex--;
 					if(pLptPortList[uIndex])continue;
-					
+
 					pLptPortList[uIndex] = new char[strlen(cTemp)+64];
 					pLptPortList[uIndex];
 					strcpy(pLptPortList[uIndex],cTemp);
 					iFound++;
 					}
-				
+
 				RegCloseKey(hKey1);
 				}
-			
+
 			RegCloseKey(hKey0);
 			}
 
-		
+
 		RegCloseKey(hKey);
 		}
 
@@ -1213,9 +1489,9 @@ int			i;
 			delete pStr;
 			continue;
 			}
-		
+
 		delete pStr;
-		
+
 		pStr		  = 0;
 		dwValueCount  = 0;
 		dwDummyLength = MAX_PATH;
@@ -1268,8 +1544,8 @@ int			i;
 			dwDummyLength = MAX_PATH;
 
 			RegQueryValueEx(hKey,cKeyName,NULL,&dwValueType,NULL,&dwDataSize);
-			
-			/* 
+
+			/*
 			if ( dwValueType == REG_SZ && strcmp(cKeyName, "ActiveService") == 0 )
 			{
 				pData = new BYTE[dwDataSize];
@@ -1278,7 +1554,7 @@ int			i;
 				if (strcmp((char*)pData,"Parport")==0)
 					{
 					}
-				
+
 				delete pData;
 			}
 			else
@@ -1314,20 +1590,20 @@ int			i;
 						}
 					}
 
-				
-								
-				if(uScanNum>=2)							
+
+
+				if(uScanNum>=2)
 					{
 					/*
 					for(uPos=1;uPos<uScanNum;uPos++)		// Sortiere die Einträge
 						{
 						if(uScanPort[uPos]>=uScanPort[uPos-1])continue;
-						
+
 						uPort=uScanPort[uPos-1];uScanPort[uPos-1]=uScanPort[uPos];uScanPort[uPos]=uPort;
 						uLen =uScanLen [uPos-1];uScanLen [uPos-1]=uScanLen [uPos];uScanLen [uPos]=uLen ;
 						uPos =0;
 						}
-					*/					
+					*/
 
 					for(uPos=0;uPos<uScanNum;uPos++)		// Suche Standard Adressen
 						{
@@ -1391,10 +1667,10 @@ int			i;
 						uScanNum=1;
 						break;
 						}
-					
+
 					if(uPos>=uScanNum)						// Suche 0x400 Abstand
-						{					
-						for(uPos=1;uPos<uScanNum;uPos++)		
+						{
+						for(uPos=1;uPos<uScanNum;uPos++)
 							{
 							if(uScanPort[uPos]-uScanPort[uPos-1]!=0x400)continue;
 							uScanNum=uPos+1;
@@ -1402,10 +1678,10 @@ int			i;
 							break;
 							}
 						}
-					
+
 					if(uPos>=uScanNum)						// Suche 0x400 Abstand
-						{					
-						for(uPos=2;uPos<uScanNum;uPos++)		
+						{
+						for(uPos=2;uPos<uScanNum;uPos++)
 							{
 							if(uScanPort[uPos]-uScanPort[uPos-2]!=0x400)continue;
 							uScanPort[uPos-1] =uScanPort[uPos];
@@ -1417,8 +1693,8 @@ int			i;
 						}
 
 					if(uPos>=uScanNum)						// Suche 0x400 Abstand
-						{					
-						for(uPos=3;uPos<uScanNum;uPos++)		
+						{
+						for(uPos=3;uPos<uScanNum;uPos++)
 							{
 							if(uScanPort[uPos]-uScanPort[uPos-3]!=0x400)continue;
 							uScanPort[uPos-2] =uScanPort[uPos];
@@ -1437,14 +1713,14 @@ int			i;
 				else{
 					uPos=0;
 					}
-				
+
 				uScanNum -= uPos;
-						
+
 				if(uScanNum>=2 && uScanPort[uPos]<0x400 &&  uScanPort[uPos+1]-uScanPort[uPos]!=0x400)
 					{
 					uScanNum=1;
 					}
-				
+
 				if(uScanNum>=2)
 					{
 					if(iLptCount<iLptIndex)iLptCount=iLptIndex;
@@ -1491,7 +1767,7 @@ int			i;
 			}
 		}
 
-	
+
 	for(uIndex=0;uIndex<10;uIndex++)						// Destroy KeyList
 		{
 		if(pLptPortList[uIndex] != 0)
@@ -1500,4 +1776,72 @@ int			i;
 			}
 		}
 }
- 
+
+
+
+//*****************************************************************************
+//*
+//*		LptTest
+//*
+//*****************************************************************************
+// 	Ausblenden von IO-Ports in den User-Process
+// 	uPorts	: Erste Port-Adresse
+// 	uSize	: Anzahl der einzublendenten Ports
+// 	Ergibt TRUE wenn die Ports eingeblentet wurden.
+void LptTest(int iNum)
+{
+BOOL			bOk;
+DWORD			dwLenght;
+LPT_INTERRUPT	sData;
+static HANDLE	hEvent;
+int				iRet;
+
+
+
+	if(hLpt==INVALID_HANDLE_VALUE)
+		{
+		return;
+		}
+
+	if(!hEvent)
+		{
+		hEvent = CreateEvent(NULL,TRUE,FALSE,NULL);
+		}
+
+	sData.uInterrupt	= 8+4;
+	sData.uInterMode	= 1;
+	sData.uInterLevel	= 7;
+	sData.uInterShare	= 1;
+	sData.uAffinity		= 1;
+	sData.hEvent		= hEvent;//(iNum&1)? 0:hEvent;
+
+for(;;)
+{
+
+	bOk = DeviceIoControl(hLpt,									// Handle to device
+						  IOCTL_LPT_SET_EVENT,					// IO Control code for Write
+						  &sData,								// Buffer to driver.  Holds port & data.
+						  sizeof(sData),						// Length of buffer in bytes.
+						  NULL, 								// Buffer from driver.	 Not used.
+						  0,									// Length of buffer in bytes.
+						  &dwLenght,							// Bytes placed in outbuf.	Should be 0.
+						  NULL									// NULL means wait till I/O completes.
+						  );
+
+	if(bOk)break;
+
+	//sData.uInterrupt++;
+	sData.uInterLevel++;
+	if(sData.uInterLevel<32)continue;
+	sData.uInterLevel=3;
+	sData.uInterMode^=1;
+
+}
+
+	iRet = WaitForSingleObject(hEvent,1000);
+
+	bOk = bOk;
+
+}
+
+

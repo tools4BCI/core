@@ -102,7 +102,6 @@ void TiDClient::stopReceiving()
   socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_receive, error);
 
   io_service_.stop();
-
   if(io_service_thread_)
   {
 
@@ -110,7 +109,6 @@ void TiDClient::stopReceiving()
     delete io_service_thread_;
     io_service_thread_ = 0;
   }
-
   if(io_service_thread_2_)
   {
     io_service_thread_2_->join();
@@ -118,15 +116,15 @@ void TiDClient::stopReceiving()
     io_service_thread_2_ = 0;
   }
 
-
   if(receive_thread_)
   {
     receive_thread_->interrupt();
-    receive_thread_->join();
+    #ifndef _WINDOWS
+      receive_thread_->join();
+    #endif
     delete receive_thread_;
     receive_thread_ = 0;
   }
-
 }
 
 //-----------------------------------------------------------------------------

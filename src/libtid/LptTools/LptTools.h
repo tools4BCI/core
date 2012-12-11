@@ -20,8 +20,9 @@
 	int		LptPortIn (unsigned Nr,unsigned Port);					// Port-Eingabe
 	int		LptPortOut(unsigned Nr,unsigned Port,unsigned Data);	// Port-Ausgabe
 	
-	int		LptDriverRemove();										// Treiber deinstallieren
+	int		LptDriverRemove ();										// Treiber deinstallieren
 	int		LptDriverInstall();										// Treiber installieren
+	int		LptDriverVersion();										// Treiber Version abfragen
 
 	int		LptMapPorts  (unsigned  uPort,unsigned uSize);
 	int		LptUnmapPorts(unsigned  uPort,unsigned uSize);

@@ -297,7 +297,7 @@ int TiDClientBase::receive(void* instance)
 
   while(inst->state_ == State_Running)
   {
-    std::cout << "receiving ..." << std::endl;
+    //std::cout << "receiving ..." << std::endl;
 
     try
     {
@@ -308,7 +308,7 @@ int TiDClientBase::receive(void* instance)
     }
     catch(TiDLostConnection&)
     {
-//      stopReceiving();
+      //      stopReceiving();
       std::cerr << "   ***  Connection to TiD Server@" <<
         inst->remote_ip_ << ":" << inst->remote_port_ << " lost." << std::endl << " >> ";
       break;
@@ -317,7 +317,7 @@ int TiDClientBase::receive(void* instance)
     {
       if(inst->state_ == State_Running)
         std::cerr << e.what() << std::endl << ">> ";
-//      stopReceiving();
+        //      stopReceiving();
       break;
     }
     catch(std::exception& e)

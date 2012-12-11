@@ -6,9 +6,9 @@
 #include "tid_client.h"
 #include "sdl_tid_client.h"
 #include "tid_exceptions.h"
+#include <boost/chrono.hpp>
 
 #include <tobiid/IDSerializerRapid.hpp>
-
 
 using namespace std;
 using namespace TiD;
@@ -52,7 +52,10 @@ int main(int argc, const char* argv[])
 //    message3.SetBlockIdx(100);
     message1.absolute.Tic();
     message2.absolute.Tic();
-    message2.absolute.Tic();
+    message3.absolute.Tic();
+    message1_end.absolute.Tic();
+    message2_end.absolute.Tic();
+    message3_end.absolute.Tic();
 
     IDMessage message4(IDMessage::FamilyBiosig, 901);
     IDMessage message5(IDMessage::FamilyBiosig, 902);
@@ -66,6 +69,9 @@ int main(int argc, const char* argv[])
 //    message4.SetBlockIdx(98);
 //    message5.SetBlockIdx(99);
 //    message6.SetBlockIdx(100);
+    message4.absolute.Tic();
+    message5.absolute.Tic();
+    message6.absolute.Tic();
     message4.absolute.Tic();
     message5.absolute.Tic();
     message6.absolute.Tic();
@@ -108,6 +114,11 @@ int main(int argc, const char* argv[])
         break;
       else if(str == "s" || str == "send")
       {
+        messages[msg_count].absolute.Tic();
+
+        TCTimestamp stamp(messages[msg_count].absolute);
+        std::cout << stamp.timestamp.tv_sec << std::endl;
+        std::cout << stamp.timestamp.tv_usec << std::endl;
 
         client->sendMessage( messages.at(msg_count) );
         if(++msg_count == messages.size())
@@ -139,6 +150,7 @@ int main(int argc, const char* argv[])
           for(unsigned int m = 0; m < 100; m++)
           {
             messages[msg_count].absolute.Tic();
+            
             client->sendMessage( messages[msg_count] );
             if(++msg_count == messages.size())
               msg_count = 0;
