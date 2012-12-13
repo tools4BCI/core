@@ -21,12 +21,12 @@ class SDLTiDClient : public TiDClientBase
 
   private:
     static int run_io_service(void* instance);
+    //static int SDLreceive(void *instance);
 
   private:
     SDL_Thread*                                       receive_thread_;
     SDL_Thread*                                       io_service_thread_;
     SDL_Thread*                                       io_service_thread_2_;
-
 };
 
 //-----------------------------------------------------------------------------

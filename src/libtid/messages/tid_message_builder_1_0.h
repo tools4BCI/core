@@ -20,6 +20,10 @@ class TiDMessageBuilder10 : public TiDMessageBuilder
   public:
     TiDMessageBuilder10()
     {
+      #ifdef DEBUG
+        std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+      #endif
+
       serializer_ = new IDSerializerRapid();
 
       // FIXXXXXME

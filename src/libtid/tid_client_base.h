@@ -78,20 +78,22 @@ class TiDClientBase
     unsigned int                                      remote_port_;
 
     ConnectionState                                   state_;
-    IDMessage                                         msg_;
     std::string                                       xml_string_;
     std::vector <IDMessage>                           messages_;
+    //IDMessage                                         msg_;
 
-    boost::asio::io_service                           io_service_;
-
-    boost::asio::ip::tcp::socket                      socket_;
+    boost::asio::ip::tcp::socket*                      socket_;
+    boost::asio::io_service*                           io_service_;
     boost::mutex                                      mutex_;
+    boost::mutex                                      state_mutex_;
 
     InputStream*                                      input_stream_;
     TiDMessageParser*                                 msg_parser_;
     TiDMessageBuilder*                                msg_builder_;
 
     bool                                              throw_on_error_;
+
+
 };
 
 //-----------------------------------------------------------------------------

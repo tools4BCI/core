@@ -65,10 +65,11 @@ void TiDClient::startReceiving(bool throw_on_error)
   receive_thread_ = new boost::thread(&TiDClientBase::receive, this);
 
   io_service_thread_ = new boost::thread(boost::bind(&boost::asio::io_service::run,
-                                                     &this->io_service_));
+                                                     this->io_service_));
 
   io_service_thread_2_ = new boost::thread(boost::bind(&boost::asio::io_service::run,
-                                                       &this->io_service_));
+                                                       this->io_service_));
+  //  &this->io_service_));
 
 
   #ifdef WIN32
@@ -90,7 +91,7 @@ void TiDClient::stopReceiving()
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
-  if(!socket_.is_open())
+  if(!socket_->is_open())
     return;
 
   if(state_ != State_Running)
@@ -98,10 +99,10 @@ void TiDClient::stopReceiving()
 
   state_ = State_Stopped;
   boost::system::error_code error;
-  socket_.cancel(error);
-  socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_receive, error);
+  socket_->cancel(error);
+  socket_->shutdown(boost::asio::ip::tcp::socket::shutdown_receive, error);
 
-  io_service_.stop();
+  io_service_->stop();
   if(io_service_thread_)
   {
 

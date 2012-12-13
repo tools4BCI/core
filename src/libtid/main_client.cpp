@@ -4,7 +4,6 @@
 #include <sstream>
 
 #include "tid_client.h"
-#include "sdl_tid_client.h"
 #include "tid_exceptions.h"
 #include <boost/chrono.hpp>
 
@@ -150,7 +149,7 @@ int main(int argc, const char* argv[])
           for(unsigned int m = 0; m < 100; m++)
           {
             messages[msg_count].absolute.Tic();
-            
+
             client->sendMessage( messages[msg_count] );
             if(++msg_count == messages.size())
               msg_count = 0;
