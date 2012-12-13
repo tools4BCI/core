@@ -36,7 +36,19 @@ IDMessage::IDMessage(void) {
 IDMessage::~IDMessage(void) {
 }
 
+IDMessage::IDMessage(const IDMessage& other) {
+  //printf("IDMessage -- Own Copy constructor ?? \n");
+  this->Init();
+  //this->Copy(&other);
+
+  TCBlock::SetBlockIdx(other.GetBlockIdx());
+  this->_event = other.GetEvent();
+  this->_familyType = other.GetFamilyType();
+  this->_description = other.GetDescription();
+}
+
 IDMessage::IDMessage(IDMessage* const other) {
+  //printf("IDMessage -- Pointer Copy constructor ?? \n");
   this->Init();
   this->Copy(other);
 }
@@ -70,11 +82,11 @@ void IDMessage::SetDescription(const std::string& description) {
 }
 
 std::string IDMessage::GetSource(void) const {
-  return this->_description;
+  return this->_source;
 }
 
-void IDMessage::SetSource(const std::string& description) {
-  this->_description = description;
+void IDMessage::SetSource(const std::string& source) {
+  this->_source = source;
 }
 
 IDFvalue IDMessage::GetFamily(void) const {

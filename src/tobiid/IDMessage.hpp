@@ -32,6 +32,7 @@ class IDMessage : public TCBlock {
   public:
     IDMessage(void);
     IDMessage(IDMessage* const other);
+    IDMessage(const IDMessage& other);
     IDMessage(IDFtype familyType, IDevent event);
     virtual ~IDMessage(void);
 
@@ -39,7 +40,7 @@ class IDMessage : public TCBlock {
     virtual std::string GetDescription(void) const;
     virtual void SetDescription(const std::string& description);
     virtual std::string GetSource(void) const;
-    virtual void SetSource(const std::string& description);
+    virtual void SetSource(const std::string& source);
     virtual IDFvalue GetFamily(void) const;
     virtual bool SetFamilyType(const IDFtype type);
     virtual bool SetFamilyType(const std::string& type);
