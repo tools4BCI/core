@@ -33,9 +33,9 @@ export PATH LD_LIBRARY_PATH
 if [ "$PLATFORM" == "x86_64" ]
 then
 
-# exec ./bin/amd64/${CMD}  $1 $2 $3
+ exec ./bin/amd64/${CMD}  $1 $2 $3
 #  exec valgrind  --leak-check=full --show-reachable=yes ./bin/amd64/${CMD}  $1 $2 $3
- exec valgrind  ./bin/amd64/${CMD}  $1 $2 $3
+# exec valgrind  ./bin/amd64/${CMD}  $1 $2 $3
 else
  exec ./bin/x86/${CMD}  $1 $2 $3
 fi

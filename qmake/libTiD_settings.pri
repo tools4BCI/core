@@ -12,6 +12,14 @@ CONFIG( debug, debug|release ) {
     DEFINES += DEBUG
 } else {
 
+GCC_4_7_VAR = $$[USE_GCC_4.7]
+
+contains(GCC_4_7_VAR, 1){
+    message( Using GCC 4.7 + optimizations)
+    unix:QMAKE_CXX = /usr/bin/g++-4.7
+    unix:QMAKE_CXXFLAGS_RELEASE = -O2 -mtune=core2
+}
+
 }
 
 #DEFINES += TIMING_TEST
@@ -26,15 +34,9 @@ DEPENDPATH += $$INCLUDEPATH
 #INCLUDEPATH += extern/include
 
 
-GCC_4_7_VAR = $$[USE_GCC_4.7]
 
-contains(GCC_4_7_VAR, 1){
-    message( Using GCC 4.7 + optimizations)
-    unix:QMAKE_CXX = /usr/bin/g++-4.7
-    unix:QMAKE_CXXFLAGS_RELEASE = -O3 -mtune=core2
-}
 
-unix:QMAKE_CXXFLAGS += -pedantic
+unix:QMAKE_CXXFLAGS += -pedantic -fPIC
 QMAKE_CXXFLAGS_WARN_ON += -Wall \
     -pedantic
 
