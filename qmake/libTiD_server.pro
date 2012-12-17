@@ -33,7 +33,6 @@ SOURCES += main_server.cpp
 # -----------------------------------------------------------------------
 
 unix {
-    LIBS += -lboost_thread -lboost_system -lSDL
 
     HARDWARE_PLATFORM = $$system(uname -m)
     contains( HARDWARE_PLATFORM, x86_64 )::{
@@ -70,6 +69,7 @@ unix {
         LIBS += -lboost_chrono
       }
 
+    LIBS += -lboost_thread -lboost_system -lSDL
 }
 
 # Note: It is assumed that the boost libraries can be automatically detected by the linker
