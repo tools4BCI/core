@@ -95,6 +95,11 @@ std::string* IDSerializerRapid::Serialize(std::string* buffer) {
         timestamp.c_str()));
   root->append_attribute(doc.allocate_attribute(IDMESSAGE_REFERENCENODE_2,
         reference.c_str()));
+  if( message->GetSource().length() > 0 )
+  {
+    root->append_attribute(doc.allocate_attribute(IDMESSAGE_SOURCENODE,
+            message->GetSource().c_str()));
+  }
   doc.append_node(root);
 
   if(this->_indent)
