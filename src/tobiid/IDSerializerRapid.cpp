@@ -213,6 +213,8 @@ std::string* IDSerializerRapid::Deserialize(std::string* const buffer)
       cache = rootnode->first_attribute(IDMESSAGE_SOURCENODE)->value();
       IDSerializer::message->SetSource(cache);
     }
+    else
+      IDSerializer::message->SetSource("");
 
     return buffer;
   }

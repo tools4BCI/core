@@ -157,7 +157,7 @@ void IDMessage::Dump(void) const {
   printf(" + Event family  %d/%s\n", this->GetFamilyType(), fvalue.c_str());
   printf(" + Event code   %d\n", this->GetEvent());
   printf(" + Event value   %d\n", this->GetValue());
-
+  printf(" + Source    %s\n", this->GetSource().c_str());
 }
 
 const IDFtype IDMessage::FamilyType(IDFvalue family) {
