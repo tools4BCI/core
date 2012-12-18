@@ -1,5 +1,8 @@
 
 TEMPLATE = lib
+CONFIG += plugin no_plugin_name_prefix
+
+TARGET = pytid
 
 CYTHON_SOURCES = ../python/pytid.pyx
 
