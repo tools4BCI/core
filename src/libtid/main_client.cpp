@@ -38,11 +38,18 @@ int main(int argc, const char* argv[])
     std::vector<IDMessage> messages;
 
     IDMessage message1(IDMessage::FamilyBiosig, 781);
+    message1.SetSource("S1");
     IDMessage message1_end(IDMessage::FamilyBiosig, 781 + 0x8000);
+    message1_end.SetSource("S1");
+
     IDMessage message2(IDMessage::FamilyBiosig, 782);
     IDMessage message2_end(IDMessage::FamilyBiosig, 782+ 0x8000);
+
     IDMessage message3(IDMessage::FamilyBiosig, 783);
+    message3.SetSource("S3");
     IDMessage message3_end(IDMessage::FamilyBiosig, 783+ 0x8000);
+    message3_end.SetSource("S3");
+
 //    message1.SetDescription("feedback");
 //    message2.SetDescription("feedback");
 //    message3.SetDescription("feedback");

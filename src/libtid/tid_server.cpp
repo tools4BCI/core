@@ -71,7 +71,7 @@ void TiDServer::stop()
   for(TiDConnHandlers::iterator it( connections_.begin() );
       it != connections_.end(); it++)
   {
-//    it->second->socket()
+    //    it->second->socket()
     it->second->stop();
   }
   erase_mutex_.lock();
@@ -242,7 +242,7 @@ void TiDServer::dispatchMsg(IDMessage& msg, const TiDConnection::ConnectionID& s
     msg.relative.Set(&current_timeval_);
   }
 
-  
+
 
   current_xml_string_.clear();
   msg_builder_->buildTiDMessage(msg, current_xml_string_);

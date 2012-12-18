@@ -54,8 +54,10 @@ TiDConnection::~TiDConnection()
 //    std::cout << "   -->  " << BOOST_CURRENT_FUNCTION << " -- sent msgs: " << nr_sent_msgs_;
 //    std::cout << "   ***  " << " msg buffer size: " << msg_string_send_buffer_.size() << std::endl;
 
-  stop();
-  close();
+    stop();
+
+  if(state_ != State_ConnectionClosed)
+    close();
 
   if(msg_parser_)
   {
@@ -72,7 +74,7 @@ TiDConnection::~TiDConnection()
   if(receive_thread_)
   {
     receive_thread_->interrupt();
-    //    receive_thread_->join();  // join causes problems if clients aborted the connection
+    // receive_thread_->join();  // join causes problems if clients aborted the connection
     delete receive_thread_;
     receive_thread_ = 0;
   }
@@ -108,7 +110,7 @@ void TiDConnection::stop()
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
-  if(state_ != State_Running)
+  if(state_ != State_Running || state_ != State_ConnectionClosed)
     return;
 
   state_ = State_Stopped;
