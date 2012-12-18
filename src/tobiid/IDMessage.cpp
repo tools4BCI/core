@@ -43,6 +43,8 @@ IDMessage::IDMessage(const IDMessage& other) {
 
   TCBlock::SetBlockIdx(other.GetBlockIdx());
   this->_event = other.GetEvent();
+  this->_value = other.GetValue();
+  this->_source = other.GetSource();
   this->_familyType = other.GetFamilyType();
   this->_description = other.GetDescription();
 }
@@ -63,6 +65,8 @@ IDMessage::IDMessage(IDFtype familyType, IDevent event) {
 void IDMessage::Copy(IDMessage* const other) {
   TCBlock::SetBlockIdx(other->GetBlockIdx());
   this->_event = other->GetEvent();
+  this->_value = other->GetValue();
+  this->_source = other->GetSource();
   this->_familyType = other->GetFamilyType();
   this->_description = other->GetDescription();
 }
@@ -71,6 +75,7 @@ void IDMessage::Init(void) {
   TCBlock::SetBlockIdx(-1);
   this->_familyType = IDMessage::FamilyUndef;
   this->_event = IDMessage::EventNull;
+  this->_value = 0;
 }
 
 std::string IDMessage::GetDescription(void) const {
@@ -137,12 +142,21 @@ IDevent IDMessage::GetEvent(void) const {
   return this->_event;
 }
 
+void IDMessage::SetValue(const IDvalue value ) {
+  this->_value = value;
+}
+
+IDvalue IDMessage::GetValue(void) const {
+  return this->_value;
+}
+
 void IDMessage::Dump(void) const {
   printf("[IDMessage::Dump] TOBI iD message for frame %d [%s]\n",
       TCBlock::GetBlockIdx(), this->GetDescription().c_str());
   IDFvalue fvalue = this->GetFamily();
   printf(" + Event family  %d/%s\n", this->GetFamilyType(), fvalue.c_str());
-  printf(" + Event value   %d\n", this->GetEvent());
+  printf(" + Event code   %d\n", this->GetEvent());
+  printf(" + Event value   %d\n", this->GetValue());
 
 }
 

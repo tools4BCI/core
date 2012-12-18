@@ -21,6 +21,8 @@ cdef extern from "tobiid/IDMessage.hpp":
         int GetFamilyType( )
         void SetEvent( int )
         int GetEvent( )
+        void SetValue( float )
+        float GetValue( )
 
 # TiD - C++ interface
 cdef extern from "libtid/tid_client.h" namespace "TiD":
@@ -72,13 +74,18 @@ cdef class PyIDMessage:
         self.thisptr.SetEvent( event )
     def GetEvent( self ):
         return self.thisptr.GetEvent( )
+    def SetValue( self, value ):
+        self.thisptr.SetValue( value )
+    def GetValue( self ):
+        return self.thisptr.GetValue( )
     def __str__(self):
         family = self.thisptr.GetFamily().decode()
         source = self.thisptr.GetSource().decode()
         family_type = self.thisptr.GetFamilyType()
         event = self.thisptr.GetEvent()
+        value = self.thisptr.GetValue()
         description = self.thisptr.GetDescription().decode()
-        return "Family: "+family+", Source: "+source+", FType: "+str(family_type)+", Event: "+str(event)+", Description: "+str(description)
+        return "Family: "+family+", Source: "+source+", FType: "+str(family_type)+", Event: "+str(event)+", Value: "+str(value)+", Description: "+str(description)
 
 # TiD - Python wrapper
 cdef class PyTiDClient:

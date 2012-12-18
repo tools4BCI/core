@@ -67,9 +67,10 @@ std::string* IDSerializerRapid::Serialize(std::string* buffer) {
     doc.append_node(decl);
   }
 
-  char cacheFidx[16], cacheEvent[128];
+  char cacheFidx[16], cacheEvent[128], cacheValue[128];
   TCTools::itoa(IDSerializer::message->GetBlockIdx(), cacheFidx);
   TCTools::itoa(IDSerializer::message->GetEvent(), cacheEvent);
+  TCTools::ftoa(IDSerializer::message->GetValue(), cacheValue);
   IDFvalue fvalue = IDSerializer::message->GetFamily();
 
   std::string timestamp, reference;
@@ -88,6 +89,8 @@ std::string* IDSerializerRapid::Serialize(std::string* buffer) {
         fvalue.c_str()));
   root->append_attribute(doc.allocate_attribute(IDMESSAGE_EVENTNODE,
         cacheEvent));
+  root->append_attribute(doc.allocate_attribute(IDMESSAGE_VALUENODE,
+        cacheValue));
   root->append_attribute(doc.allocate_attribute(IDMESSAGE_TIMESTAMPNODE_2,
         timestamp.c_str()));
   root->append_attribute(doc.allocate_attribute(IDMESSAGE_REFERENCENODE_2,
@@ -194,6 +197,10 @@ std::string* IDSerializerRapid::Deserialize(std::string* const buffer)
     cache.clear();
     cache = rootnode->first_attribute(IDMESSAGE_EVENTNODE)->value();
     IDSerializer::message->SetEvent(atoi(cache.c_str()));
+
+    cache.clear();
+    cache = rootnode->first_attribute(IDMESSAGE_VALUENODE)->value();
+    IDSerializer::message->SetValue(atof(cache.c_str()));
 
     if(rootnode->first_attribute(IDMESSAGE_SOURCENODE))
     {
