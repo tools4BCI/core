@@ -12,7 +12,7 @@ int main()
   try
   {
     TiDServer test_server;
-    test_server.bind (9100);
+    test_server.bind (9500);
     test_server.reserveNrOfMsgs(10000000);
     test_server.start();
     string str;
