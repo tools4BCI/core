@@ -340,6 +340,11 @@ int TiDClientBase::receive(void* instance)
       //      stopReceiving();
       std::cerr << "   ***  Connection to TiD Server@" <<
         inst->remote_ip_ << ":" << inst->remote_port_ << " lost." << std::endl << " >> ";
+
+      inst->state_mutex_.lock();
+      inst->state_ = State_ConnectionClosed;
+      inst->state_mutex_.unlock();
+
       break;
     }
     catch(TiDException& e)
@@ -347,6 +352,9 @@ int TiDClientBase::receive(void* instance)
       if(tmp_state == State_Running)
         std::cerr << e.what() << std::endl << ">> ";
         //      stopReceiving();
+      inst->state_mutex_.lock();
+      inst->state_ = State_Error;
+      inst->state_mutex_.unlock();
       break;
     }
     catch(std::exception& e)
@@ -452,6 +460,21 @@ bool TiDClientBase::receiving()
 
   return val;
 }
+
+//-----------------------------------------------------------------------------
+
+bool TiDClientBase::connected()
+{
+  bool val = 0;
+
+  state_mutex_.lock();
+  if(state_ == State_Connected || state_ == State_Running)
+    val = true;
+  state_mutex_.unlock();
+
+  return val;
+}
+
 
 //-----------------------------------------------------------------------------
 

@@ -36,6 +36,7 @@ class TiDClientBase
     virtual void startReceiving( bool throw_on_error = 0 ) = 0;
     virtual void stopReceiving() = 0;
     bool receiving();
+    bool connected();
 
     void setBufferSize (size_t size);
     void reserveNrOfMsgs (size_t expected_nr_of_msgs);

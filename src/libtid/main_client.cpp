@@ -96,6 +96,12 @@ int main(int argc, const char* argv[])
     messages.push_back(message6_end);
 
 
+    IDMessage left(IDMessage::FamilyBiosig, 912);
+    bool left_off = 0;
+    IDMessage right(IDMessage::FamilyBiosig, 913);
+    bool right_off = 0;
+
+
     IDMessage startRecordingMsg(IDMessage::FamilyCustom, 1);
     startRecordingMsg.SetFamilyType(IDMessage::TxtFamilyCustom);
     startRecordingMsg.SetDescription("StartRecording");
@@ -132,7 +138,7 @@ int main(int argc, const char* argv[])
 
         cout << ">> " << endl;
       }
-      else if(str == "r" )
+      else if(str == "recv" )
       {
         std::vector<IDMessage> msgs;
         client->getLastMessagesContexts(msgs);
@@ -194,6 +200,42 @@ int main(int argc, const char* argv[])
         client->sendMessage( startRecordingMsg );
         cout << ">> " << endl;
       }
+      else if(str == "l")
+      {
+        left.absolute.Tic();
+        left.Dump();
+        client->sendMessage( left );
+        if(!left_off)
+        {
+          left.SetEvent( left.GetEvent() + 0x8000 );
+          left_off = true;
+        }
+        else
+        {
+          left.SetEvent( left.GetEvent() - 0x8000 );
+          left_off = false;
+        }
+        cout << ">> " << endl;
+      }
+
+      else if(str == "r")
+      {
+        right.absolute.Tic();
+        right.Dump();
+        client->sendMessage( right );
+        if(!right_off)
+        {
+          right.SetEvent( right.GetEvent() + 0x8000 );
+          right_off = true;
+        }
+        else
+        {
+          right.SetEvent( right.GetEvent() - 0x8000 );
+          right_off = false;
+        }
+        cout << ">> " << endl;
+      }
+
       else if(str == "stop")
       {
         stopRecordingMsg.absolute.Tic();
