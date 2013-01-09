@@ -32,6 +32,7 @@ cdef extern from "libtid/tid_client.h" namespace "TiD":
         void startReceiving( )
         void stopReceiving( )
         bool receiving( )
+        bool connected( )
         void setBufferSize( unsigned int )
         void reserveNrOfMsgs( unsigned int )
         void sendMessage( string& )
@@ -104,6 +105,8 @@ cdef class PyTiDClient:
         self.thisptr.stopReceiving( )
     def receiving( self ):
         return self.thisptr.receiving( )
+    def connected( self ):
+        return self.thisptr.connected( )
     def setBufferSize( self, size ):
         self.thisptr.setBufferSize( size )
     def reserveNrOfMsgs( self, nr ):
