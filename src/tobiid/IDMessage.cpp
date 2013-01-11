@@ -162,7 +162,7 @@ void IDMessage::Dump(void) const {
   printf(" + Source    %s\n", this->GetSource().c_str());
 }
 
-const IDFtype IDMessage::FamilyType(IDFvalue family) {
+IDFtype IDMessage::FamilyType(IDFvalue family) {
   if(family.compare(IDTYPES_FAMILY_BIOSIG) == 0)
     return IDMessage::FamilyBiosig;
   else
