@@ -5,6 +5,12 @@ from libcpp.vector cimport vector
 from libcpp.string cimport string
 from libcpp cimport bool
 
+cdef extern from "tobicore/TCTimestamp.hpp":
+    cdef cppclass TCTimestamp:
+        TCTimestamp( )
+        void Tic()
+
+
 # IDMessage - C++ interface
 cdef extern from "tobiid/IDMessage.hpp":
     cdef cppclass IDMessage:
@@ -23,6 +29,7 @@ cdef extern from "tobiid/IDMessage.hpp":
         int GetEvent( )
         void SetValue( float )
         float GetValue( )
+        TCTimestamp absolute
 
 # TiD - C++ interface
 cdef extern from "libtid/tid_client.h" namespace "TiD":
@@ -32,6 +39,7 @@ cdef extern from "libtid/tid_client.h" namespace "TiD":
         void startReceiving( )
         void stopReceiving( )
         bool receiving( )
+        bool connected( )
         void setBufferSize( unsigned int )
         void reserveNrOfMsgs( unsigned int )
         void sendMessage( string& )
@@ -104,6 +112,8 @@ cdef class PyTiDClient:
         self.thisptr.stopReceiving( )
     def receiving( self ):
         return self.thisptr.receiving( )
+    def connected( self ):
+        return self.thisptr.connected( )
     def setBufferSize( self, size ):
         self.thisptr.setBufferSize( size )
     def reserveNrOfMsgs( self, nr ):
@@ -111,7 +121,8 @@ cdef class PyTiDClient:
     def sendMessageXML( self, string msg ):
         self.thisptr.sendMessage( msg )
     def sendMessage( self, PyIDMessage msg ):
-        self.thisptr.sendMessage( msg.thisptr[0] )
+        msg.thisptr.absolute.Tic( )
+        self.thisptr.sendMessage( msg.thisptr[0] )        
     def AsyncSendMessageXML( self, string msg ):
         self.thisptr.AsyncSendMessage( msg )
     def AsyncSendMessage( self, PyIDMessage msg ):
