@@ -47,6 +47,8 @@ IDMessage::IDMessage(const IDMessage& other) {
   this->_source = other.GetSource();
   this->_familyType = other.GetFamilyType();
   this->_description = other.GetDescription();
+  this->absolute = other.absolute;
+  this->relative = other.relative;
 }
 
 IDMessage::IDMessage(IDMessage* const other) {
