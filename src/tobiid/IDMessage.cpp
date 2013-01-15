@@ -47,6 +47,8 @@ IDMessage::IDMessage(const IDMessage& other) {
   this->_source = other.GetSource();
   this->_familyType = other.GetFamilyType();
   this->_description = other.GetDescription();
+  this->absolute = other.absolute;
+  this->relative = other.relative;
 }
 
 IDMessage::IDMessage(IDMessage* const other) {
@@ -160,7 +162,7 @@ void IDMessage::Dump(void) const {
   printf(" + Source    %s\n", this->GetSource().c_str());
 }
 
-const IDFtype IDMessage::FamilyType(IDFvalue family) {
+IDFtype IDMessage::FamilyType(IDFvalue family) {
   if(family.compare(IDTYPES_FAMILY_BIOSIG) == 0)
     return IDMessage::FamilyBiosig;
   else
