@@ -9,6 +9,7 @@ SUBDIRS += libTiD_static.pro \
            libTiD_client.pro \
            libTiD_lpt_client.pro \
            libTiD_sdl_client.pro \
+           libTiD_client_blocking.pro \
            libTiD_server.pro
            #libTiD_tests.pro
 

@@ -50,6 +50,7 @@ class TiDClientBase
     bool newMessagesAvailable();
     void getLastMessagesContexts( std::vector< IDMessage >& messages  );
     void clearMessages();
+    IDMessage wait4NewTiDMessage();
 
   protected:
     /**

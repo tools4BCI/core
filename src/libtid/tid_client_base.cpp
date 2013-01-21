@@ -377,6 +377,49 @@ int TiDClientBase::receive(void* instance)
 
 //-----------------------------------------------------------------------------
 
+IDMessage TiDClientBase::wait4NewTiDMessage()
+{
+  state_mutex_.lock();
+  if(state_)
+    throw(std::runtime_error( std::string(BOOST_CURRENT_FUNCTION)
+                              +  "Error -- Cant't wait for message, while already receiving!" ));
+  state_mutex_.unlock();
+
+  IDMessage msg;
+  try
+  {
+    msg_parser_->parseMessage(&msg, input_stream_ );
+  }
+  catch(TiDLostConnection&)
+  {
+    std::cerr << "   ***  Connection to TiD Server@" <<
+      remote_ip_ << ":" << remote_port_ << " lost." << std::endl << " >> ";
+
+    state_mutex_.lock();
+    state_ = State_ConnectionClosed;
+    state_mutex_.unlock();
+    throw;
+  }
+  catch(TiDException& e)
+  {
+    state_mutex_.lock();
+    state_ = State_Error;
+    state_mutex_.unlock();
+    throw;
+  }
+  catch(std::exception& e)
+  {
+    state_mutex_.lock();
+    state_ = State_Error;
+    state_mutex_.unlock();
+    throw;
+  }
+
+  return msg;
+}
+
+//-----------------------------------------------------------------------------
+
 void TiDClientBase::handleWrite(const boost::system::error_code &ec,
                               std::size_t bytes_transferred)
 {
