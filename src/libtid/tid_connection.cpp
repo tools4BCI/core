@@ -106,9 +106,9 @@ void TiDConnection::run()
 
 void TiDConnection::stop()
 {
-  #ifdef DEBUG
+  //#ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
-  #endif
+  //#endif
 
   if(state_ != State_Running || state_ != State_ConnectionClosed)
     return;
@@ -187,12 +187,16 @@ void TiDConnection::receive()
       if(state_ == State_Running)
         cerr << "TCException caught -- " << e.GetCaller() << "" << e.GetInfo() << endl << ">> ";
       state_ = State_Aborted;
+      close( );
       break;
     }
     catch(std::exception& e)
     {
       cerr <<BOOST_CURRENT_FUNCTION <<  " -- Caught STL exception while receiving: " << e.what() << endl;
-      throw;
+      state_ = State_Aborted;
+      close( );
+      break;
+      //throw;
     }
     catch(...)
     {
@@ -213,10 +217,13 @@ void TiDConnection::handleWrite(const boost::system::error_code& error,
 
   if (error && (state_ == State_Running) )
   {
-    cerr << "TiDConnection::handleWrite [Peer@" << connection_id_.second <<":"<< connection_id_.first;
-    cerr << " -- self: " << tcp_connection_->socket().local_endpoint().address().to_string();
-    cerr << ":" << tcp_connection_->socket().local_endpoint().port() << "]: "
-         << "-- error-msg: " << error.message() << " --> closing connection." << endl;
+    cerr << BOOST_CURRENT_FUNCTION << " [Peer@" << connection_id_.second <<":"<< connection_id_.first;
+    try {
+      cerr << " -- self: " << tcp_connection_->socket().local_endpoint().address().to_string();
+      cerr << ":" << tcp_connection_->socket().local_endpoint().port() << "]: ";
+    }
+    catch( ... ) { }
+    cerr << "-- error-msg: " << error.message() << " --> closing connection." << endl;
     stop();
 
     // No new asynchronous operations are started. This means that all shared_ptr
@@ -256,10 +263,13 @@ void TiDConnection::sendMsg(IDMessage& msg)
 
   if (error && (state_ == State_Running) )
   {
-    cerr << "TiDConnection::handleWrite [Peer@" << connection_id_.second <<":"<< connection_id_.first;
-    cerr << " -- self: " << tcp_connection_->socket().local_endpoint().address().to_string();
-    cerr << ":" << tcp_connection_->socket().local_endpoint().port() << "]: "
-         << "-- error-msg: " << error.message() << " --> closing connection." << endl;
+    cerr << BOOST_CURRENT_FUNCTION << " [Peer@" << connection_id_.second <<":"<< connection_id_.first;
+    try {
+      cerr << " -- self: " << tcp_connection_->socket().local_endpoint().address().to_string();
+      cerr << ":" << tcp_connection_->socket().local_endpoint().port() << "]: ";
+    }
+    catch( ... ) { }
+    cerr << "-- error-msg: " << error.message() << " --> closing connection." << endl;
     stop();
   }
 
@@ -285,10 +295,13 @@ void TiDConnection::sendMsg(const std::string xml_string)
 
   if (error && (state_ == State_Running) )
   {
-    cerr << "TiDConnection::handleWrite [Peer@" << connection_id_.second <<":"<< connection_id_.first;
-    cerr << " -- self: " << tcp_connection_->socket().local_endpoint().address().to_string();
-    cerr << ":" << tcp_connection_->socket().local_endpoint().port() << "]: "
-         << "-- error-msg: " << error.message() << " --> closing connection." << endl;
+    cerr << BOOST_CURRENT_FUNCTION << " [Peer@" << connection_id_.second <<":"<< connection_id_.first;
+    try {
+      cerr << " -- self: " << tcp_connection_->socket().local_endpoint().address().to_string();
+      cerr << ":" << tcp_connection_->socket().local_endpoint().port() << "]: ";
+    }
+    catch( ... ) { }
+    cerr << "-- error-msg: " << error.message() << " --> closing connection." << endl;
     stop();
   }
 
@@ -310,7 +323,7 @@ void TiDConnection::asyncSendMsg(IDMessage& msg)
 
   if(msg_string_send_buffer_.full())
   {
-    cerr << "TiDConnection::sendMsg [Client@" << connection_id_.second << "]: "
+    cerr << BOOST_CURRENT_FUNCTION << " [Client@" << connection_id_.second << "]: "
          << "Performance warning -- TiD biffer size too small --> resizing now!" << endl;
     msg_string_send_buffer_.resize( msg_string_send_buffer_.size() *2 );
   }
