@@ -106,9 +106,9 @@ void TiDConnection::run()
 
 void TiDConnection::stop()
 {
-  //#ifdef DEBUG
+  #ifdef DEBUG
     std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
-  //#endif
+  #endif
 
   if(state_ != State_Running || state_ != State_ConnectionClosed)
     return;
