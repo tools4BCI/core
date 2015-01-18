@@ -1,0 +1,759 @@
+%   Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+%   Michele Tavella <michele.tavella@epfl.ch>
+%
+%   This program is free software: you can redistribute it and/or modify
+%   it under the terms of the GNU General Public License as published by
+%   the Free Software Foundation, either version 3 of the License, or
+%   (at your option) any later version.
+%
+%   This program is distributed in the hope that it will be useful,
+%   but WITHOUT ANY WARRANTY; without even the implied warranty of
+%   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%   GNU General Public License for more details.
+%
+%   You should have received a copy of the GNU General Public License
+%   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+$ #include <tobicore/TCException.hpp>
+$ #include <tobiid/IDMessage.hpp>
+$ #include <tobiid/IDSerializerRapid.hpp>
+$ #include <tobiid/IDAsClient.hpp>
+$ #include <cstring>
+$ #include <stdio.h>
+$ #include <string.h>
+
+@function [c] = idasclient_new();
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDASCLIENT_NEW Allocates an IDAsClient object
+%
+% C = IDASCLIENT_NEW() return the handle C to a new IDAsClient
+% object.
+%
+% See also IDASCLIENT_DELETE
+	# IDAsClient* c = new IDAsClient();
+
+@function [c] = idasclient_delete(c);
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDASCLIENT_NEW deletes an IDAsClient object
+%
+% C = IDASCLIENT_DELETE(C) frees the instance of an IDAsClient object 
+% pointed by the handle C. 
+%
+% See also IDASCLIENT_NEW
+	# delete(IDAsClient* c);
+	c = 0;
+
+@function [q] = idserializerrapid_new(m);
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDSERIALIZERRAPID_NEW Allocates an IDSerializerRapid object
+%
+% M = IDSERIALIZERRAPID_NEW(Q) return the handle M to a new IDSerializerRapid
+% object. Q is the handle to an instance of IDMessage.
+%
+% See also IDSERIALIZERRAPID_DELETE, IDMESSAGE_NEW, IDMESSAGE_DELETE
+	# IDSerializerRapid* q = new IDSerializerRapid(IDMessage* m);
+
+@function [m] = idserializerrapid_delete(m)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDSERIALIZERRAPID_DELETE Deletes an IDSerializerRapid object
+%
+% M = IDSERIALIZERRAPID_DELETE(M) frees the instance of an IDSerializerRapid object 
+% pointed by the handle M. 
+%
+% Returns 0 upon success, >0 otherwise.
+%
+% See also IDSERIALIZERRAPID_NEW
+	# delete(IDSerializerRapid* m);
+	m = 0;
+
+@function [q] = idmessage_new();
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_NEW Allocates an IDMessage object
+%
+% Q = IDMESSAGE_NEW() returns the handle Q to a new IDMessage object.
+%
+% See also IDMESSAGE_DELETE
+	# IDMessage* q = new IDMessage();
+
+@function [q] = idmessage_delete(q)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_DELETE Deletes an IDMessage object
+%
+% Q = IDMESSAGE_DELETE(Q) frees the instance of an IDMessage object 
+% pointed by the handle Q 
+%
+% Returns 0 upon success, >0 otherwise.
+%
+% See also IDMESSAGE_NEW
+	# delete(IDMessage* q);
+	q = 0;
+
+@function [id, key] = idmessage_getfamilies(name)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_GETVALUES Returns the supported value types
+%
+% [ID, KEY] = IDMESSAGE_GETVALUES() returns the numerical ids (ID) and the
+% associated keys (KEY) for all the supported ID values.
+%
+% See also IDMESSAGE_GETVALUES
+	id  = [-1 0];
+	key = {'undef' 'biosig'};
+
+@function [bidx] = idmessage_getbidx(q)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_GETBIDX Gets the block number
+%
+% [BIDX] = IDMESSAGE_GETBIDX(Q) returns the block number
+%
+% See also IDMESSAGE_SETBIDX, IDMESSAGE_INCBIDX
+	$ int getbidx(IDMessage* q) {
+	$ 	return q->GetBlockIdx();
+	$ } 
+	# int bidx = getbidx(IDMessage* q);
+
+@function [bidx] = idmessage_setbidx(q, value)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_SETBIDX Sets the block number
+%
+% [BIDX] = IDMESSAGE_SETBIDX(Q, VALUE) sets the block number according to VALUE
+% and returns the block number value just because it's cool.
+%
+% See also IDMESSAGE_GETBIDX, IDMESSAGE_INCBIDX
+	$ int setbidx(IDMessage* q, int value) {
+	$ 	return q->SetBlockIdx(value);
+	$ } 
+	# int bidx = setbidx(IDMessage* q, int value);
+
+@function [bidx] = idmessage_incbidx(q)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_INCBIDX Increments the block number
+%
+% [BIDX] = IDMESSAGE_INCBIDX(Q) increments the block number and returns its
+% value
+%
+% See also IDMESSAGE_GETBIDX, IDMESSAGE_SETBIDX
+	$ int incbidx(IDMessage* q) {
+	$ 	return q->IncBlockIdx();
+	$ } 
+	# int bidx = incbidx(IDMessage* q);
+
+@function [smessage] = idmessage_serialize(s)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_SERIALIZE Serializes an IDMessage using an IDSerializer
+%
+% SMESSAGE = IDMESSAGE_SERIALIZE(S) Serializes the IDMessage Q (set at creation
+% time) using the IDSerializer S. Returns an empty string on error.
+%
+% See also IDMESSAGE_NEW, IDSERIALIZERRAPID_NEW, IDMESSAGE_DESERIALIZE
+	$ void serialize(IDSerializerRapid* s, char* buffer) {
+	$ 	try {
+	$ 		s->SerializeCh(buffer, 4096);
+	$	} catch(TCException e) {
+	$		printf("[idmessage_serialize] Exception in libtobiic: %s, %s\n",
+	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+	$	}
+	$ } 
+	$
+	smessage = '';
+	# serialize(IDSerializerRapid* s, inout cstring smessage[4096]);
+
+@function [status] = idmessage_deserialize(s, smessage)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_DESERIALIZE Deerializes an IDMessage using an IDSerializer
+%
+% STATUS = IDMESSAGE_DESERIALIZE(S, SMESSAGE) Deserializes SMESSAGE filling up
+% IDMessage Q (set at creation time). S is an  IDSerializer.
+% Returns 0 on error, 1 upon success.
+%
+% See also IDMESSAGE_NEW, IDSERIALIZERRAPID_NEW, IDMESSAGE_SERIALIZE
+	$ bool deserialize(IDSerializerRapid* s, char* buffer) {
+	$ 	try {
+	$ 		s->DeserializeCh(buffer, 4096);
+	$	} catch(TCException e) {
+	$		printf("[idmessage_deserialize] Exception in libtobiic: %s, %s\n",
+	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+	$		return false;
+	$	}
+	$ } 
+	$
+	# bool status = deserialize(IDSerializerRapid* s, cstring smessage[4096]);
+
+@function idmessage_dumpmessage(q)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_DUMPMESSAGE Prints an IDMessage
+%
+% IDMESSAGE_DUMPMESSAGE(Q) prints on the standard output the
+% internal structure.
+% Returns 0 without any output otherwise.
+	$ void dumpd(IDMessage* q) {
+	$	try {
+	$ 	  q->Dump();
+	$	} catch(TCException e) {
+	$		printf("[idmessage_dumpmessage] Exception in libtobiid: %s, %s\n",
+	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+	$	}
+	$ }
+	# dumpd(IDMessage* q);
+
+@function [iscopied] = idmessage_copy(q, qother)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_COPY Copies one iD message to another
+%
+% ISCOPIED = IDMESSAGE_COPY(Q, OTHER) Copies the contents of IDMessage OTHER to
+% IDMessage Q. Returns false in case of failure, true otherwsise.
+%
+% See also IDMESSAGE_NEW
+	$ bool copy(IDMessage* q, IDMessage* other) {
+	$	try {
+	$ 	  q->Copy(other);
+	$	} catch(TCException e) {
+	$		printf("[idmessage_copy] Exception in libtobiid: %s, %s\n",
+	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+	$		return false;
+	$	}
+	$	return true;
+	$ }
+	# bool iscopied = copy(IDMessage* q, IDMessage* qother);
+
+@function idmessage_setdescription(q, description)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_SETDESCRIPTION Sets the description field of an IDMessage
+%
+% IDMESSAGE_SETDESCRIPTION(Q, DESCRIPTION) sets the description field of the
+% IDMessage Q as DESCRIPTION.
+%
+% See also IDMESSAGE_GETDESCRIPTION
+	$ void setdescription(IDMessage* q, char* desc) {
+	$	try {
+	$ 	  std::string cache(desc);
+	$	  q->SetDescription(cache);
+	$	} catch(TCException e) {
+	$		printf("[idmessage_setdescription] Exception in libtobiid: %s, %s\n",
+	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+	$	}
+	$ }
+	# setdescription(IDMessage* q, cstring description[4096]);
+
+@function [description] = idmessage_getdescription(q)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_GETDESCRIPTION Gets the description field of an IDMessage
+%
+% DESCRIPTION = IDMESSAGE_GETDESCRIPTION(Q) returns the description field of the
+% IDMessage Q in DESCRIPTION.
+%
+% See also IDMESSAGE_SETDESCRIPTION
+	$ void getdescription(IDMessage* q, char* desc) {
+	$	try {
+	$ 	  std::string cache = q->GetDescription();
+	$	  strcpy(desc, cache.c_str());
+	$	} catch(TCException e) {
+	$		printf("[idmessage_getdescription] Exception in libtobiid: %s, %s\n",
+	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+	$	}
+	$ }
+	description = '';
+	# getdescription(IDMessage* q, inout cstring description[4096]);
+
+@function [family] = idmessage_getfamily(q)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_GETFAMILY Returns the family name of an IDMessage
+%
+% FAMILY = IDMESSAGE_GETFAMILY(Q) Returns the family name of the IDMessage
+% pointed by Q in FAMILY.
+%
+% See also IDMESSAGE_GETFAMILYTYPE, IDMESSAGE_SETFAMILYTYPE
+	$ void getfamily(IDMessage* q, char* family) {
+	$	try {
+	$ 	  std::string cache = q->GetFamily();
+	$	  strcpy(family, cache.c_str());
+	$	} catch(TCException e) {
+	$		printf("[idmessage_getfamily] Exception in libtobiid: %s, %s\n",
+	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+	$	}
+	$ }
+	family = '';
+	# getfamily(IDMessage* q, inout cstring family[4096]);
+
+@function idmessage_setfamilytype(q, familytype)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_SETFAMILYTYPE Sets the family type of an IDMessage
+%
+% IDMESSAGE_SETFAMILYTYPE(Q, FAMILYTYPE) Sets the family type of the IDMessage
+% pointed by Q to FAMILYTYPE.
+%
+% See also IDMESSAGE_GETFAMILY, IDMESSAGE_GETFAMILYTYPE
+	$ void setfamilytype(IDMessage* q, int type) {
+	$	try {
+	$	  q->SetFamilyType(type);
+	$	} catch(TCException e) {
+	$		printf("[idmessage_setfamilytype] Exception in libtobiid: %s, %s\n",
+	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+	$	}
+	$ }
+	# setfamilytype(IDMessage* q, int familytype);
+
+@function [familytype] = idmessage_getfamilytype(q)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_GETFAMILYTYPE Returns the family type of an IDMessage
+%
+% FAMILYTYPE = IDMESSAGE_GETFAMILYTYPE(Q) Returns the family type of the
+% IDMessage pointed by Q.
+%
+% See also IDMESSAGE_GETFAMILY, IDMESSAGE_SETFAMILYTYPE
+	$ int getfamilytype(IDMessage* q) {
+	$	try {
+	$ 	  return q->GetFamilyType();
+	$	} catch(TCException e) {
+	$		printf("[idmessage_getfamilytype] Exception in libtobiid: %s, %s\n",
+	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+	$		return IDMessage::FamilyUndef;
+	$	}
+	$ }
+	# int familytype = getfamilytype(IDMessage* q);
+
+@function idmessage_setevent(q, event)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_SETEVENT Sets the event of an IDMessage
+%
+% IDMESSAGE_SETEVENT(Q, EVENT) Sets the event of the IDMessage
+% pointed by Q to EVENT.
+% 
+% See also IDMESSAGE_GETEVENT
+	$ void setevent(IDMessage* q, int event) {
+	$	try {
+	$	  q->SetEvent(event);
+	$	} catch(TCException e) {
+	$		printf("[idmessage_setevent] Exception in libtobiid: %s, %s\n",
+	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+	$	}
+	$ }
+	# setevent(IDMessage* q, int event);
+
+@function [event] = idmessage_getevent(q)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_GETEVENT Gets the event of an IDMessage
+%
+% EVENT = IDMESSAGE_GETEVENT(Q) Returns the event of the
+% IDMessage pointed by Q.
+%
+% See also IDMESSAGE_SETEVENT
+	$ int getevent(IDMessage* q) {
+	$	try {
+	$ 	  return q->GetEvent();
+	$	} catch(TCException e) {
+	$		printf("[idmessage_getevent] Exception in libtobiid: %s, %s\n",
+	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+	$		return IDMessage::FamilyUndef;
+	$	}
+	$ }
+	# int event = getevent(IDMessage* q);
+
+@function [ftype] = idmessage_familytype(fname)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_FAMILYTYPE Returns the family type for a given family name.
+%
+% FTYPE = IDMESSAGE_FAMILYTYPE(FNAME) Returns the family type FTYPE for a given
+% family name FNAME.
+%
+% See also IDMESSAGE_SETFAMILYTYPE, IDMESSAGE_GETFAMILYTYPE, IDMESSAGE_GETFAMILY
+	$ int getftype(char* buffer, int* ftype) {
+	$	(*ftype) = IDMessage::FamilyType(std::string(buffer));
+	$ } 
+	ftype = -1;
+	# getftype(cstring fname, inout int* ftype);
+
+@function idasclient_dump(c)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDASCLIENT_DUMP Prints an IDMessage
+%
+% IDASCLIENT_DUMP(C) prints on the standard output the internal structure.
+	$ bool dumpc(IDAsClient* c) {
+	$	try {
+	$ 	  c->Dump();
+	$	} catch(TCException e) {
+	$		printf("[idasclient_dump] Exception in libtobiid: %s, %s\n",
+	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+	$	}
+	$ }
+	# dumpc(IDAsClient* c);
+
+@function [size] = idasclient_size(c)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDASCLIENT_SIZE Returns the size of the IDMessage queue in an IDAsClient
+% object
+%
+% SIZE = IDASCLIENT_SIZE(C) returns the size of the queue in IDAsClient C.
+%
+% See also IDASCLIENT_NEW, IDASCLIENT_DELETE
+	$ int size(IDAsClient* c) {
+	$	try {
+	$ 	  return c->Size();
+	$	} catch(TCException e) {
+	$		printf("[idasclient_size] Exception in libtobiid: %s, %s\n",
+	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+	$		return IDMessage::FamilyUndef;
+	$	}
+	$ }
+	# int size = size(IDAsClient* c);
+
+@function idasclient_enqueue(c, q)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDASCLIENT_ADD Adds an IDMessage to the queue of an IDAsClient
+%
+% IDASCLIENT_ADD(C, Q) enqueues IDMessage Q to the queue of IDAsClient C. The
+% IDMessage Q is copied to the queue and its destruction is handled internally
+% when C is deleted or when IDASCLIENT_GETPREV, IDASCLIENT_GETNEXT or
+% IDASCLIENT_GETTHIS are called.
+%
+% See also IDASCLIENT_NEW, IDMESSAGE_NEW, IDASCLIENT_SIZE, IDASCLIENT_GETPREV,
+% IDASCLIENT_GETNEXT, IDASCLIENT_GETTHIS
+	$ void enqueues(IDAsClient* c, IDMessage* q) {
+	$	try {
+	$	  IDMessage cache;
+	$	  cache.Copy(q);
+	$ 	  c->Enqueue(cache);
+	$	} catch(TCException e) {
+	$		printf("[idasclient_size] Exception in libtobiid: %s, %s\n",
+	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+	$	}
+	$ }
+	# enqueues(IDAsClient* c, IDMessage* q);
+
+
+@function [status] = idasclient_dequeueprev(c, q, type, event)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDASCLIENT_GETPREV Returns a queued message coming from a module that sits
+% previously in the BCI pipeline. 
+%
+% STATUS = IDASCLIENT_GETPREV(C, Q, TYPE, EVENT) C is an IDAsClient object. Q is
+% an IDMessage allocated using IDMESSAGE_NEW. TYPE is the family type of the
+% message, while EVENT is the event value.
+% If TYPE is set to '[]', than all types are matched.
+% If EVENT is set to '[]', than all events are matched.
+% 
+% IDASCLIENT_ADD copies messages to the queue. Once IDASCLIENT_GETPREV is
+% called, the returned messaged is removed from the queue.
+%
+% If a message is found STATUS is true. STATUS is set to false if no message is
+% found. Search time is linear. In order for this function to work, you need to
+% set the block number in the IDAsClient C using IDASCLIENT_SETBIDX and/or
+% IDASCLIENT_INCBIDX.
+%
+% Example: 
+%	% Get all previous messages, independently from TYPE and EVENT.
+%	idasclient_dequeueprev(client, message, [], []);
+%
+%	% Get all previous messages of TYPE 'biosig', independently from EVENT.
+%   idasclient_dequeueprev(client, message, idmessage_familytype('biosig'), []);
+%
+%	% Get all previous messages of TYPE 'biosig' and EVENT 781
+%   idasclient_dequeueprev(client, message, idmessage_familytype('biosig'), 781);
+%
+% See also IDASCLIENT_ADD, IDASCLIENT_GETNEXT, IDASCLIENT_GETTHIS,
+% IDASCLIENT_SETBIDX, IDASCLIENT_INCBIDX
+	$ bool getprev(IDAsClient* c, IDMessage* q, IDFtype type, IDevent event) {
+	$	try {
+	$ 		return(c->Dequeue(q, type, event, IDAsClient::BlockPrev));
+	$	} catch(TCException e) {
+	$		printf("[idasclient_dequeueprev] Exception in libtobiid: %s, %s\n",
+	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+	$		return false;
+	$	}
+	$ }
+	if(isempty(type))
+		type = -1;
+	end
+	if(isempty(event))
+		event = -1;
+	end
+	# bool status = getprev(IDAsClient* c, IDMessage* q, int type, int event);
+
+@function [status] = idasclient_dequeuenext(c, q, type, event)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDASCLIENT_GETNEXT Returns a queued message coming from a module that sits
+% next in the BCI pipeline. 
+%
+% STATUS = IDASCLIENT_GETNEXT(C, Q, TYPE, EVENT) C is an IDAsClient object. Q is
+% an IDMessage allocated using IDMESSAGE_NEW. TYPE is the family type of the
+% message, while EVENT is the event value.
+% If TYPE is set to '[]', than all types are matched.
+% If EVENT is set to '[]', than all events are matched.
+% 
+% IDASCLIENT_ADD copies messages to the queue. Once IDASCLIENT_GETNEXT is
+% called, the returned messaged is removed from the queue.
+%
+% If a message is found STATUS is true. STATUS is set to false if no message is
+% found. Search time is linear. In order for this function to work, you need to
+% set the block number in the IDAsClient C using IDASCLIENT_SETBIDX and/or
+% IDASCLIENT_INCBIDX.
+%
+% Example: 
+%	% Get all next messages, independently from TYPE and EVENT.
+%	idasclient_dequeuenext(client, message, [], []);
+%
+%	% Get all next messages of TYPE 'biosig', independently from EVENT.
+%   idasclient_dequeuenext(client, message, idmessage_familytype('biosig'), []);
+%
+%	% Get all next messages of TYPE 'biosig' and EVENT 781
+%   idasclient_dequeuenext(client, message, idmessage_familytype('biosig'), 781);
+%
+% See also IDASCLIENT_ADD, IDASCLIENT_GETNEXT, IDASCLIENT_GETTHIS
+% IDASCLIENT_SETBIDX, IDASCLIENT_INCBIDX
+	$ bool getnext(IDAsClient* c, IDMessage* q, IDFtype type, IDevent event) {
+	$	try {
+	$ 		return(c->Dequeue(q, type, event, IDAsClient::BlockNext));
+	$	} catch(TCException e) {
+	$		printf("[idasclient_dequeuenext] Exception in libtobiid: %s, %s\n",
+	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+	$		return false;
+	$	}
+	$ }
+	if(isempty(type))
+		type = -1;
+	end
+	if(isempty(event))
+		event = -1;
+	end
+	# bool status = getnext(IDAsClient* c, IDMessage* q, int type, int event);
+
+@function [status] = idasclient_dequeuethis(c, q, type, event)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDASCLIENT_GETTHIS Returns a queued message coming from a module that sits
+% in the same position in the BCI pipeline. 
+%
+% STATUS = IDASCLIENT_GETTHIS(C, Q, TYPE, EVENT) C is an IDAsClient object. Q is
+% an IDMessage allocated using IDMESSAGE_NEW. TYPE is the family type of the
+% message, while EVENT is the event value.
+% If TYPE is set to '[]', than all types are matched.
+% If EVENT is set to '[]', than all events are matched.
+% 
+% IDASCLIENT_ADD copies messages to the queue. Once IDASCLIENT_GETTHIS is
+% called, the returned messaged is removed from the queue.
+%
+% If a message is found STATUS is true. STATUS is set to false if no message is
+% found. Search time is linear. In order for this function to work, you need to
+% set the block number in the IDAsClient C using IDASCLIENT_SETBIDX and/or
+% IDASCLIENT_INCBIDX.
+%
+% Example: 
+%	% Get all next messages, independently from TYPE and EVENT.
+%	idasclient_dequeuethis(client, message, [], []);
+%
+%	% Get all next messages of TYPE 'biosig', independently from EVENT.
+%   idasclient_dequeuethis(client, message, idmessage_familytype('biosig'), []);
+%
+%	% Get all next messages of TYPE 'biosig' and EVENT 781
+%   idasclient_dequeuethis(client, message, idmessage_familytype('biosig'), 781);
+%
+% See also IDASCLIENT_ADD, IDASCLIENT_GETTHIS, IDASCLIENT_GETTHIS
+% IDASCLIENT_SETBIDX, IDASCLIENT_INCBIDX
+	$ bool getthis(IDAsClient* c, IDMessage* q, IDFtype type, IDevent event) {
+	$	try {
+	$ 		return(c->Dequeue(q, type, event, IDAsClient::BlockThis));
+	$	} catch(TCException e) {
+	$		printf("[idasclient_dequeuethis] Exception in libtobiid: %s, %s\n",
+	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+	$		return false;
+	$	}
+	$ }
+	if(isempty(type))
+		type = -1;
+	end
+	if(isempty(event))
+		event = -1;
+	end
+	# bool status = getthis(IDAsClient* c, IDMessage* q, int type, int event);
+
+@function [bidx] = idasclient_dequeuebidx(q)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDASCLIENT_GETBIDX Gets the block number
+%
+% [BIDX] = IDASCLIENT_GETBIDX(Q) returns the block number
+%
+% See also IDASCLIENT_SETBIDX, IDASCLIENT_INCBIDX
+	$ int cgetbidx(IDAsClient* q) {
+	$ 	return q->GetBlockIdx();
+	$ } 
+	# int bidx = cgetbidx(IDAsClient* q);
+
+@function [bidx] = idasclient_setbidx(q, value)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDASCLIENT_SETBIDX Sets the block number
+%
+% [BIDX] = IDASCLIENT_SETBIDX(Q, VALUE) sets the block number according to VALUE
+% and returns the block number value just because it's cool.
+%
+% See also IDASCLIENT_GETBIDX, IDASCLIENT_INCBIDX
+	$ int csetbidx(IDAsClient* q, int value) {
+	$ 	return q->SetBlockIdx(value);
+	$ } 
+	# int bidx = csetbidx(IDAsClient* q, int value);
+
+@function [bidx] = idasclient_incbidx(q)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDASCLIENT_INCBIDX Increments the block number
+%
+% [BIDX] = IDASCLIENT_INCBIDX(Q) increments the block number and returns its
+% value
+%
+% See also IDASCLIENT_GETBIDX, IDASCLIENT_SETBIDX
+	$ int cincbidx(IDAsClient* q) {
+	$ 	return q->IncBlockIdx();
+	$ } 
+	# int bidx = cincbidx(IDAsClient* q);
+
+@function idmessage_absolutetic(q)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_ABSOLUTETIC Tics the absolute
+%
+% IDMESSAGE_ABSOLUTETIC(Q) tics the internal absolute absolute
+%
+% See also IDMESSAGE_ABSOLUTETOC, IDMESSAGE_ABSOLUTEGET
+	$ void absolutetic(IDMessage* q) {
+	$ 	q->absolute.Tic();
+	$ } 
+	# absolutetic(IDMessage* q);
+
+@function [toc] = idmessage_absolutetoc(q)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_ABSOLUTETOC Tocs the absolute
+%
+% [TOC] = IDMESSAGE_ABSOLUTETOC(Q) tocs the internal absolute absolute,
+% returning the time difference in milliseconds.
+%
+% See also IDMESSAGE_ABSOLUTETIC, IDMESSAGE_ABSOLUTEGET
+	$ double absolutetoc(IDMessage* q) {
+	$ 	return q->absolute.Toc();
+	$ } 
+	# double toc = absolutetoc(IDMessage* q);
+
+@function [stoc] = idmessage_absoluteget(q)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_ABSOLUTEGET Returns the absolute as string
+%
+% [TOC] = IDMESSAGE_ABSOLUTEGET(Q) returns the internal absolute absolute as a
+% string.
+%
+% See also IDMESSAGE_ABSOLUTETIC, IDMESSAGE_ABSOLUTETOC
+	$ void absoluteget(IDMessage* q, char* stoc) {
+	$	std::string cache;
+	$ 	q->absolute.Get(&cache);
+	$	strcpy(stoc, cache.c_str());
+	$ } 
+	stoc = '';
+	# absoluteget(IDMessage* q, inout cstring stoc[4096]);
+
+@function idmessage_relativetic(q)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_RELATIVETIC Tics the relative
+%
+% IDMESSAGE_RELATIVETIC(Q) tics the internal relative relative absolute
+%
+% See also IDMESSAGE_RELATIVETOC, IDMESSAGE_RELATIVEGET
+	$ void relativetic(IDMessage* q) {
+	$ 	q->relative.Tic();
+	$ } 
+	# relativetic(IDMessage* q);
+
+@function [toc] = idmessage_relativetoc(q)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_RELATIVETOC Tocs the relative
+%
+% [TOC] = IDMESSAGE_RELATIVETOC(Q) tocs the internal relative relative
+% absolute, returning the time difference in milliseconds.
+%
+% See also IDMESSAGE_RELATIVETIC, IDMESSAGE_RELATIVEGET
+	$ double relativetoc(IDMessage* q) {
+	$ 	return q->relative.Toc();
+	$ } 
+	# double toc = relativetoc(IDMessage* q);
+
+@function [stoc] = idmessage_relativeget(q)
+% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% Michele Tavella <michele.tavella@epfl.ch>
+%
+% IDMESSAGE_RELATIVEGET Returns the relative as string
+%
+% [TOC] = IDMESSAGE_RELATIVEGET(Q) returns the internal relative relative as a
+% string.
+%
+% See also IDMESSAGE_RELATIVETIC, IDMESSAGE_RELATIVETOC
+	$ void relativeget(IDMessage* q, char* stoc) {
+	$	std::string cache;
+	$ 	q->relative.Get(&cache);
+	$	strcpy(stoc, cache.c_str());
+	$ } 
+	stoc = '';
+	# relativeget(IDMessage* q, inout cstring stoc[4096]);

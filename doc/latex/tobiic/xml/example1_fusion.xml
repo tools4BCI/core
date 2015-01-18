@@ -1,0 +1,6 @@
+<tobiic version="0.1.1.0" frame="11">
+	<classifier name="smr+emg" description="SMR+EMG fusion" vtype="prob" ltype="custom">
+		<class label="left">0.654274</class>
+		<class label="right">0.345726</class>
+	</classifier>
+</tobiic>
