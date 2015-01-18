@@ -1,20 +1,19 @@
 /*
-	Copyright (C) 2011 Francesco Leotta <francescoleotta@hotmail.com>
-	Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
-	Michele Tavella <michele.tavella@epfl.ch>
+    Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+    Michele Tavella <michele.tavella@epfl.ch>
 
     This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of
+    the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
+    It is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+    GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Lesser General Public License
+    along with this file.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "TCTime.hpp"
@@ -38,15 +37,15 @@
 
 #include <sys/timeb.h>
 #ifdef _MSC_VER
-	#pragma warning(disable:4100) //disable 'unused parameter' warning
+  #pragma warning(disable:4100) //disable 'unused parameter' warning
 #endif
 int gettimeofday(struct timeval* tv, struct timezone * tzp)
 {
- 	struct __timeb32 systime;
- 	_ftime32_s(&systime);
+  struct __timeb32 systime;
+  _ftime32_s(&systime);
   tv->tv_sec = systime.time;
- 	tv->tv_usec = systime.millitm * 1000;
-	return 0;
+  tv->tv_usec = systime.millitm * 1000;
+  return 0;
 }
 
 // following code produces negative time values --> win7 32bit
@@ -61,21 +60,21 @@ int gettimeofday(struct timeval* tv, struct timezone * tzp)
 //	FILETIME ft;
 //	unsigned __int64 tmpres = 0;
 //	static int tzflag;
-// 
+//
 //	if (NULL != tv) {
 //		GetSystemTimeAsFileTime(&ft);
 //
 //		tmpres |= ft.dwHighDateTime;
 //		tmpres <<= 32;
 //		tmpres |= ft.dwLowDateTime;
-// 
+//
 //		// converting file time to unix epoch
-//    tmpres -= DELTA_EPOCH_IN_MICROSECS; 
+//    tmpres -= DELTA_EPOCH_IN_MICROSECS;
 //    tmpres /= 10;  /*convert into microseconds*/
 //    tv->tv_sec = (long)(tmpres / 1000000UL);
 //    tv->tv_usec = (long)(tmpres % 1000000UL);
 //	}
-// 
+//
 //	if (NULL != tz) {
 //		if (!tzflag) {
 //			_tzset();
@@ -84,7 +83,7 @@ int gettimeofday(struct timeval* tv, struct timezone * tzp)
 //		tz->tz_minuteswest = _timezone / 60;
 //		tz->tz_dsttime = _daylight;
 //	}
-// 
+//
 //	return 0;
 //}
 
@@ -102,12 +101,12 @@ int gettimeofday(struct timeval* tv, struct timezone * tzp)
 #endif
 
 void TCSleep(double ms) {
-	timeval tm;
-	tm.tv_sec = 0;
-	tm.tv_usec = (long)1000*ms;
+  timeval tm;
+  tm.tv_sec = 0;
+  tm.tv_usec = (long)1000*ms;
 #ifdef __MINGW32__
-	Sleep(ms);
+  Sleep(ms);
 #else
-	select(0, 0, 0, 0, &tm);
+  select(0, 0, 0, 0, &tm);
 #endif
 }

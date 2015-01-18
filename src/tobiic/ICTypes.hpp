@@ -3,17 +3,17 @@
     Michele Tavella <michele.tavella@epfl.ch>
 
     This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of
+    the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
+    It is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+    GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Lesser General Public License
+    along with this file.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef ICTYPES_HPP
@@ -79,7 +79,7 @@ typedef std::string ICLabel;
 
 #endif
 
-/** 
+/**
  * \defgroup tobicore TOBI Core library
  * \brief The TOBI Core library provides some basic tools used by the remaining
  * components of tobicore, such as threading stuff, time and the very useful
@@ -104,20 +104,20 @@ typedef std::string ICLabel;
  * The tobicore project provides a total of four C++ libraries that implement
  * some concepts of the <a href="http://www.tobi-project.org">TOBI</a> hBCI design.
  *
- * \subsection sec_intro1 libtobicore 
+ * \subsection sec_intro1 libtobicore
  * Low-level library that provides basic functionalities, such as timestamp
- * management (via TCTimestamp) and the TCBlock base class. 
+ * management (via TCTimestamp) and the TCBlock base class.
  *
- * \subsection sec_intro2 libtobiic 
+ * \subsection sec_intro2 libtobiic
  * Implements the TOBI iC classifier output encoding/decoding via ICMessage.
  *
- * \subsection sec_intro3 libtobiid 
+ * \subsection sec_intro3 libtobiid
  * Implements the TOBI iD events encoding/decoding via IDMessage.
  *
  * \subsection sec_intro4 libtobiplatform
  * Provides working and cross-platform implementations of some TOBI components,
  * such as an iC client/server class (TPiC) and an iD client class (TPiD).
- * 
+ *
  * \subsection sec_intro5 tobicoremat: mextobicore, mextobiic and mextobiid
  * tobicoremat provides MEX interfaces to a large set of the tobicore
  * functionalities. The MEX interfaces are not documented here since a
@@ -126,7 +126,7 @@ typedef std::string ICLabel;
  *
  * \section sec_resources Resources
  * - <a href="http://www.tobi-project.org">TOBI project website</a>: general
- * resources about the big BCI project responsible about the hBCI design 
+ * resources about the big BCI project responsible about the hBCI design
  * - <a href="http://www..org">BCI standards website</a>: lots of information
  * about hBCI and BCI standards in general
  * - <a href="http://files.mtvl.org/projects/tobicore/doc/libtobiic.pdf">TOBI iC
@@ -156,7 +156,7 @@ typedef std::string ICLabel;
  *
  * To compile for Microsoft Windows, you also need:
  * - MinGW + Msys: I suggest you download the "mingw-get-install" installer and
- * install the latest official package list. 
+ * install the latest official package list.
  * - <a href="http://gnumex.sourceforge.net">Gnumex</a>
  *
  * \subsection sec_install_linux Linux
@@ -170,7 +170,7 @@ typedef std::string ICLabel;
  * make check   # to build the examples
  * make html    # to build the documentation
  * </PRE>
- * 
+ *
  * \subsection sec_install_mingw MinGW
  * <PRE>
  * autoreconf -i
@@ -214,7 +214,7 @@ typedef std::string ICLabel;
 /*! \example icexample.cpp
  *
  * \ingroup tobiic
- * 
+ *
  * Comprehensive TOBI iC example, using all classes.
  */
 

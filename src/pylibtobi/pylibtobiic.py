@@ -1,19 +1,18 @@
 # pylibtobiic.py -
-# Copyright (C) 2010 Andrew Ramsay 
+# Copyright (C) 2010 Andrew Ramsay
 #
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as
+# published by the Free Software Foundation, either version 3 of
+# the License, or (at your option) any later version.
+
+# It is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program; if not, write to the Free Software Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+# GNU Lesser General Public License for more details.
+
+# You should have received a copy of the GNU Lesser General Public License
+# along with this file.  If not, see <http://www.gnu.org/licenses/>.
 
 #   This is a Python port of TOBI "interface C"
 
@@ -87,7 +86,7 @@ class ICSetClass:
         r = self.map[lclass]
         del self.map[lclass]
         return r
-    
+
     def Get(self, lclass):
         if not isinstance(lclass, basestring):
             if not lclass:
@@ -115,7 +114,7 @@ class ICSetClass:
     def Destroy(self):
         self.Clear()
 
-# 
+#
 #   ICSetClassifier
 #
 class ICSetClassifier:
@@ -207,7 +206,7 @@ class ICMessage(TCBlock):
                 v2 = v.classes.map[k2]
                 print "   --> Class Value=%.6f Label=%s" % (v2.GetValue(), v2.GetLabel())
 
-# 
+#
 #   ICClass
 #
 class ICClass:
@@ -236,7 +235,7 @@ class ICClass:
     def GetChLabel(self):
         return self._label
 
-# 
+#
 #   ICClassifier
 #
 class ICClassifier:
@@ -338,7 +337,7 @@ class ICClassifier:
             cvtype = ICClassifier.ValueCLbl
         elif vtype == ICTYPES_ENTRY_RCOE:
             cvtype = ICClassifier.ValueRCoe
-        
+
         return cvtype
 
     @staticmethod
@@ -483,7 +482,7 @@ class ICSerializer:
             raise TCException("iC root node not found!", '%s::%s' % (self.__class__.__name__, current_function()))
 
         root = doc.documentElement
-    
+
         # check version
         if not root.hasAttribute(ICMESSAGE_VERSIONNODE) or root.getAttribute(ICMESSAGE_VERSIONNODE) != ICMESSAGE_VERSION:
             raise TCException("iC version mismatch", '%s::%s' % (self.__class__.__name__, current_function()))
@@ -536,5 +535,5 @@ class ICSerializer:
                 else:
                     cptr.classes.Get(klabel).SetValue(float(tvalue))
 
-        return 
+        return
 

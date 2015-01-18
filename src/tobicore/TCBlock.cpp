@@ -3,47 +3,47 @@
     Michele Tavella <michele.tavella@epfl.ch>
 
     This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of
+    the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
+    It is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+    GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Lesser General Public License
+    along with this file.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TCBLOCK_CPP 
-#define TCBLOCK_CPP 
+#ifndef TCBLOCK_CPP
+#define TCBLOCK_CPP
 
-#include "TCBlock.hpp" 
+#include "TCBlock.hpp"
 
 TCBlock::TCBlock(void) {
-	this->_blockidx = TCBlock::BlockIdxUnset;
+  this->_blockidx = TCBlock::BlockIdxUnset;
 }
 
 int TCBlock::SetBlockIdx(int fidx) {
-	this->_blockidx = fidx;
-	return this->_blockidx;
+  this->_blockidx = fidx;
+  return this->_blockidx;
 }
 
 int TCBlock::GetBlockIdx(void) const {
-	return this->_blockidx;
+  return this->_blockidx;
 }
 
 int TCBlock::IncBlockIdx(void) {
-	return ++this->_blockidx;
+  return ++this->_blockidx;
 }
 
 void TCBlock::UnsetBlockIdx(void) {
-	this->_blockidx = TCBlock::BlockIdxUnset;
+  this->_blockidx = TCBlock::BlockIdxUnset;
 }
 
 bool TCBlock::IsSetBlockIdx(void) const {
-	return(this->_blockidx >= 0);
+  return(this->_blockidx >= 0);
 }
 
 #endif

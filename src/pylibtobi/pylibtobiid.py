@@ -1,3 +1,16 @@
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as
+# published by the Free Software Foundation, either version 3 of
+# the License, or (at your option) any later version.
+
+# It is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+
+# You should have received a copy of the GNU Lesser General Public License
+# along with this file.  If not, see <http://www.gnu.org/licenses/>.
+
 from xml.dom.minidom import Document
 from xml.dom.minidom import parseString
 from inspect import stack
@@ -44,7 +57,7 @@ class IDAsClient(TCBlock):
 
     def Add(self, message, updatefidx = False):
         self.__queue.append(message)
-        if updatefidx: 
+        if updatefidx:
             TCBlock.SetBlockIdx(self, message.GetBlockIdx())
 
     def Get(message, idftype, idevent, direction):
@@ -53,7 +66,7 @@ class IDAsClient(TCBlock):
 
         if direction != IDAsClient.BlockAll and not TCBlock.IsSetBlockIdx(self):
             raise TCException("Block number must be set for searching Prev/Next", '%s.%s' % (self.__class__.__name__, current_function()))
-    
+
         if self.Size() == 0:
             return None
 
@@ -74,8 +87,8 @@ class IDAsClient(TCBlock):
                 fmatch = (t_blockidx < TCBlock.GetBlockIdx(self))
             else: # BlockAll
                 fmatch = True
-        
-            
+
+
             # Match type
             if idftype == IDMessage.FamilyBiosig:
                 tmatch = (idftype == t_type)
@@ -105,7 +118,7 @@ class IDAsClient(TCBlock):
         for i in self.__queue:
             i.Dump()
 
-# 
+#
 # IDMessage
 #
 
@@ -153,7 +166,7 @@ class IDMessage(TCBlock):
             return IDTYPES_FAMILY_BIOSIG
         elif self.__familyType == IDMessage.FamilyCustom:
             return IDTYPES_FAMILY_CUSTOM
-        
+
         return IDTYPES_FAMILY_UNDEF
 
     def SetFamilyType(self, ftype):
@@ -193,7 +206,7 @@ class IDMessage(TCBlock):
             return IDMessage.FamilyBiosig
         else:
             return IDMessage.FamilyUndef
-    
+
 #
 # IDSerializer
 #

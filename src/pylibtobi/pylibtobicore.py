@@ -1,27 +1,26 @@
 # pylibtobicore.py -
-# Copyright (C) 2011 Andrew Ramsay 
+# Copyright (C) 2011 Andrew Ramsay
 #
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as
+# published by the Free Software Foundation, either version 3 of
+# the License, or (at your option) any later version.
+
+# It is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program; if not, write to the Free Software Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+# GNU Lesser General Public License for more details.
+
+# You should have received a copy of the GNU Lesser General Public License
+# along with this file.  If not, see <http://www.gnu.org/licenses/>.
 
 # 	This is a Python port of the "tobicore" library from EPFL.
 
 import time, math, re
 
-# 
+#
 #   TCTypes
-# 
+#
 TCSTATUS_VERSION        = "0.1.0.0"
 TCSTATUS_ROOTNODE       = "tcstatus"
 TCSTATUS_VERSIONNODE    = "version"
@@ -75,7 +74,7 @@ class TCTimestamp:
 
     def Get(self):
         return '%ld,%ld' % (self.__timestamp.sec, self.__timestamp.usec)
-        
+
     def Set(self, timestamp):
         if isinstance(timestamp, TCTimeval):
             self.__timestamp.sec = timestamp.sec
@@ -87,9 +86,9 @@ class TCTimestamp:
             print '[ERROR] TCTimestamp.Set() incorrect data type!', type(timestamp)
             return
 
-# 
+#
 #   TCException
-# 
+#
 class TCException(Exception):
     def __init__(self, info, caller = "undef"):
         Exception.__init__(self, info, caller)
@@ -141,7 +140,7 @@ class TCBlock:
 
 #
 #   TCLanguage
-# 
+#
 class TCLanguage:
     IA                  = 1
     IB                  = 2
@@ -169,7 +168,7 @@ class TCLanguage:
 
     def IsStatus(self, message):
         res = re.search('<tcstatus \S+ component="(\d+)" status="(\d+)"/>', message)
-        
+
         if len(res.groups()) != 2:
             return (False, TCLanguage.ErrorGeneric, TCLanguage.ErrorGeneric)
 

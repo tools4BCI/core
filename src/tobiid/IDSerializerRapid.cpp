@@ -3,17 +3,17 @@
     Michele Tavella <michele.tavella@epfl.ch>
 
     This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of
+    the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
+    It is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+    GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Lesser General Public License
+    along with this file.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "IDSerializerRapid.hpp"
@@ -78,7 +78,7 @@ std::string* IDSerializerRapid::Serialize(std::string* buffer) {
   IDSerializer::message->relative.Get(&reference);
 
   // Root node
-  xml_node<>* root = doc.allocate_node(node_element, IDMESSAGE_ROOTNODE);
+  xml_node<>* root = doc.allocate_node(node_element, IDMESSAGE_ROOTNODE_NEW);
   root->append_attribute(doc.allocate_attribute(IDMESSAGE_VERSIONNODE,
         IDMESSAGE_VERSION));
   root->append_attribute(doc.allocate_attribute(IDMESSAGE_DESCRIPTIONNODE,
@@ -130,8 +130,12 @@ std::string* IDSerializerRapid::Deserialize(std::string* const buffer)
     doc.parse<parse_declaration_node | parse_no_data_nodes>(&xml_copy[0]);
 
   xml_node<>* rootnode = doc.first_node(IDMESSAGE_ROOTNODE);
+
   if(rootnode == NULL)
-    throw TCException("iD root node not found",
+    rootnode = doc.first_node(IDMESSAGE_ROOTNODE_NEW);
+
+  if(rootnode == NULL)
+    throw TCException("TiD root node not found",
                                                #ifdef _WIN32
                                                        __FUNCSIG__
                                                #else
