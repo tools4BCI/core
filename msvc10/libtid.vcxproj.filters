@@ -32,9 +32,6 @@
     <ClCompile Include="..\src\libtid\tcp_connection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\libtid\sdl_tid_client.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\libtid\tid_client_base.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -86,9 +83,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\libtid\misc\databuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\libtid\sdl_tid_client.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\libtid\tid_client_base.h">

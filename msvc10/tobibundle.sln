@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tobicore", "tobicore.vcxproj", "{871AD90B-DA76-9140-1949-8933F5D40C76}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tobiic", "tobiic.vcxproj", "{C5FC3D5D-395D-0316-2224-FC985E2CC4CA}"
@@ -106,12 +106,10 @@ Global
 		{1F4C47A7-D8A5-4F75-93EA-4EA78B9501A2}.Release|Win32.Build.0 = Release|Win32
 		{1F4C47A7-D8A5-4F75-93EA-4EA78B9501A2}.Release|x64.ActiveCfg = Release|x64
 		{1F4C47A7-D8A5-4F75-93EA-4EA78B9501A2}.Release|x64.Build.0 = Release|x64
-		{A14EB8CB-B036-4693-9B5F-764593360784}.Debug|Win32.ActiveCfg = Debug|Win32
-		{A14EB8CB-B036-4693-9B5F-764593360784}.Debug|Win32.Build.0 = Debug|Win32
+		{A14EB8CB-B036-4693-9B5F-764593360784}.Debug|Win32.ActiveCfg = Release|Win32
 		{A14EB8CB-B036-4693-9B5F-764593360784}.Debug|x64.ActiveCfg = Debug|x64
 		{A14EB8CB-B036-4693-9B5F-764593360784}.Debug|x64.Build.0 = Debug|x64
 		{A14EB8CB-B036-4693-9B5F-764593360784}.Release|Win32.ActiveCfg = Release|Win32
-		{A14EB8CB-B036-4693-9B5F-764593360784}.Release|Win32.Build.0 = Release|Win32
 		{A14EB8CB-B036-4693-9B5F-764593360784}.Release|x64.ActiveCfg = Release|x64
 		{A14EB8CB-B036-4693-9B5F-764593360784}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
