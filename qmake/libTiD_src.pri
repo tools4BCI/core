@@ -1,37 +1,37 @@
 
 HEADERS += \
-    tid_server.h \
-    tid_exceptions.h \
-    tid_connection.h \
-    tcp_connection.h \
-    input_stream_socket.h \
-    tid_client_base.h \
-    tid_client.h \
-    sdl_tid_client.h \
-    tcp_server.h \
-    input_stream.h \
-    messages/tid_message_types.h \
-    messages/tid_message_tags_1_0.h \
-    messages/tid_message_parser_1_0.h \
-    messages/tid_message_parser.h \
-    messages/tid_message_builder_1_0.h \
-    messages/tid_message_builder.h \
-    messages/tid_message.h
+    ../src/libtid/tid_server.h \
+    ../src/libtid/tid_exceptions.h \
+    ../src/libtid/tid_connection.h \
+    ../src/libtid/tcp_connection.h \
+    ../src/libtid/input_stream_socket.h \
+    ../src/libtid/tid_client_base.h \
+    ../src/libtid/tid_client.h \
+    ../src/libtid/sdl_tid_client.h \
+    ../src/libtid/tcp_server.h \
+    ../src/libtid/input_stream.h \
+    ../src/libtid/messages/tid_message_types.h \
+    ../src/libtid/messages/tid_message_tags_1_0.h \
+    ../src/libtid/messages/tid_message_parser_1_0.h \
+    ../src/libtid/messages/tid_message_parser.h \
+    ../src/libtid/messages/tid_message_builder_1_0.h \
+    ../src/libtid/messages/tid_message_builder.h \
+    ../src/libtid/messages/tid_message.h
 
 contains( DEFINES, LPT_TEST )::HEADERS += LptTools/LptTools.h
 
 #---------------------------
 
 SOURCES += \
-    tid_server.cpp \
-    tid_connection.cpp \
-    tcp_connection.cpp \
-    input_stream_socket.cpp \
-    tid_client_base.cpp \
-    tid_client.cpp \
-    sdl_tid_client.cpp \
-    tcp_server.cpp \
-    messages/tid_message_parser_1_0.cpp
+    ../src/libtid/tid_server.cpp \
+    ../src/libtid/tid_connection.cpp \
+    ../src/libtid/tcp_connection.cpp \
+    ../src/libtid/input_stream_socket.cpp \
+    ../src/libtid/tid_client_base.cpp \
+    ../src/libtid/tid_client.cpp \
+    ../src/libtid/sdl_tid_client.cpp \
+    ../src/libtid/tcp_server.cpp \
+    ../src/libtid/messages/tid_message_parser_1_0.cpp
 
 unix {
   contains( DEFINES, LPT_TEST )::SOURCES += LptTools/LptToolsLinux.cpp

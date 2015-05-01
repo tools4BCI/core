@@ -25,19 +25,27 @@ CONFIG( debug, debug|release ) {
 #DEFINES += TIMING_TEST
 #DEFINES += LPT_TEST
 
-TARGET = tid
+#TEMPLATE = subdirs
+SUBDIRS = ../src/libtid/
 
+TARGET = tid
 INCLUDEPATH += ../src/libtid \
                ../src
+
+#INCLUDEPATH += E:/local/boost_1_58_0
+#LIBS += "-LE:/local/boost_1_58_0/lib32-msvc-11.0"
+#LIBS += "-L../msvc10/lib/tobicore/Win32/Debug" -ltobicore
 
 DEPENDPATH += $$INCLUDEPATH
 #INCLUDEPATH += extern/include
 
 
+QMAKE_CXXFLAGS_RELEASE -= -O1
+QMAKE_CXXFLAGS_RELEASE -= -O2
+QMAKE_CXXFLAGS_RELEASE *= -O3
 
-
-unix:QMAKE_CXXFLAGS += -pedantic -fPIC
-QMAKE_CXXFLAGS_WARN_ON += -Wall \
+unix:QMAKE_CXXFLAGS += -pedantic -fPIC -mtune=core2 -std=c++11
+unix:QMAKE_CXXFLAGS_WARN_ON += -Wall \
     -pedantic
 
 #--------------------------------------------------------------------

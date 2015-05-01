@@ -12,16 +12,16 @@ CONFIG( debug, debug|release ) {
     DEFINES += DEBUG
 }
 
-DEFINES += \
-SKIP_TOBIID_SERIALIZE_TEST \
-SKIP_TOBIID_DESERIALIZE_TEST \
-SKIP_LIBTID_CLIENT_SEND_TEST \
-SKIP_LIBTID_CLIENT_RECV_TEST \
-SKIP_LIBTID_LOCALHOST_SEND_RECEIVE_TEST\
-#SKIP_LIBTID_SERVER_DISPATCH_TEST \
-SKIP_LIBTID_REMOTE_SEND_RECEIVE_TEST\
-SKIP_LIBTID_LPT_TEST\
-SKIP_STREAM_PARSING_TEST
+#DEFINES += \
+#SKIP_TOBIID_SERIALIZE_TEST \
+#SKIP_TOBIID_DESERIALIZE_TEST \
+#SKIP_LIBTID_CLIENT_SEND_TEST \
+#SKIP_LIBTID_CLIENT_RECV_TEST \
+#SKIP_LIBTID_LOCALHOST_SEND_RECEIVE_TEST\
+##SKIP_LIBTID_SERVER_DISPATCH_TEST \
+#SKIP_LIBTID_REMOTE_SEND_RECEIVE_TEST\
+#SKIP_LIBTID_LPT_TEST\
+#SKIP_STREAM_PARSING_TEST
 
 
 QT -= core \
@@ -32,39 +32,50 @@ INCLUDEPATH += ../src/libtid \
                ../src/tests
 DEPENDPATH += $$INCLUDEPATH
 
-GCC_4_7_VAR = $$[USE_GCC_4.7]
+#GCC_4_7_VAR = $$[USE_GCC_4.7]
 
-contains(GCC_4_7_VAR, 1){
-    message( Using GCC 4.7 + optimizations)
-    unix:QMAKE_CXX = /usr/bin/g++-4.7
-    unix:QMAKE_CXXFLAGS_RELEASE = -O3 -mtune=core2
-}
+#contains(GCC_4_7_VAR, 1){
+#    message( Using GCC 4.7 + optimizations)
+#    unix:QMAKE_CXX = /usr/bin/g++-4.7
+#    unix:QMAKE_CXXFLAGS_RELEASE = -O3 -mtune=core2
+#}
 
 #QMAKE_CXXFLAGS += -fprofile-arcs -ftest-coverage
 #QMAKE_LFLAGS += -fprofile-arcs -ftest-coverage
 #LIBS += -lgcov
 
+unix:QMAKE_CXXFLAGS += -pedantic -fPIC -mtune=core2 -std=c++11
+unix:QMAKE_CXXFLAGS_WARN_ON += -Wall \
+    -pedantic
+
+
+QMAKE_CXXFLAGS_RELEASE -= -O1
+QMAKE_CXXFLAGS_RELEASE -= -O2
+QMAKE_CXXFLAGS_RELEASE *= -O3
+
+
 # -----------------------------------------------------------------------
 
 SOURCES += \
-    tests/main.cpp\
-    tests/statistics.cpp\
-    tests/tobiid_timing_tests.cpp \
-    tests/libtid_client_timing_tests.cpp \
-    tests/timed_input_stream_socket.h \
-    tests/libtid_server_timing_tests.cpp \
-    tests/libtid_send_receive_timing_test.cpp \
-    tests/timing_test_helpers.cpp \
-    tests/libtid_send_LPT_test.cpp \
-    tests/stream_parsing_tests.cpp
+    ../src/tests/main.cpp\
+    ../src/tests/statistics.cpp\
+    ../src/tests/tobiid_timing_tests.cpp \
+    ../src/tests/libtid_client_timing_tests.cpp \
+    ../src/tests/timed_input_stream_socket.h \
+    ../src/tests/libtid_server_timing_tests.cpp \
+    ../src/tests/libtid_send_receive_timing_test.cpp \
+    ../src/tests/timing_test_helpers.cpp \
+    ../src/tests/libtid_send_LPT_test.cpp \
+    ../src/tests/stream_parsing_tests.cpp
 
 HEADERS += \
-    tests/statistics.h \
-    tests/tid_message_vector_builder.h \
-    tests/timed_tid_client.h \
-    tests/timed_tid_server.h \
-    tests/timed_tid_connection.h \
-    tests/timing_test_helpers.h
+    ../src/tests/statistics.h \
+    ../src/tests/tid_message_vector_builder.h \
+    ../src/tests/timed_tid_client.h \
+    ../src/tests/timed_tid_server.h \
+    ../src/tests/timed_tid_connection.h \
+    ../src/tests/timing_test_helpers.h \
+    ../src/tests/timing_values.h
 #    tests/LPT_tid_server.h \
 #    tests/LPT_tid_client.h \
 #    tests/LPT_tid_connection.h
