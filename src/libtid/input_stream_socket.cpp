@@ -23,6 +23,9 @@
 #include <boost/bind.hpp>
 #include <boost/current_function.hpp>
 
+#include <iostream>
+#include <thread>
+
 using std::string;
 
 namespace TiD
@@ -33,7 +36,7 @@ InputStreamSocket::InputStreamSocket (boost::asio::ip::tcp::socket& socket)
   : socket_ (socket), last_pos_(0)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   str_buffer_ = new std::string;
@@ -50,11 +53,8 @@ InputStreamSocket::InputStreamSocket (boost::asio::ip::tcp::socket& socket)
 InputStreamSocket::~InputStreamSocket ()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
-
-  boost::system::error_code ec;
-  socket_.close(ec);
 
   if(str_buffer_)
     delete str_buffer_;
@@ -139,7 +139,7 @@ InputStreamSocket::~InputStreamSocket ()
 void InputStreamSocket::readUntil (const std::string&  delimiter, std::string* str)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl << std::flush;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl << std::flush;
   #endif
 
   str_buffer_->reserve(2048);
@@ -205,7 +205,7 @@ void InputStreamSocket::readUntil (const std::string&  delimiter, std::string* s
 void InputStreamSocket::fustyreadUntil (const std::string& delimiter, std::string* str)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   std::istream is(&stream_buffer_);

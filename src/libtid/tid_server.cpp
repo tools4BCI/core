@@ -29,6 +29,7 @@
 #include "tobiid/IDMessage.hpp"
 #include "messages/tid_message_builder_1_0.h"
 
+#include <thread>
 
 using std::cout;
 using std::cerr;
@@ -45,7 +46,7 @@ TiDServer::TiDServer()
     assume_zero_network_delay_(0)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   messages_.reserve(100);
@@ -58,7 +59,7 @@ TiDServer::TiDServer()
 TiDServer::~TiDServer ()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   if(running_)
@@ -73,7 +74,7 @@ TiDServer::~TiDServer ()
 void TiDServer::start()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
   listen();
   running_ = true;
@@ -84,7 +85,7 @@ void TiDServer::start()
 void TiDServer::stop()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
   running_ = false;
 
@@ -94,9 +95,11 @@ void TiDServer::stop()
     //    it->second->socket()
     it->second->stop();
   }
+
   erase_mutex_.lock();
   connections_.clear();
   erase_mutex_.unlock();
+
   dispatch_mutex_.lock();
   messages_.clear();
   dispatch_mutex_.unlock();
@@ -107,7 +110,7 @@ void TiDServer::stop()
 bool TiDServer::newMessagesAvailable()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   bool available = false;
@@ -123,7 +126,7 @@ bool TiDServer::newMessagesAvailable()
 void TiDServer::getLastMessages(std::vector<IDMessage>& messages)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   dispatch_mutex_.lock();
@@ -137,7 +140,7 @@ void TiDServer::getLastMessages(std::vector<IDMessage>& messages)
 void TiDServer::clearMessages()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   dispatch_mutex_.lock();
@@ -150,7 +153,7 @@ void TiDServer::clearMessages()
 void TiDServer::reserveNrOfMsgs (size_t expected_nr_of_msgs)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   dispatch_mutex_.lock();
@@ -164,12 +167,12 @@ void TiDServer::handleAccept(const TCPConnection::pointer& new_connection,
       const boost::system::error_code& error)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   if (error)
   {
-    std::cerr << BOOST_CURRENT_FUNCTION << error << std::endl;
+    std::cerr << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION << error << std::endl;
     return;
   }
 
@@ -217,7 +220,7 @@ void TiDServer::handleAccept(const TCPConnection::pointer& new_connection,
 void TiDServer::clientHasDisconnected(const TiDConnection::ConnectionID& id)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   if(!running_)
@@ -225,13 +228,15 @@ void TiDServer::clientHasDisconnected(const TiDConnection::ConnectionID& id)
 
   dispatch_mutex_.lock();
   erase_mutex_.lock();
-  std::cout << "  ** TiD Server: Connection to client @";
-  cout << id.second << ":" << id.first << " has been closed.";
+
+  //std::cout << "  ** TiD Server: Connection to client @";
+  //cout << id.second << ":" << id.first << " has been closed.";
   connections_.erase(id);
-  std::cout << " -- Connected clients: " << connections_.size() << std::endl << std::flush;
+  //std::cout << " -- Connected clients: " << connections_.size() << std::endl << std::flush;
 
   erase_mutex_.unlock();
   dispatch_mutex_.unlock();
+
 }
 
 //-----------------------------------------------------------------------------
@@ -239,7 +244,7 @@ void TiDServer::clientHasDisconnected(const TiDConnection::ConnectionID& id)
 void TiDServer::dispatchMsg(IDMessage& msg, const TiDConnection::ConnectionID& src_id)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   if(!running_)
@@ -262,7 +267,7 @@ void TiDServer::dispatchMsg(IDMessage& msg, const TiDConnection::ConnectionID& s
     msg.relative.Set(&current_timeval_);
   }
 
-
+  //msg.Dump();
 
   current_xml_string_.clear();
   msg_builder_->buildTiDMessage(msg, current_xml_string_);
@@ -281,7 +286,7 @@ void TiDServer::dispatchMsg(IDMessage& msg, const TiDConnection::ConnectionID& s
 void TiDServer::update(boost::uint64_t rel_timestamp, boost::uint64_t packet_nr)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   dispatch_mutex_.lock();

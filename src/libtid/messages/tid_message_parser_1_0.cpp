@@ -22,6 +22,7 @@
 //#include "tid_exceptions.h"
 
 #include <assert.h>
+#include <thread>
 
 #include <iostream>
 #include <boost/algorithm/string/trim.hpp>
@@ -46,7 +47,7 @@ namespace TiD
 TiDMessageParser10::TiDMessageParser10()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
 
@@ -72,7 +73,7 @@ TiDMessageParser10::TiDMessageParser10()
 TiDMessageParser10::~TiDMessageParser10()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   if(serializer_)
@@ -88,7 +89,7 @@ TiDMessageParser10::~TiDMessageParser10()
 void TiDMessageParser10::parseMessage (IDMessage* msg, InputStream* stream)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   xml_string_->clear();

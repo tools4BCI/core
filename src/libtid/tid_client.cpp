@@ -19,6 +19,7 @@
 */
 
 #include "tid_client.h"
+#include <thread>
 
 namespace TiD
 {
@@ -30,7 +31,7 @@ TiDClient::TiDClient()
     receive_thread_(0), io_service_thread_(0), io_service_thread_2_(0)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
 
@@ -41,7 +42,7 @@ TiDClient::TiDClient()
 TiDClient::~TiDClient()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   if(io_service_thread_)
@@ -70,7 +71,7 @@ TiDClient::~TiDClient()
 void TiDClient::startReceiving(bool throw_on_error)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   stopReceiving();
@@ -108,7 +109,7 @@ void TiDClient::startReceiving(bool throw_on_error)
 void TiDClient::stopReceiving()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   if(!socket_->is_open())

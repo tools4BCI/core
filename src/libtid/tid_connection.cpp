@@ -28,6 +28,8 @@
 #include <boost/current_function.hpp>
 #include <boost/asio/error.hpp>
 
+#include <thread>
+
 using std::cerr;
 using std::cout;
 using std::endl;
@@ -46,7 +48,7 @@ TiDConnection::TiDConnection(const TCPConnection::pointer& tcp_conn_handle,
    msg_string_send_buffer_(128)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   //message_buffer_.reserve(TID_MESSAGE_BUFFER_SIZE__IN_BYTE);
@@ -67,13 +69,13 @@ TiDConnection::TiDConnection(const TCPConnection::pointer& tcp_conn_handle,
 TiDConnection::~TiDConnection()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
-//    std::cout << "   -->  " << BOOST_CURRENT_FUNCTION << " -- sent msgs: " << nr_sent_msgs_;
-//    std::cout << "   ***  " << " msg buffer size: " << msg_string_send_buffer_.size() << std::endl;
+  //    std::cout << "   -->  " << BOOST_CURRENT_FUNCTION << " -- sent msgs: " << nr_sent_msgs_;
+  //    std::cout << "   ***  " << " msg buffer size: " << msg_string_send_buffer_.size() << std::endl;
 
-    stop();
+  stop();
 
   if(state_ != State_ConnectionClosed)
     close();
@@ -110,7 +112,7 @@ TiDConnection::~TiDConnection()
 void TiDConnection::run()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   state_ = State_Running;
@@ -126,13 +128,15 @@ void TiDConnection::run()
 void TiDConnection::stop()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   if(state_ != State_Running || state_ != State_ConnectionClosed)
     return;
 
-  state_ = State_Stopped;
+  //#ifdef WIN32
+    state_ = State_Stopped;
+  //#endif
   receive_thread_->interrupt();
 
   boost::system::error_code error;
@@ -156,7 +160,7 @@ void TiDConnection::stop()
 void TiDConnection::close()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   if(state_ == State_ConnectionClosed)
@@ -179,7 +183,7 @@ void TiDConnection::close()
 void TiDConnection::receive()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   while(state_ == State_Running)
@@ -231,7 +235,7 @@ void TiDConnection::handleWrite(const boost::system::error_code& error,
                                   std::size_t bytes_transferred)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<"--"<< connection_id_.second << ":" <<connection_id_.first<< std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<"--"<< connection_id_.second << ":" <<connection_id_.first<< std::endl;
   #endif
 
   if (error && (state_ == State_Running) )
@@ -264,7 +268,7 @@ void TiDConnection::handleWrite(const boost::system::error_code& error,
 void TiDConnection::sendMsg(IDMessage& msg)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   if(msg_string_send_buffer_.full())
@@ -305,7 +309,7 @@ void TiDConnection::sendMsg(IDMessage& msg)
 void TiDConnection::sendMsg(const std::string xml_string)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   boost::system::error_code error;
@@ -337,7 +341,7 @@ void TiDConnection::sendMsg(const std::string xml_string)
 void TiDConnection::asyncSendMsg(IDMessage& msg)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   if(msg_string_send_buffer_.full())
@@ -368,7 +372,7 @@ void TiDConnection::asyncSendMsg(IDMessage& msg)
 void TiDConnection::asyncSendMsg(const std::string xml_string)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   boost::asio::async_write(tcp_connection_->socket(),

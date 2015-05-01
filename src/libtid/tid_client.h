@@ -32,6 +32,7 @@ namespace TiD
 
 class TiDClient : public TiDClientBase
 {
+  friend class TimedTiDClient;
   public:
     TiDClient();
     virtual ~TiDClient();

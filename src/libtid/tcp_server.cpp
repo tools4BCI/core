@@ -27,6 +27,7 @@
 
 // STL
 #include <sstream>
+#include <thread>
 
 // Boost
 #include <boost/bind.hpp>
@@ -46,7 +47,7 @@ TCPServer::TCPServer()
   : acceptor_(io_service_),io_service_thread_(0)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 }
 
@@ -55,7 +56,7 @@ TCPServer::TCPServer()
 TCPServer::~TCPServer()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   io_service_.stop();
@@ -75,7 +76,7 @@ TCPServer::~TCPServer()
 void TCPServer::bind(uint16_t port)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   try
@@ -96,7 +97,7 @@ void TCPServer::bind(uint16_t port)
 void TCPServer::bind(const std::string& address, uint16_t port)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
   try
   {
@@ -121,7 +122,7 @@ void TCPServer::bind(const std::string& address, uint16_t port)
 void TCPServer::listen()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   acceptor_.listen();
@@ -131,6 +132,7 @@ void TCPServer::listen()
   #ifdef WIN32
     SetPriorityClass(io_service_thread_->native_handle(),  REALTIME_PRIORITY_CLASS);
     SetThreadPriority(io_service_thread_->native_handle(), THREAD_PRIORITY_HIGHEST );
+    //NtSetTimerResolution(2, True, 0);
   #endif
 }
 
@@ -139,7 +141,7 @@ void TCPServer::listen()
 void TCPServer::startAccept()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   TCPConnection::pointer new_connection = TCPConnection::create(io_service_);

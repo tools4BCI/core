@@ -21,6 +21,7 @@
 #include "tcp_connection.h"
 #include <boost/current_function.hpp>
 #include <iostream>
+#include <thread>
 
 namespace TiD
 {
@@ -30,7 +31,7 @@ namespace TiD
 TCPConnection::~TCPConnection()
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   boost::system::error_code error;
@@ -48,7 +49,7 @@ TCPConnection::~TCPConnection()
 TCPConnection::pointer TCPConnection::create(boost::asio::io_service& io_service)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   return pointer(new TCPConnection(io_service));
@@ -59,7 +60,7 @@ TCPConnection::pointer TCPConnection::create(boost::asio::io_service& io_service
 std::string TCPConnection::endpointToString(const boost::asio::ip::tcp::endpoint& endpoint)
 {
   #ifdef DEBUG
-    std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
   std::ostringstream ss;

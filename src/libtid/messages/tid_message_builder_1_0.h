@@ -27,6 +27,7 @@
 
 #include <boost/lexical_cast.hpp>
 #include <iostream>
+#include <thread>
 
 #include <tobiid/IDSerializerRapid.hpp>
 #include <tobicore/TCException.hpp>
@@ -41,7 +42,7 @@ class TiDMessageBuilder10 : public TiDMessageBuilder
     TiDMessageBuilder10()
     {
       #ifdef DEBUG
-        std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+        std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
       #endif
 
       serializer_ = new IDSerializerRapid();
@@ -76,7 +77,7 @@ class TiDMessageBuilder10 : public TiDMessageBuilder
     virtual void buildTiDMessage (IDMessage& message, std::string& xml_string)
     {
       #ifdef DEBUG
-        std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+        std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
       #endif
 
       try
