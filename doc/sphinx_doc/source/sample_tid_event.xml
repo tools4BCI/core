@@ -1,2 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<tobiid version="0.0.2.0" description="feedback" frame="98" family="biosig" event="781"/>
+<tid version="0.3.0.0"
+description="beep"
+block="1732"
+family="biosig"
+event="785"
+absolute="1330691458,821096"
+relative="34687,761248"
+source="P300 detector"
+value="3,14159"/>
