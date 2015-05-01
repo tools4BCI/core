@@ -124,4 +124,5 @@ TEST(delimiterParsingTest)
 
   std::cout << " ... successfully" << std::endl << std::endl;
 
+  return;
 }

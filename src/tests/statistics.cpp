@@ -17,7 +17,6 @@
     Copyright 2012 Christian Breitwieser
     Contact: c.breitwieser@tugraz.at
 */
-*/
 
 /**
 * @file statistics.cpp

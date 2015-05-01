@@ -24,20 +24,31 @@
 
 //-------------------------------------------------------------------------------------------------
 
-char TiDHelpers::rand_alnum()
-{
-  char c;
-  while (!std::isalnum(c = static_cast<char>(rand())))
-    ;
-  return c;
-}
+//char TiDHelpers::rand_alnum()
+//{
+//  char c;
+//  while (!std::isalnum(c = static_cast<char>(rand())))
+//    ;
+//  return c;
+//}
 
 //-------------------------------------------------------------------------------------------------
 
 void TiDHelpers::rand_alnum_str (std::string::size_type sz, std::string& s)
 {
   s.clear();
-  generate_n (std::back_inserter(s), sz, rand_alnum);
+  s.resize(sz);
+  //generate_n (std::back_inserter(s), sz, rand_alnum);
+
+      static const char alphanum[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+
+    for (unsigned int i = 0; i < sz; ++i)
+    {
+        s[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
 }
 
 //-------------------------------------------------------------------------------------------------

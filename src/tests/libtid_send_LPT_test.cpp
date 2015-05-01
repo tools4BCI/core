@@ -1,4 +1,3 @@
-
 /*
     This file is part of the libTiD test routine.
 
@@ -33,11 +32,10 @@
 
 #include "LPT_tid_server.h"
 #include "LPT_tid_client.h"
+#include "timing_values.h"
 
 extern unsigned int NR_TID_MESSAGES;
 extern unsigned int NR_CLIENTS;
-extern boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS;
-extern boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS_REMOTE;
 
 
 //-------------------------------------------------------------------------------------------------

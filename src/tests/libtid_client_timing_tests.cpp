@@ -74,10 +74,10 @@ TEST(libTiDClientSendTiming)
   std::string filename;
 
   std::vector<unsigned int> description_str_lengths;
-  description_str_lengths.push_back(5);
-  description_str_lengths.push_back(10);
-  description_str_lengths.push_back(20);
-  description_str_lengths.push_back(50);
+  //  description_str_lengths.push_back(5);
+  //  description_str_lengths.push_back(10);
+  //  description_str_lengths.push_back(20);
+  //  description_str_lengths.push_back(50);
   description_str_lengths.push_back(100);
 
   filename = "libtid_send_client-" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +"-reps_summary.txt";
@@ -128,6 +128,8 @@ TEST(libTiDClientSendTiming)
   summary_file_stream.close();
 
   std::cout << std::endl << std::endl;
+
+  return;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -150,10 +152,10 @@ TEST(libTiDClientReceiveTiming)
   std::string filename;
 
   std::vector<unsigned int> description_str_lengths;
-  description_str_lengths.push_back(5);
-  description_str_lengths.push_back(10);
-  description_str_lengths.push_back(20);
-  description_str_lengths.push_back(50);
+  //  description_str_lengths.push_back(5);
+  //  description_str_lengths.push_back(10);
+  //  description_str_lengths.push_back(20);
+  //  description_str_lengths.push_back(50);
   description_str_lengths.push_back(100);
 
   try
@@ -162,8 +164,12 @@ TEST(libTiDClientReceiveTiming)
     test_server.bind (9001);
     test_server.start();
 
+    boost::this_thread::sleep(boost::posix_time::milliseconds(500));
+
     TiD::TiDClient send_client;
     TiD::TimedTiDClient recv_client;
+
+    boost::this_thread::sleep(boost::posix_time::milliseconds(500));
 
     filename = "libtid_recv_client-" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +"-reps_summary.txt";
     summary_file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
@@ -266,6 +272,8 @@ TEST(libTiDClientReceiveTiming)
 
   summary_file_stream.close();
   std::cout << std::endl << std::endl;
+
+  return;
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -56,10 +56,10 @@ TEST(tobiidSerializeTiming)
   std::vector<IDMessage> messages;
   messages.reserve(NR_TID_MESSAGES);
   std::vector<unsigned int> description_str_lengths;
-  description_str_lengths.push_back(5);
-  description_str_lengths.push_back(10);
-  description_str_lengths.push_back(20);
-  description_str_lengths.push_back(50);
+  //  description_str_lengths.push_back(5);
+  //  description_str_lengths.push_back(10);
+  //  description_str_lengths.push_back(20);
+  //  description_str_lengths.push_back(50);
   description_str_lengths.push_back(100);
 
   std::fstream file_stream;
@@ -171,10 +171,10 @@ TEST(tobiidDeSerializeTiming)
   std::string tmp_str;
 
   std::vector<unsigned int> description_str_lengths;
-  description_str_lengths.push_back(5);
-  description_str_lengths.push_back(10);
-  description_str_lengths.push_back(20);
-  description_str_lengths.push_back(50);
+  //  description_str_lengths.push_back(5);
+  //  description_str_lengths.push_back(10);
+  //  description_str_lengths.push_back(20);
+  //  description_str_lengths.push_back(50);
   description_str_lengths.push_back(100);
 
   std::fstream file_stream;

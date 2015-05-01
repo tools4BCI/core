@@ -65,16 +65,16 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
   std::string filename;
 
   std::vector<unsigned int> description_str_lengths;
-//  description_str_lengths.push_back(5);
-//  description_str_lengths.push_back(20);
+  //  description_str_lengths.push_back(5);
+  //  description_str_lengths.push_back(20);
   description_str_lengths.push_back(100);
 
   std::vector<unsigned int> nr_clients;
   if(NR_CLIENTS == 0)
   {
     // 2 clients are always present --> send and recv client
-//    nr_clients.push_back(0);
-//    nr_clients.push_back(3);
+    // nr_clients.push_back(0);
+    // nr_clients.push_back(3);
     nr_clients.push_back(8);
     //nr_clients.push_back(50);
   }
@@ -131,7 +131,7 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
         stat.reset();
         recv_client.clearRecvTimingValues();
         recv_client.clearMessages();
-        boost::this_thread::sleep(boost::posix_time::milliseconds(200));
+        boost::this_thread::sleep(boost::posix_time::milliseconds(500));
 
 
         filename = "libtid_localhost_send_and_receive_timing_nr_clients_"
@@ -231,6 +231,8 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
 
   summary_file_stream.close();
   std::cout << std::endl << std::endl;
+
+  return;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -253,18 +255,18 @@ TEST(libTiDRemoteSendReceiveTimingTest)
   std::string filename;
 
   std::vector<unsigned int> description_str_lengths;
-//  description_str_lengths.push_back(5);
-//  description_str_lengths.push_back(20);
+  //  description_str_lengths.push_back(5);
+  //  description_str_lengths.push_back(20);
   description_str_lengths.push_back(100);
 
   std::vector<unsigned int> nr_clients;
   if(NR_CLIENTS == 0)
   {
     // 2 clients are always present --> send and recv client
-    nr_clients.push_back(0);
+    // nr_clients.push_back(0);
     nr_clients.push_back(3);
-//    nr_clients.push_back(8);
-    //nr_clients.push_back(50);
+    // nr_clients.push_back(8);
+    // nr_clients.push_back(50);
   }
   else
     nr_clients.push_back(NR_CLIENTS);
@@ -405,6 +407,8 @@ TEST(libTiDRemoteSendReceiveTimingTest)
 
   summary_file_stream.close();
   std::cout << std::endl << std::endl;
+
+  return;
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -1,4 +1,3 @@
-
 /*
     This file is part of the libTiD test routine.
 
@@ -66,16 +65,16 @@ TEST(libTiDServerDispatchTiming)
   std::string filename;
 
   std::vector<unsigned int> description_str_lengths;
-//  description_str_lengths.push_back(5);
-//  description_str_lengths.push_back(20);
+  //  description_str_lengths.push_back(5);
+  //  description_str_lengths.push_back(20);
   description_str_lengths.push_back(100);
 
   std::vector<unsigned int> nr_clients;
   if(NR_CLIENTS == 0)
   {
-//    nr_clients.push_back(1);
+    //    nr_clients.push_back(1);
     nr_clients.push_back(5);
-//    nr_clients.push_back(10);
+    //    nr_clients.push_back(10);
     //    nr_clients.push_back(50);
   }
   else
@@ -195,9 +194,10 @@ TEST(libTiDServerDispatchTiming)
 
       for(unsigned int n = 0; n < nr_clients[cl_ind]; n++)
       {
+        clients_vec[n]->stopReceiving();
         clients_vec[n]->disconnect();
         delete clients_vec[n];
-        boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+        boost::this_thread::sleep(boost::posix_time::milliseconds(200));
       }
       clients_vec.clear();
       send_client.disconnect();
@@ -216,6 +216,7 @@ TEST(libTiDServerDispatchTiming)
 
   summary_file_stream.close();
   std::cout << std::endl << std::endl;
+  return;
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -23,6 +23,7 @@
 
 #include <boost/chrono.hpp>
 #include <string>
+#include <thread>
 
 #include "libtid/input_stream_socket.h"
 #include "libtid/tid_exceptions.h"
@@ -38,14 +39,14 @@ class TimedInputStreamSocket : public InputStreamSocket
       : InputStreamSocket(socket)
     {
       #ifdef DEBUG
-        std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+        std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
       #endif
     }
 
     virtual void readUntil (const std::string& delimiter, std::string* str)
     {
       #ifdef DEBUG
-        std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+        std::cout << std::this_thread::get_id() << BOOST_CURRENT_FUNCTION <<  std::endl;
       #endif
 
       str_buffer_->reserve(4096);
@@ -91,7 +92,7 @@ class TimedInputStreamSocket : public InputStreamSocket
     virtual ~TimedInputStreamSocket()
     {
       #ifdef DEBUG
-        std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+        std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
       #endif
     };
 
