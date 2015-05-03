@@ -20,6 +20,7 @@
 #include <tobicore/TCException.hpp>
 #include <string.h>
 #include <stdio.h>
+#include <cmath>
 
 #ifdef __BORLANDC__
 using namespace std;
@@ -77,7 +78,7 @@ void IDMessage::Init(void) {
   TCBlock::SetBlockIdx(-1);
   this->_familyType = IDMessage::FamilyUndef;
   this->_event = IDMessage::EventNull;
-  this->_value = 0;
+  this->_value = NAN;
 }
 
 std::string IDMessage::GetDescription(void) const {

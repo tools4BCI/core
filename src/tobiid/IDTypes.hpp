@@ -25,14 +25,14 @@
 #define IDTYPES_FAMILY_CUSTOM		"custom"
 
 #define IDMESSAGE_VERSION_SUPPORTED 			"0.0.2.1"
-#define IDMESSAGE_VERSION 			"0.2.0.0"
+#define IDMESSAGE_VERSION 			"0.3.0.0"
 
 #define IDMESSAGE_ROOTNODE 			"tobiid"
 #define IDMESSAGE_ROOTNODE_NEW	"tid"
 #define IDMESSAGE_VERSIONNODE		"version"
 
 #define IDMESSAGE_FRAMENODE			"frame"
-#define IDMESSAGE_FRAMENODE_2			"block"
+#define IDMESSAGE_BLOCKNODE			"block"
 
 #define IDMESSAGE_DESCRIPTIONNODE	"description"
 #define IDMESSAGE_FAMILYNODE		"family"
@@ -41,8 +41,8 @@
 #define IDMESSAGE_TIMESTAMPNODE		"timestamp"
 #define IDMESSAGE_REFERENCENODE		"reference"
 
-#define IDMESSAGE_TIMESTAMPNODE_2		"absolute"
-#define IDMESSAGE_REFERENCENODE_2		"relative"
+#define IDMESSAGE_ABSOLUTE_TS		"absolute"
+#define IDMESSAGE_RELATIVE_TS		"relative"
 
 #define IDMESSAGE_SOURCENODE    		"source"
 

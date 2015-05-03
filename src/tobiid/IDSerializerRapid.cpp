@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
+#include <cmath>
 
 #ifdef __BORLANDC__
 using namespace std;
@@ -56,8 +57,8 @@ std::string* IDSerializerRapid::Serialize(std::string* buffer) {
 
   // XML document and buffers
   xml_document<> doc;
-  std::string xml_as_string;
-  std::string xml_no_indent;
+  //std::string xml_as_string;
+  //std::string xml_no_indent;
 
   // XML declaration
   if(this->_declaration) {
@@ -78,29 +79,77 @@ std::string* IDSerializerRapid::Serialize(std::string* buffer) {
   IDSerializer::message->relative.Get(&reference);
 
   // Root node
+
   xml_node<>* root = doc.allocate_node(node_element, IDMESSAGE_ROOTNODE_NEW);
   root->append_attribute(doc.allocate_attribute(IDMESSAGE_VERSIONNODE,
         IDMESSAGE_VERSION));
-  root->append_attribute(doc.allocate_attribute(IDMESSAGE_DESCRIPTIONNODE,
-        IDSerializer::message->_description.c_str()));
-  root->append_attribute(doc.allocate_attribute(IDMESSAGE_FRAMENODE_2,
-        cacheFidx));
-  root->append_attribute(doc.allocate_attribute(IDMESSAGE_FAMILYNODE,
-        fvalue.c_str()));
-  root->append_attribute(doc.allocate_attribute(IDMESSAGE_EVENTNODE,
-        cacheEvent));
-  root->append_attribute(doc.allocate_attribute(IDMESSAGE_VALUENODE,
-        cacheValue));
-  root->append_attribute(doc.allocate_attribute(IDMESSAGE_TIMESTAMPNODE_2,
-        timestamp.c_str()));
-  root->append_attribute(doc.allocate_attribute(IDMESSAGE_REFERENCENODE_2,
-        reference.c_str()));
+  doc.append_node(root);
+
+  // desc
+  xml_node<>* desc = doc.allocate_node(node_element, IDMESSAGE_DESCRIPTIONNODE,
+                    IDSerializer::message->_description.c_str());
+  root->append_node(desc);
+
+  //block
+  xml_node<>* block = doc.allocate_node(node_element, IDMESSAGE_BLOCKNODE, cacheFidx);
+  root->append_node(block);
+
+  //family
+  xml_node<>* family = doc.allocate_node(node_element, IDMESSAGE_FAMILYNODE, fvalue.c_str());
+  root->append_node(family);
+
+  //event
+  xml_node<>* event = doc.allocate_node(node_element, IDMESSAGE_EVENTNODE, cacheEvent);
+  root->append_node(event);
+
+  //absolute timestamp
+  xml_node<>* abs_ts = doc.allocate_node(node_element, IDMESSAGE_ABSOLUTE_TS, timestamp.c_str());
+  root->append_node(abs_ts);
+
+  //relative timestamp
+  xml_node<>* rel_ts = doc.allocate_node(node_element, IDMESSAGE_RELATIVE_TS, reference.c_str());
+  root->append_node(rel_ts);
+
+  if(!isnan(message->GetValue()))
+  {
+    xml_node<>* val = doc.allocate_node(node_element, IDMESSAGE_VALUENODE, cacheValue);
+    root->append_node(val);
+  }
+
   if( message->GetSource().length() > 0 )
   {
-    root->append_attribute(doc.allocate_attribute(IDMESSAGE_SOURCENODE,
-            message->GetSource().c_str()));
+    xml_node<>* src = doc.allocate_node(node_element, IDMESSAGE_SOURCENODE,
+                                        message->GetSource().c_str());
+    root->append_node(src);
   }
-  doc.append_node(root);
+
+  // for debugging
+  //rapidxml::print(std::cout, doc, 0);
+
+
+  // former attribute based TiD Msg
+  //  xml_node<>* root = doc.allocate_node(node_element, IDMESSAGE_ROOTNODE_NEW);
+  //  root->append_attribute(doc.allocate_attribute(IDMESSAGE_VERSIONNODE,
+  //                                                IDMESSAGE_VERSION));
+  //  root->append_attribute(doc.allocate_attribute(IDMESSAGE_DESCRIPTIONNODE,
+  //                                                IDSerializer::message->_description.c_str()));
+  //  root->append_attribute(doc.allocate_attribute(IDMESSAGE_FRAMENODE_2,
+  //                                                cacheFidx));
+  //  root->append_attribute(doc.allocate_attribute(IDMESSAGE_FAMILYNODE,
+  //                                                fvalue.c_str()));
+  //  root->append_attribute(doc.allocate_attribute(IDMESSAGE_EVENTNODE,
+  //                                                cacheEvent));
+  //  root->append_attribute(doc.allocate_attribute(IDMESSAGE_VALUENODE,
+  //                                                cacheValue));
+  //  root->append_attribute(doc.allocate_attribute(IDMESSAGE_TIMESTAMPNODE_2,
+  //                                                timestamp.c_str()));
+  //  root->append_attribute(doc.allocate_attribute(IDMESSAGE_REFERENCENODE_2,
+  //                                                reference.c_str()));
+  //  if( message->GetSource().length() > 0 )
+  //  {
+  //    root->append_attribute(doc.allocate_attribute(IDMESSAGE_SOURCENODE,
+  //                                                  message->GetSource().c_str()));
+  //  }
 
   if(this->_indent)
     print(std::back_inserter(*buffer), doc);
@@ -145,6 +194,9 @@ std::string* IDSerializerRapid::Deserialize(std::string* const buffer)
 
   /* Check version */
   cache = rootnode->first_attribute(IDMESSAGE_VERSIONNODE)->value();
+
+
+  // old attribute based version
   if(cache.compare(IDMESSAGE_VERSION_SUPPORTED) == 0 )
   {
     // Get frame number
@@ -177,25 +229,33 @@ std::string* IDSerializerRapid::Deserialize(std::string* const buffer)
 
     return buffer;
   }
+  // new node based version
   else if( cache.compare(IDMESSAGE_VERSION)  == 0 )
   {
     // Get frame number
     cache.clear();
-    cache = rootnode->first_attribute(IDMESSAGE_FRAMENODE_2)->value();
+
+    // for debugging
+    //rapidxml::print(std::cout, doc, 0);
+
+    //block
+    cache = rootnode->first_node(IDMESSAGE_BLOCKNODE)->value();
     IDSerializer::message->SetBlockIdx(atol(cache.c_str()));
 
     // Get timestamp
     cache.clear();
-    cache = rootnode->first_attribute(IDMESSAGE_TIMESTAMPNODE_2)->value();
+    cache = rootnode->first_node(IDMESSAGE_ABSOLUTE_TS)->value();
     IDSerializer::message->absolute.Set(cache);
     cache.clear();
-    cache = rootnode->first_attribute(IDMESSAGE_REFERENCENODE_2)->value();
+    cache = rootnode->first_node(IDMESSAGE_RELATIVE_TS)->value();
     IDSerializer::message->relative.Set(cache);
 
-    cache = rootnode->first_attribute(IDMESSAGE_DESCRIPTIONNODE)->value();
+    //description
+    cache = rootnode->first_node(IDMESSAGE_DESCRIPTIONNODE)->value();
     IDSerializer::message->SetDescription(cache);
 
-    cache = rootnode->first_attribute(IDMESSAGE_FAMILYNODE)->value();
+    // familiy
+    cache = rootnode->first_node(IDMESSAGE_FAMILYNODE)->value();
     if(cache.compare(IDTYPES_FAMILY_BIOSIG) == 0)
       IDSerializer::message->SetFamilyType(IDMessage::FamilyBiosig);
     else if(cache.compare(IDTYPES_FAMILY_CUSTOM) == 0)
@@ -203,22 +263,72 @@ std::string* IDSerializerRapid::Deserialize(std::string* const buffer)
     else
       IDSerializer::message->SetFamilyType(IDMessage::FamilyUndef);
 
+    //event
     cache.clear();
-    cache = rootnode->first_attribute(IDMESSAGE_EVENTNODE)->value();
+    cache = rootnode->first_node(IDMESSAGE_EVENTNODE)->value();
     IDSerializer::message->SetEvent(atoi(cache.c_str()));
 
-    cache.clear();
-    cache = rootnode->first_attribute(IDMESSAGE_VALUENODE)->value();
-    IDSerializer::message->SetValue(atof(cache.c_str()));
+    //value
 
-    if(rootnode->first_attribute(IDMESSAGE_SOURCENODE))
+    if(rootnode->first_node(IDMESSAGE_VALUENODE))
     {
       cache.clear();
-      cache = rootnode->first_attribute(IDMESSAGE_SOURCENODE)->value();
+      cache = rootnode->first_node(IDMESSAGE_VALUENODE)->value();
+      IDSerializer::message->SetValue(atof(cache.c_str()));
+    }
+    else
+      IDSerializer::message->SetValue(NAN);
+
+    //source
+    if(rootnode->first_node(IDMESSAGE_SOURCENODE))
+    {
+      cache.clear();
+      cache = rootnode->first_node(IDMESSAGE_SOURCENODE)->value();
       IDSerializer::message->SetSource(cache);
     }
     else
       IDSerializer::message->SetSource("");
+
+    // former code
+
+    //    cache = rootnode->first_attribute(IDMESSAGE_BLOCKNODE)->value();
+    //    IDSerializer::message->SetBlockIdx(atol(cache.c_str()));
+
+    //    // Get timestamp
+    //    cache.clear();
+    //    cache = rootnode->first_attribute(IDMESSAGE_ABSOLUTE_TS)->value();
+    //    IDSerializer::message->absolute.Set(cache);
+    //    cache.clear();
+    //    cache = rootnode->first_attribute(IDMESSAGE_RELATIVE_TS)->value();
+    //    IDSerializer::message->relative.Set(cache);
+
+    //    cache = rootnode->first_attribute(IDMESSAGE_DESCRIPTIONNODE)->value();
+    //    IDSerializer::message->SetDescription(cache);
+
+    //    cache = rootnode->first_attribute(IDMESSAGE_FAMILYNODE)->value();
+    //    if(cache.compare(IDTYPES_FAMILY_BIOSIG) == 0)
+    //      IDSerializer::message->SetFamilyType(IDMessage::FamilyBiosig);
+    //    else if(cache.compare(IDTYPES_FAMILY_CUSTOM) == 0)
+    //      IDSerializer::message->SetFamilyType(IDMessage::FamilyCustom);
+    //    else
+    //      IDSerializer::message->SetFamilyType(IDMessage::FamilyUndef);
+
+    //    cache.clear();
+    //    cache = rootnode->first_attribute(IDMESSAGE_EVENTNODE)->value();
+    //    IDSerializer::message->SetEvent(atoi(cache.c_str()));
+
+    //    cache.clear();
+    //    cache = rootnode->first_attribute(IDMESSAGE_VALUENODE)->value();
+    //    IDSerializer::message->SetValue(atof(cache.c_str()));
+
+    //    if(rootnode->first_attribute(IDMESSAGE_SOURCENODE))
+    //    {
+    //      cache.clear();
+    //      cache = rootnode->first_attribute(IDMESSAGE_SOURCENODE)->value();
+    //      IDSerializer::message->SetSource(cache);
+    //    }
+    //    else
+    //      IDSerializer::message->SetSource("");
 
     return buffer;
   }
