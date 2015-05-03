@@ -70,6 +70,7 @@ class TiDClientBase
     bool newMessagesAvailable();
     void getLastMessagesContexts( std::vector< IDMessage >& messages  );
     void clearMessages();
+
     IDMessage wait4NewTiDMessage();
 
   protected:
@@ -101,12 +102,12 @@ class TiDClientBase
 
     ConnectionState                                   state_;
     std::string                                       xml_string_;
-    std::vector <IDMessage>                           messages_;
+    std::vector <IDMessage>                           messages_from_net_;
     //IDMessage                                         msg_;
 
     boost::asio::ip::tcp::socket*                      socket_;
     boost::asio::io_service*                           io_service_;
-    boost::mutex                                      mutex_;
+    boost::mutex                                      mutex_net_msgs_;
     boost::mutex                                      state_mutex_;
 
     InputStream*                                      input_stream_;

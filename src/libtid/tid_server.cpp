@@ -42,7 +42,7 @@ namespace TiD
 //-----------------------------------------------------------------------------
 
 TiDServer::TiDServer()
-  : running_(0), current_rel_timestamp_(0), current_packet_nr_(0),
+  : TiDSHMServer(boost::bind( &TiDServer::dispatchMsg, this, _1, _2)), running_(0), current_rel_timestamp_(0), current_packet_nr_(0),
     assume_zero_network_delay_(0)
 {
   #ifdef DEBUG

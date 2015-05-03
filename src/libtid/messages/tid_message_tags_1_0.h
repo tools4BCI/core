@@ -29,7 +29,7 @@ namespace TiD
 namespace TiDMessageTags10
 {
   char const NEW_LINE_CHAR = 0x0A;
-  std::string const XML_END_STRING("/>");
+  std::string const XML_END_STRING("</tid>");
 
 //    char const NEW_LINE_CHAR = 0x0A;
 //    std::string const NEW_LINE (1, NEW_LINE_CHAR);

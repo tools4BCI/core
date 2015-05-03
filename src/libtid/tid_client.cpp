@@ -148,6 +148,62 @@ void TiDClient::stopReceiving()
     receive_thread_ = 0;
   }
 }
+//-----------------------------------------------------------------------------
+
+void TiDClient::sendMessage(std::string &tid_xml_context)
+{
+  TiDClientBase::sendMessage(tid_xml_context);
+  TiDSHMClient::sendMessage(tid_xml_context);
+}
+
+//-----------------------------------------------------------------------------
+
+void TiDClient::sendMessage(IDMessage &msg)
+{
+  TiDClientBase::sendMessage(msg);
+  TiDSHMClient::sendMessage(msg);
+}
+
+//-----------------------------------------------------------------------------
+
+void TiDClient::getLastMessagesContexts(std::vector< IDMessage >& messages )
+{
+  #ifdef DEBUG
+    std::cout << std::this_thread::get_id() << BOOST_CURRENT_FUNCTION <<  std::endl;
+  #endif
+
+  TiDClientBase::getLastMessagesContexts(messages);
+  TiDSHMClient::getLastMessagesContexts(messages);
+}
+
+//-----------------------------------------------------------------------------
+
+bool TiDClient::newMessagesAvailable()
+{
+  #ifdef DEBUG
+    //std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+  #endif
+
+
+  if(TiDClientBase::newMessagesAvailable())
+    return true;
+  if(TiDSHMClient::newMessagesAvailable())
+    return true;
+
+  return false;
+}
+
+//-----------------------------------------------------------------------------
+
+void TiDClient::clearMessages()
+{
+  #ifdef DEBUG
+    std::cout << std::this_thread::get_id() << BOOST_CURRENT_FUNCTION <<  std::endl;
+  #endif
+
+  TiDClientBase::clearMessages();
+  TiDSHMClient::clearMessages();
+}
 
 //-----------------------------------------------------------------------------
 

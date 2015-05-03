@@ -44,7 +44,7 @@ bool  lpt_flag_;
 
 //-----------------------------------------------------------------------
 
-void getMessages(TiDClientBase* client)
+void getMessages(TiDClient* client)
 {
   std::vector<IDMessage> msgs;
   msgs.reserve(1024);
@@ -85,7 +85,7 @@ void getMessages(TiDClientBase* client)
 
 int main(int argc, const char* argv[])
 {
-  TiDClientBase* client = 0;
+  TiDClient* client = 0;
   boost::thread* recv_thread = 0;
 
   std::string srv_addr("127.0.0.1");

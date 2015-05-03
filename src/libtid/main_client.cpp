@@ -32,14 +32,21 @@ using namespace TiD;
 
 int main(int argc, const char* argv[])
 {
-  TiDClientBase* client = 0;
+  TiDClient* client = 0;
 
   std::string srv_addr("127.0.0.1");
   int srv_port = 9500;
 
+  string queue ="";
+
   if(argc == 1)
   {
     cout << "Using default server " << srv_addr << ":" << srv_port << endl;
+  }
+  else if(argc == 2)
+  {
+    queue = argv[1];
+    cout << "Using SHM " << queue << endl;
   }
   else if(argc == 3)
   {
@@ -129,8 +136,16 @@ int main(int argc, const char* argv[])
     stopRecordingMsg.SetDescription("StopRecording");
 
 
-    client->connect(srv_addr, srv_port);
-    client->startReceiving(false);
+    if(queue.empty())
+    {
+      client->connect(srv_addr, srv_port);
+      client->startReceiving(false);
+    }
+    else
+    {
+      client->createSHMMessageQueue(queue);
+      client->startReceivingFromSHM();
+    }
 
     string str("a");
     cout << endl << ">>";
@@ -265,7 +280,16 @@ int main(int argc, const char* argv[])
         cout << "Command '" << str << "' not recognized!" << endl << ">>";
     }
 
-    client->stopReceiving();
+    if(queue.empty())
+    {
+      client->stopReceiving();
+    }
+    else
+    {
+      client->stopReceivingFromSHM();
+      client->closeMsgQueue();
+    }
+
   }
 //  catch(TiDException& e)
 //  {

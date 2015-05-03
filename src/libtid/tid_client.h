@@ -22,6 +22,7 @@
 #define TID_CLIENT_H
 
 #include "tid_client_base.h"
+#include "tid_shm_client.h"
 
 #include <boost/thread.hpp>
 
@@ -30,7 +31,7 @@
 namespace TiD
 {
 
-class TiDClient : public TiDClientBase
+class TiDClient : public TiDClientBase, public TiDSHMClient
 {
   friend class TimedTiDClient;
   public:
@@ -40,7 +41,20 @@ class TiDClient : public TiDClientBase
     virtual void startReceiving( bool throw_on_error = 0 );
     virtual void stopReceiving();
 
+    void sendMessage(std::string& tid_xml_context);
+    void sendMessage(IDMessage& msg);
+
+    bool newMessagesAvailable();
+    void getLastMessagesContexts( std::vector< IDMessage >& messages  );
+    void clearMessages();
+
   private:
+
+    virtual void receiveSHMFinalHook()
+    {
+
+    }
+
     boost::thread*                                    receive_thread_;
     boost::thread*                                    io_service_thread_;
     boost::thread*                                    io_service_thread_2_;

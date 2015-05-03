@@ -34,6 +34,7 @@
 #include <boost/cstdint.hpp>
 
 #include "tcp_server.h"
+#include "tid_shm_server.h"
 #include "tid_connection.h"
 
 //-----------------------------------------------------------------------------
@@ -51,7 +52,7 @@ namespace TiD
 
 class TiDMessageBuilder;
 
-class TiDServer : public TCPServer
+class TiDServer : public TCPServer, public TiDSHMServer
 {
   friend class TimedTiDServer;
   friend class LPTTiDServer;
@@ -110,6 +111,7 @@ class TiDServer : public TCPServer
     TCTimeval                   current_timeval_;
 
     bool                        assume_zero_network_delay_;
+
 };
 
 } // Namespace TiD

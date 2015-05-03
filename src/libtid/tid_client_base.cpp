@@ -64,7 +64,7 @@ TiDClientBase::TiDClientBase()
   msg_parser_   = new TiDMessageParser10();
   msg_builder_  = new TiDMessageBuilder10();
 
-  messages_.reserve(100);
+  messages_from_net_.reserve(100);
   xml_string_.reserve(2048);
 }
 
@@ -181,11 +181,10 @@ void TiDClientBase::disconnect()
 
     socket_->shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
     io_service_->run_one();
-    std::cerr << BOOST_CURRENT_FUNCTION << " ***** " << ec.message() << std::endl;
+
     socket_->close(ec);
     io_service_->run_one();
 
-    std::cerr << BOOST_CURRENT_FUNCTION << " ***** " << ec.message() << std::endl;
     if(ec)
     {
       std::cerr << BOOST_CURRENT_FUNCTION << " -- " << ec.message() << std::endl;
@@ -226,7 +225,7 @@ void TiDClientBase::setBufferSize(size_t size)
 
 void TiDClientBase::reserveNrOfMsgs (size_t expected_nr_of_msgs)
 {
-  messages_.reserve(expected_nr_of_msgs);
+  messages_from_net_.reserve(expected_nr_of_msgs);
 }
 
 //-----------------------------------------------------------------------------
@@ -361,9 +360,9 @@ int TiDClientBase::receive(void* instance)
     {
       IDMessage msg;
       inst->msg_parser_->parseMessage(&msg, inst->input_stream_ );
-      inst->mutex_.lock();
-      inst->messages_.push_back(msg);
-      inst->mutex_.unlock();
+      inst->mutex_net_msgs_.lock();
+      inst->messages_from_net_.push_back(msg);
+      inst->mutex_net_msgs_.unlock();
     }
     catch(TiDLostConnection&)
     {
@@ -488,10 +487,10 @@ void TiDClientBase::getLastMessagesContexts(std::vector< IDMessage >& messages )
     std::cout << std::this_thread::get_id() << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
-  mutex_.lock();
-  messages = messages_;
-  messages_.clear();
-  mutex_.unlock();
+  mutex_net_msgs_.lock();
+  messages.insert(messages.end(), messages_from_net_.begin(), messages_from_net_.end());
+  messages_from_net_.clear();
+  mutex_net_msgs_.unlock();
 }
 
 //-----------------------------------------------------------------------------
@@ -503,9 +502,9 @@ bool TiDClientBase::newMessagesAvailable()
   #endif
 
   bool available = false;
-  mutex_.lock();
-  available = messages_.size();
-  mutex_.unlock();
+  mutex_net_msgs_.lock();
+  available = messages_from_net_.size();
+  mutex_net_msgs_.unlock();
 
   return available;
 }
@@ -518,9 +517,9 @@ void TiDClientBase::clearMessages()
     std::cout << std::this_thread::get_id() << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
-  mutex_.lock();
-  messages_.clear();
-  mutex_.unlock();
+  mutex_net_msgs_.lock();
+  messages_from_net_.clear();
+  mutex_net_msgs_.unlock();
 }
 
 //-----------------------------------------------------------------------------

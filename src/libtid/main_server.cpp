@@ -28,11 +28,19 @@ using namespace std;
 
 int main()
 {
+  string msg_queue2 = "q1";
+  string msg_queue3 = "q2";
   try
   {
     TiDServer test_server;
     test_server.bind (9500);
     test_server.reserveNrOfMsgs(10000000);
+    test_server.addSHMMessageQueue(msg_queue2);
+    test_server.startMessageQueueProcessing(msg_queue2);
+
+    test_server.addSHMMessageQueue(msg_queue3);
+    test_server.startMessageQueueProcessing(msg_queue3);
+
     test_server.start();
     string str;
     cout << endl << ">>";
@@ -52,7 +60,14 @@ int main()
             cout << "Command '" << str << "' not recognized!" << endl << ">>";
     }
 
+
     test_server.stop();
+    test_server.stopMessageQueueProcessing(msg_queue2);
+    test_server.closeMsgQueue(msg_queue2);
+
+    test_server.stopMessageQueueProcessing(msg_queue3);
+    test_server.closeMsgQueue(msg_queue3);
+
   }
   catch(std::exception& e)
   {
