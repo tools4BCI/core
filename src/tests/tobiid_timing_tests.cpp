@@ -85,7 +85,7 @@ TEST(tobiidSerializeTiming)
 
     for(unsigned int n = 0; n < NR_TID_MESSAGES; n++)
     {
-      IDMessage msg(IDMessage::FamilyBiosig, rand() % 10000 + 1);
+      IDMessage msg(IDMessage::TxtFamilyBiosig, rand() % 10000 + 1);
       TiDHelpers::rand_alnum_str(description_str_lengths[k], str);
       msg.SetDescription( str.c_str() );
       msg.SetBlockIdx(n+1);
@@ -93,6 +93,7 @@ TEST(tobiidSerializeTiming)
       msg.relative.Tic();
       msg.SetValue(233);
       messages.push_back(msg);
+      //msg.Dump();
     }
 
     std::string xml_str;
@@ -102,6 +103,7 @@ TEST(tobiidSerializeTiming)
     stat.reset();
     serializer.SetMessage(&(messages[0]) );
     serializer.Serialize(&xml_str);
+    //std::cout << xml_str << std::endl;
 
     filename = "tobiid_serialize_desc_len_" + boost::lexical_cast<std::string>(description_str_lengths[k])
         + "nr_reps_" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +".csv";

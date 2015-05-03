@@ -190,6 +190,7 @@ void TiDConnection::receive()
   {
     try
     {
+
       msg_parser_->parseMessage(&msg_, input_stream_ );
       disp_tid_msg_callback_ref_( msg_ , connection_id_);
     }

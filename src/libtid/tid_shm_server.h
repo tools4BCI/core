@@ -60,13 +60,12 @@ class TiDSHMServer
     void stopMessageQueueProcessing();
 
 
+  protected:
+    void dispatchMsgToOtherQueues(std::string& msg, const std::string& origin);
 
   private:
     typedef std::map< std::string, std::pair< std::pair<boost::interprocess::message_queue*, boost::interprocess::message_queue*>, boost::thread*> > QueueMap;
     void receive(QueueMap::iterator it);
-
-    void dispatchMsgToOtherQueues(std::string& msg, const std::string& origin);
-
 
   private:
     QueueMap        msg_queues_;

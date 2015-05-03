@@ -55,7 +55,7 @@ class TiDMessageVectorBuilder
 
       for(unsigned int n = 0; n < nr_messages; n++)
       {
-        IDMessage msg(IDMessage::FamilyBiosig, rand() % 10000 + 1);
+        IDMessage msg(IDMessage::TxtFamilyBiosig, rand() % 10000 + 1);
         TiDHelpers::rand_alnum_str(desc_length, str);
         msg.SetDescription( str.c_str() );
         msg.SetBlockIdx(n+1);

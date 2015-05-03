@@ -265,7 +265,7 @@ void TiDSHMServer::receive(QueueMap::iterator it)
   message_queue** mq_r = &it->second.first.first;
   message_queue** mq_s = &it->second.first.second;
 
-  std::pair<int, std::string> connection_id = make_pair(-99, name_r);
+  std::pair<int, std::string> connection_id = make_pair(-99, it->first);
 
   IDSerializerRapid serializer;
   IDMessage msg;
@@ -277,6 +277,8 @@ void TiDSHMServer::receive(QueueMap::iterator it)
   buffer.resize(max_msg_size_);
   size_t msg_size = 0;
   unsigned int msg_prio = 0;
+
+  boost::posix_time::millisec dur = boost::posix_time::milliseconds(100);
 
   while(1)
   {
@@ -299,16 +301,15 @@ void TiDSHMServer::receive(QueueMap::iterator it)
     else
     {
       buffer.resize(max_msg_size_);
-      boost::posix_time::ptime pt =
-                  boost::posix_time::microsec_clock::universal_time()+ boost::posix_time::milliseconds(250);
+      boost::posix_time::ptime pt = boost::posix_time::microsec_clock::universal_time()+ dur;
       try
       {
         //cerr << "trying to read from queue... "  <<  pt <<  endl;
         if((*mq_r)->timed_receive(&buffer[0], buffer.size(), msg_size, msg_prio, pt))
         {
           buffer.resize(msg_size);
-          dispatchMsgToOtherQueues(buffer, it->first);
-
+          // done by TiDServer dispatcher
+          //dispatchMsgToOtherQueues(buffer, it->first);
           serializer.Deserialize(&buffer);
           //msg.Dump(); cout << endl;
 
@@ -349,13 +350,13 @@ void TiDSHMServer::dispatchMsgToOtherQueues(string& msg, const string& origin)
 
   boost::mutex::scoped_lock(shm_dispatch_mutex_);
   QueueMap::iterator it;
-
+  message_queue* mq = NULL;
 
   for(it = msg_queues_.begin(); it != msg_queues_.end(); it++)
   {
     if(it->first != origin)
     {
-      message_queue* mq = it->second.first.second;
+      mq = it->second.first.second;
       if(mq != NULL)
       {
         //cout << "   ...  to: " << it->first << endl;

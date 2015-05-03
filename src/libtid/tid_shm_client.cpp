@@ -217,7 +217,7 @@ void TiDSHMClient::createSHMMessageQueue(const string& name)
       mq_s_.first = name;
     }
     else
-      std::cerr << "Error: Message Queue '"+mq_r_.first+"' already in opened!" << std::endl;
+      std::cerr << "Error: Message Queue '"+mq_r_.first+"' already opened!" << std::endl;
   }
   catch(interprocess_exception &ex)
   {
@@ -249,8 +249,6 @@ void TiDSHMClient::closeMsgQueue()
       delete mq_s_.second;
       mq_s_.second = NULL;
     }
-    else
-      cerr << "Error: Message Queue '"+mq_r_.first+"' not available!" << endl;
   }
   catch(interprocess_exception &ex)
   {
@@ -267,6 +265,9 @@ void TiDSHMClient::sendMessage(string &tid_xml_context)
   #ifdef DEBUG
     std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
+
+  if(mq_s_.second == NULL)
+    return;
 
   try
   {
@@ -285,6 +286,9 @@ void TiDSHMClient::sendMessage(IDMessage &msg)
   #ifdef DEBUG
     std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
+
+  if(mq_s_.second == NULL)
+    return;
 
   msg_builder_->buildTiDMessage(msg, xml_string_);
 

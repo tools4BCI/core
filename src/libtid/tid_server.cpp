@@ -247,17 +247,12 @@ void TiDServer::dispatchMsg(IDMessage& msg, const TiDConnection::ConnectionID& s
     std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
-  if(!running_)
-    return;
-
   // TODO: Maybe increase speed with multithreaded dispatching if needed!
 
   dispatch_mutex_.lock();
 
   if(assume_zero_network_delay_)
     msg.absolute.Tic();
-
-  messages_.push_back(msg);
 
   if( (msg.GetBlockIdx() == TCBlock::BlockIdxUnset) && current_packet_nr_)
   {
@@ -267,10 +262,15 @@ void TiDServer::dispatchMsg(IDMessage& msg, const TiDConnection::ConnectionID& s
     msg.relative.Set(&current_timeval_);
   }
 
+  messages_.push_back(msg);
+
   //msg.Dump();
 
   current_xml_string_.clear();
   msg_builder_->buildTiDMessage(msg, current_xml_string_);
+
+  dispatchMsgToOtherQueues(current_xml_string_, src_id.second);
+
   for(TiDConnHandlers::iterator it( connections_.begin() );
       it != connections_.end(); it++)
   {

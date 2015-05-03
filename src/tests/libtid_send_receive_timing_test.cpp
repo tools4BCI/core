@@ -309,10 +309,7 @@ TEST(libTiDSharedMemLocalHostSendReceiveTimingTest)
         boost::this_thread::sleep(boost::posix_time::milliseconds(10));
       }
 
-      boost::this_thread::sleep(boost::posix_time::milliseconds(10));
-
-      boost::this_thread::sleep(boost::posix_time::milliseconds(100));
-
+      boost::this_thread::sleep(boost::posix_time::milliseconds(50));
 
       for(unsigned int k= 0; k < description_str_lengths.size(); k++ )
       {
@@ -338,7 +335,7 @@ TEST(libTiDSharedMemLocalHostSendReceiveTimingTest)
         boost::chrono::high_resolution_clock::time_point  start_time;
         boost::chrono::duration<double, boost::micro>     recv_diff;
 
-        boost::posix_time::microsec no_msgs_available_sleep_time = boost::posix_time::microseconds(10);
+        //boost::posix_time::microsec no_msgs_available_sleep_time = boost::posix_time::microseconds(10);
 
         for(unsigned int n = 0; n < msgs_vec.size(); n++ )
         {
