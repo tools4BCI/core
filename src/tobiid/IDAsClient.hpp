@@ -59,7 +59,7 @@ class IDAsClient : public TCBlock {
      * \arg direction Matching rule based on direction
      */
     virtual bool Dequeue(IDMessage* message = NULL,
-        const IDFtype type = IDMessage::FamilyUndef,
+        const std::string type = IDMessage::TxtFamilyUndef,
         const IDevent event = IDMessage::EventNull,
         const int direction = IDAsClient::BlockAll);
 

@@ -20,9 +20,9 @@
 #define IDTYPES_HPP
 #include <string>
 
-#define IDTYPES_FAMILY_UNDEF		"undef"
-#define IDTYPES_FAMILY_BIOSIG		"biosig"
-#define IDTYPES_FAMILY_CUSTOM		"custom"
+//#define IDTYPES_FAMILY_UNDEF		"undef"
+//#define IDTYPES_FAMILY_BIOSIG		"biosig"
+//#define IDTYPES_FAMILY_CUSTOM		"custom"
 
 #define IDMESSAGE_VERSION_SUPPORTED 			"0.0.2.1"
 #define IDMESSAGE_VERSION 			"0.3.0.0"

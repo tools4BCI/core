@@ -308,27 +308,27 @@ $ #include <string.h>
 	family = '';
 	# getfamily(IDMessage* q, inout cstring family[4096]);
 
-@function idmessage_setfamilytype(q, familytype)
+@function idmessage_setfamily(q, family)
 % Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
 % Michele Tavella <michele.tavella@epfl.ch>
 %
-% IDMESSAGE_SETFAMILYTYPE Sets the family type of an IDMessage
+% IDMESSAGE_SETFAMILY Sets the family type of an IDMessage
 %
-% IDMESSAGE_SETFAMILYTYPE(Q, FAMILYTYPE) Sets the family type of the IDMessage
-% pointed by Q to FAMILYTYPE.
+% IDMESSAGE_SETFAMILYTYPE(Q, FAMILY) Sets the family type of the IDMessage
+% pointed by Q to FAMILY.
 %
 % See also IDMESSAGE_GETFAMILY, IDMESSAGE_GETFAMILYTYPE
-	$ void setfamilytype(IDMessage* q, int type) {
+	$ void setfamily(IDMessage* q, char* family) {
 	$	try {
-	$	  q->SetFamilyType(type);
+	$	  q->SetFamily(family);
 	$	} catch(TCException e) {
 	$		printf("[idmessage_setfamilytype] Exception in libtobiid: %s, %s\n",
 	$			e.GetCaller().c_str(), e.GetInfo().c_str());
 	$	}
 	$ }
-	# setfamilytype(IDMessage* q, int familytype);
+	# setfamily(IDMessage* q, char* family);
 
-@function [familytype] = idmessage_getfamilytype(q)
+% @function [familytype] = idmessage_getfamilytype(q)
 % Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
 % Michele Tavella <michele.tavella@epfl.ch>
 %
@@ -338,16 +338,16 @@ $ #include <string.h>
 % IDMessage pointed by Q.
 %
 % See also IDMESSAGE_GETFAMILY, IDMESSAGE_SETFAMILYTYPE
-	$ int getfamilytype(IDMessage* q) {
-	$	try {
-	$ 	  return q->GetFamilyType();
-	$	} catch(TCException e) {
-	$		printf("[idmessage_getfamilytype] Exception in libtobiid: %s, %s\n",
-	$			e.GetCaller().c_str(), e.GetInfo().c_str());
-	$		return IDMessage::FamilyUndef;
-	$	}
-	$ }
-	# int familytype = getfamilytype(IDMessage* q);
+% 	$ int getfamilytype(IDMessage* q) {
+% 	$	try {
+% 	$ 	  return q->GetFamilyType();
+% 	$	} catch(TCException e) {
+% 	$		printf("[idmessage_getfamilytype] Exception in libtobiid: %s, %s\n",
+% 	$			e.GetCaller().c_str(), e.GetInfo().c_str());
+% 	$		return IDMessage::FamilyUndef;
+% 	$	}
+% 	$ }
+% 	# int familytype = getfamilytype(IDMessage* q);
 
 @function idmessage_setevent(q, event)
 % Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
@@ -385,26 +385,26 @@ $ #include <string.h>
 	$	} catch(TCException e) {
 	$		printf("[idmessage_getevent] Exception in libtobiid: %s, %s\n",
 	$			e.GetCaller().c_str(), e.GetInfo().c_str());
-	$		return IDMessage::FamilyUndef;
+	$		return -1;
 	$	}
 	$ }
 	# int event = getevent(IDMessage* q);
 
-@function [ftype] = idmessage_familytype(fname)
-% Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
-% Michele Tavella <michele.tavella@epfl.ch>
-%
-% IDMESSAGE_FAMILYTYPE Returns the family type for a given family name.
-%
-% FTYPE = IDMESSAGE_FAMILYTYPE(FNAME) Returns the family type FTYPE for a given
-% family name FNAME.
-%
-% See also IDMESSAGE_SETFAMILYTYPE, IDMESSAGE_GETFAMILYTYPE, IDMESSAGE_GETFAMILY
-	$ int getftype(char* buffer, int* ftype) {
-	$	(*ftype) = IDMessage::FamilyType(std::string(buffer));
-	$ } 
-	ftype = -1;
-	# getftype(cstring fname, inout int* ftype);
+% % % @function [ftype] = idmessage_familytype(fname)
+% % % Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
+% % % Michele Tavella <michele.tavella@epfl.ch>
+% % %
+% % % IDMESSAGE_FAMILYTYPE Returns the family type for a given family name.
+% % %
+% % % FTYPE = IDMESSAGE_FAMILYTYPE(FNAME) Returns the family type FTYPE for a given
+% % % family name FNAME.
+% % %
+% % % See also IDMESSAGE_SETFAMILYTYPE, IDMESSAGE_GETFAMILYTYPE, IDMESSAGE_GETFAMILY
+% % % 	$ int getftype(char* buffer, int* ftype) {
+% % % 	$	(*ftype) = IDMessage::FamilyType(std::string(buffer));
+% % % 	$ } 
+% % % 	ftype = -1;
+% % % 	# getftype(cstring fname, inout int* ftype);
 
 @function idasclient_dump(c)
 % Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
@@ -439,7 +439,7 @@ $ #include <string.h>
 	$	} catch(TCException e) {
 	$		printf("[idasclient_size] Exception in libtobiid: %s, %s\n",
 	$			e.GetCaller().c_str(), e.GetInfo().c_str());
-	$		return IDMessage::FamilyUndef;
+	$		return -1;
 	$	}
 	$ }
 	# int size = size(IDAsClient* c);
@@ -503,7 +503,7 @@ $ #include <string.h>
 %
 % See also IDASCLIENT_ADD, IDASCLIENT_GETNEXT, IDASCLIENT_GETTHIS,
 % IDASCLIENT_SETBIDX, IDASCLIENT_INCBIDX
-	$ bool getprev(IDAsClient* c, IDMessage* q, IDFtype type, IDevent event) {
+	$ bool getprev(IDAsClient* c, IDMessage* q, char* type, IDevent event) {
 	$	try {
 	$ 		return(c->Dequeue(q, type, event, IDAsClient::BlockPrev));
 	$	} catch(TCException e) {
@@ -518,7 +518,7 @@ $ #include <string.h>
 	if(isempty(event))
 		event = -1;
 	end
-	# bool status = getprev(IDAsClient* c, IDMessage* q, int type, int event);
+	# bool status = getprev(IDAsClient* c, IDMessage* q, char* type, int event);
 
 @function [status] = idasclient_dequeuenext(c, q, type, event)
 % Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
@@ -553,7 +553,7 @@ $ #include <string.h>
 %
 % See also IDASCLIENT_ADD, IDASCLIENT_GETNEXT, IDASCLIENT_GETTHIS
 % IDASCLIENT_SETBIDX, IDASCLIENT_INCBIDX
-	$ bool getnext(IDAsClient* c, IDMessage* q, IDFtype type, IDevent event) {
+	$ bool getnext(IDAsClient* c, IDMessage* q, char* type, IDevent event) {
 	$	try {
 	$ 		return(c->Dequeue(q, type, event, IDAsClient::BlockNext));
 	$	} catch(TCException e) {
@@ -568,7 +568,7 @@ $ #include <string.h>
 	if(isempty(event))
 		event = -1;
 	end
-	# bool status = getnext(IDAsClient* c, IDMessage* q, int type, int event);
+	# bool status = getnext(IDAsClient* c, IDMessage* q, char* type, int event);
 
 @function [status] = idasclient_dequeuethis(c, q, type, event)
 % Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)
@@ -603,7 +603,7 @@ $ #include <string.h>
 %
 % See also IDASCLIENT_ADD, IDASCLIENT_GETTHIS, IDASCLIENT_GETTHIS
 % IDASCLIENT_SETBIDX, IDASCLIENT_INCBIDX
-	$ bool getthis(IDAsClient* c, IDMessage* q, IDFtype type, IDevent event) {
+	$ bool getthis(IDAsClient* c, IDMessage* q, char* type, IDevent event) {
 	$	try {
 	$ 		return(c->Dequeue(q, type, event, IDAsClient::BlockThis));
 	$	} catch(TCException e) {
@@ -618,7 +618,7 @@ $ #include <string.h>
 	if(isempty(event))
 		event = -1;
 	end
-	# bool status = getthis(IDAsClient* c, IDMessage* q, int type, int event);
+	# bool status = getthis(IDAsClient* c, IDMessage* q, char* type, int event);
 
 @function [bidx] = idasclient_dequeuebidx(q)
 % Copyright (C) 2009-2011  EPFL (Ecole Polytechnique Fédérale de Lausanne)

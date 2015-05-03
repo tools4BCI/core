@@ -55,12 +55,12 @@ int main(int argc, const char* argv[])
 
     std::vector<IDMessage> messages;
 
-    IDMessage message1(IDMessage::FamilyBiosig, 781);
-    IDMessage message1_end(IDMessage::FamilyBiosig, 781 + 0x8000);
-    IDMessage message2(IDMessage::FamilyBiosig, 782);
-    IDMessage message2_end(IDMessage::FamilyBiosig, 782+ 0x8000);
-    IDMessage message3(IDMessage::FamilyBiosig, 783);
-    IDMessage message3_end(IDMessage::FamilyBiosig, 783+ 0x8000);
+    IDMessage message1(IDMessage::TxtFamilyBiosig, 781);
+    IDMessage message1_end(IDMessage::TxtFamilyBiosig, 781 + 0x8000);
+    IDMessage message2(IDMessage::TxtFamilyBiosig, 782);
+    IDMessage message2_end(IDMessage::TxtFamilyBiosig, 782+ 0x8000);
+    IDMessage message3(IDMessage::TxtFamilyBiosig, 783);
+    IDMessage message3_end(IDMessage::TxtFamilyBiosig, 783+ 0x8000);
 //    message1.SetDescription("feedback");
 //    message2.SetDescription("feedback");
 //    message3.SetDescription("feedback");
@@ -74,12 +74,12 @@ int main(int argc, const char* argv[])
     message2_end.absolute.Tic();
     message3_end.absolute.Tic();
 
-    IDMessage message4(IDMessage::FamilyBiosig, 901);
-    IDMessage message5(IDMessage::FamilyBiosig, 902);
-    IDMessage message6(IDMessage::FamilyBiosig, 903);
-    IDMessage message4_end(IDMessage::FamilyBiosig, 901 + 0x8000);
-    IDMessage message5_end(IDMessage::FamilyBiosig, 902 + 0x8000);
-    IDMessage message6_end(IDMessage::FamilyBiosig, 903 + 0x8000);
+    IDMessage message4(IDMessage::TxtFamilyBiosig, 901);
+    IDMessage message5(IDMessage::TxtFamilyBiosig, 902);
+    IDMessage message6(IDMessage::TxtFamilyBiosig, 903);
+    IDMessage message4_end(IDMessage::TxtFamilyBiosig, 901 + 0x8000);
+    IDMessage message5_end(IDMessage::TxtFamilyBiosig, 902 + 0x8000);
+    IDMessage message6_end(IDMessage::TxtFamilyBiosig, 903 + 0x8000);
 //    message4.SetDescription("classifier");
 //    message5.SetDescription("classifier");
 //    message6.SetDescription("classifier");
@@ -107,12 +107,12 @@ int main(int argc, const char* argv[])
     messages.push_back(message6_end);
 
 
-    IDMessage startRecordingMsg(IDMessage::FamilyCustom, 1);
-    startRecordingMsg.SetFamilyType(IDMessage::TxtFamilyCustom);
+    IDMessage startRecordingMsg(IDMessage::TxtFamilyCustom, 1);
+    startRecordingMsg.SetFamily(IDMessage::TxtFamilyCustom);
     startRecordingMsg.SetDescription("StartRecording");
 
-    IDMessage stopRecordingMsg(IDMessage::FamilyCustom, 1);
-    stopRecordingMsg.SetFamilyType(IDMessage::TxtFamilyCustom);
+    IDMessage stopRecordingMsg(IDMessage::TxtFamilyCustom, 1);
+    stopRecordingMsg.SetFamily(IDMessage::TxtFamilyCustom);
     stopRecordingMsg.SetDescription("StopRecording");
 
 

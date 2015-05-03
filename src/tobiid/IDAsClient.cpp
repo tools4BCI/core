@@ -33,7 +33,7 @@ void IDAsClient::Enqueue(const IDMessage message, bool updatefidx) {
     TCBlock::SetBlockIdx(message.GetBlockIdx());
 }
 
-bool IDAsClient::Dequeue(IDMessage* message,  const IDFtype type,
+bool IDAsClient::Dequeue(IDMessage* message,  const std::string type,
     const IDevent event, const int direction) {
   if(message == NULL)
     throw TCException("iD message needs to be allocated",
@@ -56,12 +56,12 @@ bool IDAsClient::Dequeue(IDMessage* message,  const IDFtype type,
     return false;
 
   int t_blockidx = TCBlock::BlockIdxUnset;
-  IDFtype t_type;
+  std::string t_type;
   IDevent t_event;
   bool fmatch = false, tmatch = false, ematch = false;
   for(unsigned int i = 0; i < this->_queue.size(); i++) {
     t_blockidx = (this->_queue.at(i)).GetBlockIdx();
-    t_type = (this->_queue.at(i)).GetFamilyType();
+    t_type = (this->_queue.at(i)).GetFamily();
     t_event = (this->_queue.at(i)).GetEvent();
 
     // Match frame
@@ -82,15 +82,19 @@ bool IDAsClient::Dequeue(IDMessage* message,  const IDFtype type,
     }
 
     // Match type
-    switch(type) {
-      case IDMessage::FamilyBiosig:
-        tmatch = (type == t_type);
-        break;
-      default:
-      case IDMessage::FamilyUndef:
-        tmatch = true;
-        break;
-    }
+    if(type == t_type)
+      tmatch = true;
+    else
+      tmatch = false;
+    //    switch(type) {
+    //      case IDMessage::FamilyBiosig:
+    //        tmatch = (type == t_type);
+    //        break;
+    //      default:
+    //      case IDMessage::FamilyUndef:
+    //        tmatch = true;
+    //        break;
+    //    }
 
     // Match event
     switch(event) {

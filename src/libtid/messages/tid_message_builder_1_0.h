@@ -50,7 +50,7 @@ class TiDMessageBuilder10 : public TiDMessageBuilder
       // FIXXXXXME
       // Bad hack to get around varying performance of tobiid
 
-      IDMessage msg(IDMessage::FamilyBiosig,10000);
+      IDMessage msg(IDMessage::TxtFamilyBiosig,10000);
       msg.SetDescription( "dhsfkjhfku84ewrkhfkjdhg7sfkhkshdfkjflaruihhdfskjhf74zkshgfksdhfsrfz7erfsdfkksdfh" );
       msg.SetBlockIdx(10000);
       msg.absolute.Tic();
@@ -65,6 +65,8 @@ class TiDMessageBuilder10 : public TiDMessageBuilder
 
     }
 
+    //-------------------------------------------
+
     virtual ~TiDMessageBuilder10()
     {
       #ifdef DEBUG
@@ -73,6 +75,8 @@ class TiDMessageBuilder10 : public TiDMessageBuilder
       if(serializer_)
         delete serializer_;
     }
+
+    //-------------------------------------------
 
     virtual void buildTiDMessage (IDMessage& message, std::string& xml_string)
     {
@@ -92,7 +96,14 @@ class TiDMessageBuilder10 : public TiDMessageBuilder
         std::cerr << "  --> xml string: "  << xml_string <<  std::endl<< std::flush;
         throw;
       }
+      catch(...)
+      {
+        std::cerr << "Uknown Exception caught@ " << BOOST_CURRENT_FUNCTION <<  std::endl;
+        throw;
+      }
     }
+
+    //-------------------------------------------
 
   private:
     IDSerializerRapid*              serializer_;
