@@ -56,7 +56,9 @@ bool parseIstream(std::istream& stream, std::string& out_string, std::string& de
       n++;
     else
     {
-      std::getline(stream, out_string, delimiter[0]);
+      string tmp_string;
+      std::getline(stream, tmp_string, delimiter[0]);
+      out_string += tmp_string;
       out_string.push_back(delimiter[0]);
       if(stream.eof())
         return 0;
@@ -106,10 +108,11 @@ TEST(delimiterParsingTest)
   stringstream ss_stream(stringstream::in | stringstream::out);
 
   string out_str;
-  string delimiter("/>");
+  string delimiter("</tid>");
 
   ss_stream << multi_xml_msg;
 
+  //std::cout << multi_xml_msg << std::endl;
 
   bool run = 1;
   while(ss_stream.good() && run)

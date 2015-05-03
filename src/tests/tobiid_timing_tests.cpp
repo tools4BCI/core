@@ -91,6 +91,7 @@ TEST(tobiidSerializeTiming)
       msg.SetBlockIdx(n+1);
       msg.absolute.Tic();
       msg.relative.Tic();
+      msg.SetValue(233);
       messages.push_back(msg);
     }
 
@@ -162,13 +163,20 @@ TEST(tobiidDeSerializeTiming)
   srand (time(NULL));
   std::string xml_str_to_serialize;
   xml_str_to_serialize.reserve(2048);
-  std::string str_1("<tobiid version=\"0.0.2.1\" description=\"");
-  std::string str_2("\" frame=\"");
-  std::string str_3("\" family=\"biosig\" event=\"");
-  std::string str_4("\" timestamp=\"");
-  std::string str_5("\" reference=\"");
-  std::string str_6("\"/>");
+  //  std::string str_1("<tobiid version=\"0.0.2.1\" description=\"");
+  //  std::string str_2("\" frame=\"");
+  //  std::string str_3("\" family=\"biosig\" event=\"");
+  //  std::string str_4("\" timestamp=\"");
+  //  std::string str_5("\" reference=\"");
+  //  std::string str_6("\"/>");
+  //  std::string tmp_str;
+
+
+  std::string start_tag("<tobiid version=\"0.3.0.0\">");
+
+  std::string end_tag("</tobiid>");
   std::string tmp_str;
+
 
   std::vector<unsigned int> description_str_lengths;
   //  description_str_lengths.push_back(5);
@@ -208,32 +216,41 @@ TEST(tobiidDeSerializeTiming)
     for(unsigned int n = 0; n < NR_TID_MESSAGES; n++)
     {
       xml_str_to_serialize.clear();
-      xml_str_to_serialize += str_1;
+      xml_str_to_serialize += start_tag + "\n";
+
 
       TiDHelpers::rand_alnum_str(description_str_lengths[k], tmp_str);
-      xml_str_to_serialize += tmp_str;
+      xml_str_to_serialize += "<description>" + tmp_str +"</description>" + "\n";
+      //      xml_str_to_serialize += tmp_str;
 
-      xml_str_to_serialize += str_2;
-      xml_str_to_serialize += boost::lexical_cast<std::string>(n);
+      //      xml_str_to_serialize += str_2;
+      xml_str_to_serialize += "<block>" + boost::lexical_cast<std::string>(n) +"</block>" + "\n";
 
-      xml_str_to_serialize += str_3;
-      xml_str_to_serialize += boost::lexical_cast<std::string>(rand() % 10000 + 1);
+      //      xml_str_to_serialize += str_3;
+      //      xml_str_to_serialize += boost::lexical_cast<std::string>(rand() % 10000 + 1);
+      xml_str_to_serialize += std::string("<family> biosig </family>") + "\n";
+      xml_str_to_serialize += "<event>" + boost::lexical_cast<std::string>(n) +"</event>" + "\n";
 
       tmp_str.clear();
       tid_msg.absolute.Tic();
       tid_msg.absolute.Get(&tmp_str);
-      xml_str_to_serialize += str_4;
-      xml_str_to_serialize += tmp_str;
+      //      xml_str_to_serialize += str_4;
+      //      xml_str_to_serialize += tmp_str;
+      xml_str_to_serialize += "<absolute>"+ tmp_str +"</absolute>" + "\n";
+
 
       tmp_str.clear();
       tid_msg.relative.Tic();
       tid_msg.relative.Get(&tmp_str);
-      xml_str_to_serialize += str_5;
-      xml_str_to_serialize += tmp_str;
+      //      xml_str_to_serialize += str_5;
+      //      xml_str_to_serialize += tmp_str;
+      xml_str_to_serialize += "<relative>"+ tmp_str +"</relative>" + "\n";
 
-      xml_str_to_serialize += str_6;
+      //      xml_str_to_serialize += str_6;
+      xml_str_to_serialize += end_tag;
 
-      // std::cout << xml_str_to_serialize << std::endl << std::flush;
+
+      //std::cout << xml_str_to_serialize << std::endl << std::flush;
 
       start_time = boost::chrono::high_resolution_clock::now();
       recv_serializer.SetMessage(&recv_message);

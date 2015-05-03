@@ -39,7 +39,7 @@ class TimedTiDClient : public TiD::TiDClient
     TimedTiDClient()
       : send_start_time_(boost::chrono::high_resolution_clock::now()),
         recv_start_time_(boost::chrono::high_resolution_clock::now()),
-        nr_received_msgs_(0), last_frame_nr_(0)
+        nr_received_msgs_(0), last_frame_nr_(0), data_ready(0)
     {
       #ifdef DEBUG
         std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
@@ -115,6 +115,7 @@ class TimedTiDClient : public TiD::TiDClient
     {
       timing_mutex_.lock();
 
+      data_ready=false;
       nr_received_msgs_ = 0;
 
       recv_diffs_.clear();
@@ -134,6 +135,31 @@ class TimedTiDClient : public TiD::TiDClient
       timing_mutex_.unlock();
 
       return available;
+    }
+
+    //---------------------------------
+
+    bool newRecvTimePointsAvailable()
+    {
+      bool available = false;
+      timing_mutex_.lock();
+      available = recv_timepoints_.size();
+      timing_mutex_.unlock();
+
+      return available;
+    }
+
+    //---------------------------------
+
+    void waitForSHM()
+    {
+      boost::mutex mut;
+      boost::unique_lock<boost::mutex> lock(timing_mutex_);
+
+      while(!data_ready)
+      {
+        shm_cond_.wait(lock);
+      }
     }
 
     //---------------------------------
@@ -178,6 +204,22 @@ class TimedTiDClient : public TiD::TiDClient
     //-----------------------------------------------------------------------------
 
   private:
+
+    virtual void receiveSHMFinalHook()
+    {
+      #ifdef DEBUG
+        std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
+      #endif
+
+      recv_stop_time_ = boost::chrono::high_resolution_clock::now();
+
+      boost::lock_guard<boost::mutex> lock(timing_mutex_);
+      recv_timepoints_.push_back(recv_stop_time_);
+      data_ready=true;
+
+      shm_cond_.notify_all();
+    }
+
     void receive()
     {
       #ifdef DEBUG
@@ -197,14 +239,14 @@ class TimedTiDClient : public TiD::TiDClient
 
           //msg->Dump();
 
-          mutex_.lock();
-          messages_.push_back(msg);
+          mutex_net_msgs_.lock();
+          messages_from_net_.push_back(msg);
 //          nr_received_msgs_++;
 //          if( (last_frame_nr_+1) != msg_.GetBlockIdx() )
 //            std::cerr << "Lost a TiD msg -- last/current: " << last_frame_nr_ << "/" << msg_.GetBlockIdx() << std::endl;
 
 //          last_frame_nr_ = msg_.GetBlockIdx();
-          mutex_.unlock();
+          mutex_net_msgs_.unlock();
         }
         catch(std::exception& e)
         {
@@ -253,6 +295,9 @@ class TimedTiDClient : public TiD::TiDClient
 
     unsigned int                                           nr_received_msgs_;
     unsigned int                                           last_frame_nr_;
+
+    boost::condition_variable                              shm_cond_;
+    bool data_ready;
 
 };
 

@@ -71,9 +71,9 @@ class LPTTiDClient : public TiD::TiDClient
         {
           IDMessage msg;
           msg_parser_->parseMessage(&msg, input_stream_ );
-          mutex_.lock();
-          messages_.push_back(msg);
-          mutex_.unlock();
+          mutex_net_msgs_.lock();
+          messages_from_net_.push_back(msg);
+          mutex_net_msgs_.unlock();
         }
         catch(std::exception& e)
         {

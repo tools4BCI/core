@@ -85,6 +85,8 @@ TEST(libTiDLPTTimingTest)
   {
     if(str == "s" || str == "start" || str == "run")
       break;
+    else if(str == "q" || str == "quit" || str == "stop")
+      return;
     else
       std::cout << "Command '" << str << "' not recognized!" << std::endl << ">>";
   }
