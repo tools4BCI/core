@@ -31,7 +31,7 @@ QMAKE_CXXFLAGS_RELEASE *= -O3
 
 # -----------------------------------------------------------------------
 
-SOURCES += main_client.cpp
+SOURCES += ../src/libtid/main_client.cpp
 
 # -----------------------------------------------------------------------
 
@@ -71,7 +71,7 @@ unix {
     contains( DEFINES, TIMING_TEST )::{
         LIBS += -lboost_chrono
       }
-    LIBS += -lboost_thread -lboost_system -lSDL
+    LIBS += -lboost_thread -lboost_system -lSDL -lpthread -lrt
 }
 
 # Note: It is assumed that the boost libraries can be automatically detected by the linker

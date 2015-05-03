@@ -86,6 +86,8 @@ HEADERS += \
 LIBS += -lboost_thread \
         -lboost_system \
         -lboost_chrono \
+        -lpthread\
+        -lrt\
         -lSDL \
         -L../src/tests/UnitTest++
 

@@ -28,7 +28,7 @@ QMAKE_CXXFLAGS_WARN_ON += -Wall -pedantic
 
 # -----------------------------------------------------------------------
 
-SOURCES += main_lpt_tid_client.cpp \
+SOURCES += ../src/libtid/main_lpt_tid_client.cpp \
            LptTools/LptToolsLinux.cpp
 
 # -----------------------------------------------------------------------

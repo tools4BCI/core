@@ -28,7 +28,7 @@ QMAKE_CXXFLAGS_WARN_ON += -Wall -pedantic
 
 # -----------------------------------------------------------------------
 
-SOURCES += main_client_blocking.cpp
+SOURCES += ../src/libtid/main_client_blocking.cpp
 
 # -----------------------------------------------------------------------
 

@@ -16,7 +16,9 @@ HEADERS += \
     ../src/libtid/messages/tid_message_parser.h \
     ../src/libtid/messages/tid_message_builder_1_0.h \
     ../src/libtid/messages/tid_message_builder.h \
-    ../src/libtid/messages/tid_message.h
+    ../src/libtid/messages/tid_message.h \
+    ../src/libtid/tid_shm_server.h \
+    ../src/libtid/tid_shm_client.h
 
 contains( DEFINES, LPT_TEST )::HEADERS += LptTools/LptTools.h
 
@@ -31,7 +33,9 @@ SOURCES += \
     ../src/libtid/tid_client.cpp \
     ../src/libtid/sdl_tid_client.cpp \
     ../src/libtid/tcp_server.cpp \
-    ../src/libtid/messages/tid_message_parser_1_0.cpp
+    ../src/libtid/messages/tid_message_parser_1_0.cpp\
+    ../src/libtid/tid_shm_server.cpp\
+    ../src/libtid/tid_shm_client.cpp
 
 unix {
   contains( DEFINES, LPT_TEST )::SOURCES += LptTools/LptToolsLinux.cpp
