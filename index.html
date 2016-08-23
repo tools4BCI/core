@@ -1,25 +1,37 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="UTF-8">
-    <title>tools4bci -- The Core components by tools4BCI</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">tools4bci -- The Core components</h1>
-      <h2 class="project-tagline"></h2>
-      <a href="https://github.com/tools4BCI/core" class="btn">View on GitHub</a>
-      <a href="https://github.com/tools4BCI/core/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/tools4BCI/core/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+<html>
 
-    <section class="main-content">
-      <h3>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="tools4bci -- The Core components : ">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>tools4bci -- The Core components</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/tools4BCI/core">View on GitHub</a>
+
+          <h1 id="project_title">tools4bci -- The Core components</h1>
+          <h2 id="project_tagline"></h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/tools4BCI/core/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/tools4BCI/core/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>
 <a id="about-tools4bci" class="anchor" href="#about-tools4bci" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>About tools4BCI</h3>
 
 <p>The tools4BCI project provides useful tools for brain-computer interface (BCI) researchers all over the world. BCIs more and more become a promenent topic in research and media. It is known, that the BCI research field is a multidisciplinary one, involving e.g., psychology, medicine and biomedical engeneering. Unfortunately, due to such a multidisciplinarity, exchangeable tools and methods are rare.
@@ -40,20 +52,24 @@ The defined and implemented interfaces focus mainly on brain-computer interface 
 <p>The tobicore project provides a total of five C++ libraries that implement some concepts of the TOBI hBCI design</p>
 
 <ul>
-<li>libtobicore:
+<li>
+<strong>libtobicore</strong>:
 This is low-level library that provides basic functionalities, such as timestamp management (via TCTimestamp) and the TCBlock base class.
 It an essential library for all other libraries within the tobicore package.</li>
-<li>libtobiic:
+<li>
+<strong>libtobiic</strong>:
 This library implements the TOBI iC classifier output encoding/decoding via ICMessage.</li>
-<li>libtobiid:
+<li>
+<strong>libtobiid</strong>:
 This library implements the TOBI iD events encoding/decoding via IDMessage.</li>
-<li>libtobiplatform:
+<li>
+<strong>libtobiplatform</strong>:
 This library provides working and cross-platform implementations of some TOBI components,
 such as an iC client/server class (TPiC) and an iD client class (TPiD).
 (under Windows, e.g. MinGW or Cygwin are needed to compile this library.)</li>
-<li><p>libTiD:
+<li><p><strong>libTiD</strong>:
 This library provides a platform independent network layer around the tobiid library including a TiD server to dispatch TiD messages.</p></li>
-<li><p>tobicoremat:
+<li><p><strong>tobicoremat</strong>:
 This library provides MEX interfaces to a large set of the tobicore functionalities. The MEX interfaces are not documented here since a per-funtion documentation is provided in the .m files and examples are provided with the interfaces.</p></li>
 </ul>
 
@@ -81,15 +97,18 @@ To get r/w access to the tobicore repository, please get in touch with: Christia
 <a id="licencing" class="anchor" href="#licencing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Licencing</h3>
 
 <p>The individual tobicore libraries are licenced under the <a href="http://www.gnu.org/copyleft/lesser.html">LGPL version 3.0</a>.</p>
+      </section>
+    </div>
 
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/tools4BCI/core">tools4bci -- The Core components</a> is maintained by <a href="https://github.com/tools4BCI">tools4BCI</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">tools4bci -- The Core components maintained by <a href="https://github.com/tools4BCI">tools4BCI</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
+    </div>
 
-    </section>
+    
 
-  
   </body>
 </html>
