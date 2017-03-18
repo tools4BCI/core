@@ -56,12 +56,12 @@ class TiDMessageBuilder10 : public TiDMessageBuilder
       msg.absolute.Tic();
       msg.relative.Tic();
 
-      for(unsigned int n = 0; n < 10; n++)
-      {
-        std::string str;
-        serializer_->SetMessage(&msg);
-        serializer_->Serialize(&str);
-      }
+      //for(unsigned int n = 0; n < 10; n++)
+      //{
+      //  std::string str;
+      //  serializer_->SetMessage(&msg);
+      //  serializer_->Serialize(&str);
+      //}
 
     }
 

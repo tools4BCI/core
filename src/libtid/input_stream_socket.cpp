@@ -158,10 +158,14 @@ void InputStreamSocket::readUntil (const std::string&  delimiter, std::string* s
   }
   std::istream is(&stream_buffer_);
 
-  boost::asio::read_until (socket_, stream_buffer_, delimiter,error_ );
+  boost::asio::read_until (socket_, stream_buffer_, delimiter, error_ );
   if(error_)
-    throw TiDLostConnection ("InputStreamSocket::readUntil error read_until: "
-                             + std::string (error_.category().name()) + " " + error_.message());
+  {
+    throw  TiDLostConnection ("InputStreamSocket::readUntil");
+    // getting a segfault since latest boost
+    //    throw  TiDLostConnection ("InputStreamSocket::readUntil error read_until: "
+    //                             + std::string (error_.category().name()) + " " + error_.message());
+  }
 
   if(str_buffer_->size())
   {

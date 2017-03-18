@@ -28,6 +28,15 @@
 #include <vector>
 #include <cmath>
 
+#ifdef WIN32
+    #ifndef NAN
+        static const unsigned long __nan[2] = {0xffffffff, 0x7fffffff};
+        #define NAN (*(const float *) __nan)
+    #endif
+#endif
+
+
+
 #ifdef __BORLANDC__
 using namespace std;
 #endif
@@ -83,7 +92,15 @@ std::string* IDSerializerRapid::Serialize(std::string* buffer) {
   xml_node<>* root = doc.allocate_node(node_element, IDMESSAGE_ROOTNODE_NEW);
   root->append_attribute(doc.allocate_attribute(IDMESSAGE_VERSIONNODE,
         IDMESSAGE_VERSION));
+
+  //absolute timestamp
+  root->append_attribute(doc.allocate_attribute(IDMESSAGE_ABSOLUTE_TS,
+                                                timestamp.c_str()));
+  //relative timestamp
+  root->append_attribute(doc.allocate_attribute(IDMESSAGE_RELATIVE_TS,
+                                                reference.c_str()));
   doc.append_node(root);
+
 
   // desc
   xml_node<>* desc = doc.allocate_node(node_element, IDMESSAGE_DESCRIPTIONNODE,
@@ -103,23 +120,29 @@ std::string* IDSerializerRapid::Serialize(std::string* buffer) {
   root->append_node(event);
 
   //absolute timestamp
-  xml_node<>* abs_ts = doc.allocate_node(node_element, IDMESSAGE_ABSOLUTE_TS, timestamp.c_str());
-  root->append_node(abs_ts);
+  //  xml_node<>* abs_ts = doc.allocate_node(node_element, IDMESSAGE_ABSOLUTE_TS, timestamp.c_str());
+  //  root->append_node(abs_ts);
 
-  //relative timestamp
-  xml_node<>* rel_ts = doc.allocate_node(node_element, IDMESSAGE_RELATIVE_TS, reference.c_str());
-  root->append_node(rel_ts);
+  //  //relative timestamp
+  //  xml_node<>* rel_ts = doc.allocate_node(node_element, IDMESSAGE_RELATIVE_TS, reference.c_str());
+  //  root->append_node(rel_ts);
 
-  if(!isnan(message->GetValue()))
+#ifdef WIN32
+  if(!_isnan(message->GetValue()))
+#else
+  if(!__isnan(message->GetValue()))
+#endif
   {
     xml_node<>* val = doc.allocate_node(node_element, IDMESSAGE_VALUENODE, cacheValue);
     root->append_node(val);
   }
 
-  if( message->GetSource().length() > 0 )
+  if(!message->GetSource().empty())
   {
+    IDFvalue src_str = message->GetSource().c_str();
     xml_node<>* src = doc.allocate_node(node_element, IDMESSAGE_SOURCENODE,
-                                        message->GetSource().c_str());
+                                        src_str.c_str());
+
     root->append_node(src);
   }
 
@@ -174,9 +197,12 @@ std::string* IDSerializerRapid::Deserialize(std::string* const buffer)
 
   xml_document<> doc;
   std::string cache;
+
   std::vector<char> xml_copy(buffer->begin(), buffer->end());
-    xml_copy.push_back('\0');
-    doc.parse<parse_declaration_node | parse_no_data_nodes>(&xml_copy[0]);
+  xml_copy.push_back('\0');
+  //doc.parse<parse_declaration_node | parse_no_data_nodes>(&xml_copy[0]);
+  //doc.parse<parse_declaration_node>(&xml_copy[0]);
+  doc.parse<parse_validate_closing_tags>(&xml_copy[0]);
 
   xml_node<>* rootnode = doc.first_node(IDMESSAGE_ROOTNODE);
 
@@ -230,11 +256,11 @@ std::string* IDSerializerRapid::Deserialize(std::string* const buffer)
 
     return buffer;
   }
+  //-------------------------
   // new node based version
+  //-------------------------
   else if( cache.compare(IDMESSAGE_VERSION)  == 0 )
   {
-    // Get frame number
-    cache.clear();
 
     // for debugging
     //rapidxml::print(std::cout, doc, 0);
@@ -245,11 +271,18 @@ std::string* IDSerializerRapid::Deserialize(std::string* const buffer)
 
     // Get timestamp
     cache.clear();
-    cache = rootnode->first_node(IDMESSAGE_ABSOLUTE_TS)->value();
+    cache = rootnode->first_attribute(IDMESSAGE_ABSOLUTE_TS)->value();
     IDSerializer::message->absolute.Set(cache);
     cache.clear();
-    cache = rootnode->first_node(IDMESSAGE_RELATIVE_TS)->value();
+    cache = rootnode->first_attribute(IDMESSAGE_RELATIVE_TS)->value();
     IDSerializer::message->relative.Set(cache);
+
+    //    cache.clear();
+    //    cache = rootnode->first_node(IDMESSAGE_ABSOLUTE_TS)->value();
+    //    IDSerializer::message->absolute.Set(cache);
+    //    cache.clear();
+    //    cache = rootnode->first_node(IDMESSAGE_RELATIVE_TS)->value();
+    //    IDSerializer::message->relative.Set(cache);
 
     //description
     cache = rootnode->first_node(IDMESSAGE_DESCRIPTIONNODE)->value();

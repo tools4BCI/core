@@ -22,6 +22,13 @@
 #include <stdio.h>
 #include <cmath>
 
+#ifdef WIN32
+    #ifndef NAN
+        static const unsigned long __nan[2] = {0xffffffff, 0x7fffffff};
+        #define NAN (*(const float *) __nan)
+    #endif
+#endif
+
 #ifdef __BORLANDC__
 using namespace std;
 #endif

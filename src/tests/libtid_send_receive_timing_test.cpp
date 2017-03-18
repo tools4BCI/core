@@ -39,7 +39,7 @@
 
 extern unsigned int NR_TID_MESSAGES;
 extern unsigned int STATISTICS_WINDOW_SIZE;
-extern unsigned int NR_CLIENTS;
+extern int NR_CLIENTS;
 //extern boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS;
 //extern boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS_REMOTE;
 
@@ -176,7 +176,7 @@ TEST(libTiDLocalHostSendReceiveTimingTest)
           for(unsigned int n = 0; n < nr_clients[cl_ind]; n++)
             clients_vec[n]->clearMessages();
 
-
+          test_server.clearMessages();
         }
         test_server.clearMessages();
         file_stream.unget();
@@ -254,8 +254,10 @@ TEST(libTiDSharedMemLocalHostSendReceiveTimingTest)
   description_str_lengths.push_back(100);
 
   std::vector<unsigned int> nr_clients;
-  if(NR_CLIENTS == 0)
+  if(NR_CLIENTS == -1)
   {
+    nr_clients.push_back(0);
+    nr_clients.push_back(3);
     nr_clients.push_back(8);
   }
   else
@@ -267,7 +269,7 @@ TEST(libTiDSharedMemLocalHostSendReceiveTimingTest)
 
   try
   {
-    filename = "libtid_SHM_localhost_send_and_receive_timing-" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +"-reps_summary.txt";
+    filename = "libtid_localhost_SHM_send_and_receive_timing-" + boost::lexical_cast<std::string>(NR_TID_MESSAGES) +"-reps_summary.txt";
     summary_file_stream.open(filename.c_str(), fstream::in | fstream::out | fstream::trunc);
     summary_file_stream << "All values are in microseconds:" << std::endl << std::endl;
 
@@ -335,15 +337,16 @@ TEST(libTiDSharedMemLocalHostSendReceiveTimingTest)
         boost::chrono::high_resolution_clock::time_point  start_time;
         boost::chrono::duration<double, boost::micro>     recv_diff;
 
-        //boost::posix_time::microsec no_msgs_available_sleep_time = boost::posix_time::microseconds(10);
+        boost::posix_time::microsec no_msgs_available_sleep_time = boost::posix_time::microseconds(10);
 
         for(unsigned int n = 0; n < msgs_vec.size(); n++ )
         {
+          
           send_client.sendTimedMessage( msgs_vec[n],start_time);
           recv_client.waitForSHM();
 
-          boost::this_thread::yield();
-          //boost::this_thread::sleep(SLEEP_TIME_BETWEEN_MSGS);
+          boost::this_thread::sleep(SLEEP_TIME_BETWEEN_MSGS);
+          //boost::this_thread::sleep(SLEEP_TIME_BETWEEN_MSGS_REMOTE);
 
           //while( !recv_client.newRecvTimePointsAvailable())
             //boost::this_thread::sleep(no_msgs_available_sleep_time);
@@ -367,8 +370,10 @@ TEST(libTiDSharedMemLocalHostSendReceiveTimingTest)
           send_client.clearMessages();
           for(unsigned int n = 0; n < nr_clients[cl_ind]; n++)
             clients_vec[n]->clearMessages();
+
+          test_server.clearMessages();
         }
-        test_server.clearMessages();
+
         file_stream.unget();
         file_stream << " ";
         file_stream.close();
@@ -445,18 +450,21 @@ TEST(libTiDRemoteSendReceiveTimingTest)
   summary_file_stream.precision(12);
   std::string filename;
 
+  std::string server_ip = "192.168.178.20";
+  int server_port = 9001;
+
   std::vector<unsigned int> description_str_lengths;
   //  description_str_lengths.push_back(5);
   //  description_str_lengths.push_back(20);
   description_str_lengths.push_back(100);
 
   std::vector<unsigned int> nr_clients;
-  if(NR_CLIENTS == 0)
+  if(NR_CLIENTS == -1)
   {
     // 2 clients are always present --> send and recv client
-    // nr_clients.push_back(0);
+    nr_clients.push_back(0);
     nr_clients.push_back(3);
-    // nr_clients.push_back(8);
+     nr_clients.push_back(8);
     // nr_clients.push_back(50);
   }
   else
@@ -476,23 +484,28 @@ TEST(libTiDRemoteSendReceiveTimingTest)
 
     for(unsigned int cl_ind = 0; cl_ind < nr_clients.size(); cl_ind++ )
     {
-      send_client.connect("192.168.1.11",9001);
+      send_client.connect(server_ip, server_port);
+      TiD::TimedTiDClient recv_client;
+      recv_client.reserveNrOfMsgs(1200000);
+
+
       boost::this_thread::sleep(boost::posix_time::milliseconds(10));
       std::cout << "  ... iteration " << cl_ind+1 << " from " << nr_clients.size() << std::endl;
       for(unsigned int n = 0; n < nr_clients[cl_ind]; n++)
       {
         clients_vec.push_back(new TiD::TiDClient );
         clients_vec[n]->reserveNrOfMsgs(1000000);
-        clients_vec[n]->connect("192.168.1.11",9001);
+        
+        //if(n == nr_clients[cl_ind]-1)
+        //  recv_client.connect(server_ip, server_port);
+
+        clients_vec[n]->connect(server_ip, server_port);
         clients_vec[n]->startReceiving(0);
         boost::this_thread::sleep(boost::posix_time::milliseconds(20));
       }
 
       boost::this_thread::sleep(boost::posix_time::milliseconds(10));
-
-      TiD::TimedTiDClient recv_client;
-      recv_client.reserveNrOfMsgs(1000000);
-      recv_client.connect("192.168.1.11",9001);
+      recv_client.connect(server_ip, server_port);
       recv_client.startReceiving(0);
       boost::this_thread::sleep(boost::posix_time::milliseconds(100));
 
@@ -524,11 +537,13 @@ TEST(libTiDRemoteSendReceiveTimingTest)
         for(unsigned int n = 0; n < msgs_vec.size(); n++ )
         {
           send_client.sendTimedMessage( msgs_vec[n],start_time);
+
+          recv_client.waitForSocket();
+          //boost::this_thread::sleep(SLEEP_TIME_BETWEEN_MSGS);
           boost::this_thread::sleep(SLEEP_TIME_BETWEEN_MSGS_REMOTE);
 
-
-          while( !recv_client.newReceiveDiffsAvailable())
-            boost::this_thread::sleep(no_msgs_available_sleep_time);
+          //while( !recv_client.newReceiveDiffsAvailable())
+            //boost::this_thread::sleep(no_msgs_available_sleep_time);
 
           if(recv_client.getRecvTimePoints().size() != 1)
           {

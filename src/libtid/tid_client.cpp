@@ -90,8 +90,6 @@ void TiDClient::startReceiving(bool throw_on_error)
 
   io_service_thread_2_ = new boost::thread(boost::bind(&boost::asio::io_service::run,
                                                        this->io_service_));
-  //  &this->io_service_));
-
 
   #ifdef WIN32
     SetPriorityClass(receive_thread_->native_handle(),  REALTIME_PRIORITY_CLASS);

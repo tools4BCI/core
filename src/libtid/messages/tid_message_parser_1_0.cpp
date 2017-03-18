@@ -59,13 +59,13 @@ TiDMessageParser10::TiDMessageParser10()
 
   xml_string_->reserve(1024);
 
-  for(unsigned int n = 0; n < 10; n++)
-  {
-    IDMessage msg;
-    serializer_->SetMessage(&msg);
-    std::string str = "<tobiid version=\"0.0.2.1\" description=\"7Qfa4c51JsIJi0U6pUPLRQgWxRGmA97RIapdgMNll65AHCGV0f\" frame=\"64\" family=\"biosig\" event=\"6000\" timestamp=\"1330691458,821096\" reference=\"1330691458,821096\"/>";
-    serializer_->Deserialize(&str);
-  }
+  //for(unsigned int n = 0; n < 10; n++)
+  //{
+  //  IDMessage msg;
+  //  serializer_->SetMessage(&msg);
+  //  std::string str = "<tobiid version=\"0.0.2.1\" description=\"7Qfa4c51JsIJi0U6pUPLRQgWxRGmA97RIapdgMNll65AHCGV0f\" frame=\"64\" family=\"biosig\" event=\"6000\" timestamp=\"1330691458,821096\" reference=\"1330691458,821096\"/>";
+  //  serializer_->Deserialize(&str);
+  //}
 }
 
 //-----------------------------------------------------------------------------
@@ -107,8 +107,12 @@ void TiDMessageParser10::parseMessage (IDMessage* msg, InputStream* stream)
     std::cerr << "  --> xml string: "  << *xml_string_ <<  std::endl<< std::flush;
     throw;
   }
-  catch(TiDLostConnection&)
+  catch(TiDLostConnection& e)
   {
+  #ifdef DEBUG
+    std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION;
+    std::cout << " -- " <<  "TiDLostConnection caught: " << e.what() << std::endl;
+  #endif
     throw;
   }
   catch(...)

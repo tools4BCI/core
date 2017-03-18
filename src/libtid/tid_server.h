@@ -81,6 +81,8 @@ class TiDServer : public TCPServer, public TiDSHMServer
     void update(boost::uint64_t rel_timestamp, boost::uint64_t packet_nr);
 
     void assumeZeroNetworkDelay(bool val);
+    void keepIncomingMessages(bool val);
+
 
   protected:
     /**
@@ -111,6 +113,7 @@ class TiDServer : public TCPServer, public TiDSHMServer
     TCTimeval                   current_timeval_;
 
     bool                        assume_zero_network_delay_;
+    bool                        keep_messages_;
 
 };
 

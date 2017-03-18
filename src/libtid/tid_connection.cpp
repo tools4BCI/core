@@ -233,7 +233,7 @@ void TiDConnection::receive()
 //-----------------------------------------------------------------------------
 
 void TiDConnection::handleWrite(const boost::system::error_code& error,
-                                  std::size_t bytes_transferred)
+                                  std::size_t /*bytes_transferred*/)
 {
   #ifdef DEBUG
     std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<"--"<< connection_id_.second << ":" <<connection_id_.first<< std::endl;

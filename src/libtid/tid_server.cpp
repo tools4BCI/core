@@ -43,7 +43,7 @@ namespace TiD
 
 TiDServer::TiDServer()
   : TiDSHMServer(boost::bind( &TiDServer::dispatchMsg, this, _1, _2)), running_(0), current_rel_timestamp_(0), current_packet_nr_(0),
-    assume_zero_network_delay_(0)
+    assume_zero_network_delay_(0), keep_messages_(true)
 {
   #ifdef DEBUG
     std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
@@ -51,7 +51,7 @@ TiDServer::TiDServer()
 
   messages_.reserve(100);
   msg_builder_  = new TiDMessageBuilder10();
-  current_xml_string_.reserve(2048);
+  current_xml_string_.reserve(4096);
 }
 
 //-----------------------------------------------------------------------------
@@ -262,22 +262,26 @@ void TiDServer::dispatchMsg(IDMessage& msg, const TiDConnection::ConnectionID& s
     msg.relative.Set(&current_timeval_);
   }
 
-  messages_.push_back(msg);
+  if(keep_messages_)
+    messages_.push_back(msg);
 
   //msg.Dump();
 
-  current_xml_string_.clear();
+  
   msg_builder_->buildTiDMessage(msg, current_xml_string_);
-
   dispatchMsgToOtherQueues(current_xml_string_, src_id.second);
 
   for(TiDConnHandlers::iterator it( connections_.begin() );
       it != connections_.end(); it++)
   {
     if(src_id.first != it->first.first )
-      it->second->sendMsg(current_xml_string_);
+      it->second->asyncSendMsg(current_xml_string_);
+      //it->second->sendMsg(current_xml_string_);
     io_service_.poll();
   }
+
+  current_xml_string_.clear();
+
   dispatch_mutex_.unlock();
 }
 
@@ -301,7 +305,16 @@ void TiDServer::update(boost::uint64_t rel_timestamp, boost::uint64_t packet_nr)
 
 void TiDServer::assumeZeroNetworkDelay(bool val)
 {
+  boost::mutex::scoped_lock(dispatch_mutex_);
   assume_zero_network_delay_ = val;
+}
+
+//-----------------------------------------------------------------------------
+
+void TiDServer::keepIncomingMessages(bool val)
+{
+  boost::mutex::scoped_lock(dispatch_mutex_);
+  keep_messages_ = val;
 }
 
 //-----------------------------------------------------------------------------

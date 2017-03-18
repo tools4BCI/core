@@ -167,7 +167,8 @@ void TiDSHMClient::receive()
       if(!mq_r_.second->try_receive(&buffer[0], buffer.size(), msg_size, msg_prio))
       //if(!mq_r_.second->timed_receive(&buffer[0], buffer.size(), msg_size, msg_prio, pt))
       {
-        boost::this_thread::sleep(boost::posix_time::microseconds(5));
+        //boost::this_thread::sleep(boost::posix_time::microseconds(5));
+        boost::this_thread::sleep(boost::posix_time::microseconds(50));
         boost::this_thread::interruption_point();
         continue;
       }

@@ -44,7 +44,7 @@ using boost::uint32_t;
 //-----------------------------------------------------------------------------
 
 TCPServer::TCPServer()
-  : acceptor_(io_service_),io_service_thread_(0)
+  : acceptor_(io_service_),io_service_thread_pool_(0)
 {
   #ifdef DEBUG
     std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
@@ -61,14 +61,24 @@ TCPServer::~TCPServer()
 
   io_service_.stop();
 
-  if(io_service_thread_)
-  {
-    io_service_thread_->interrupt();
-    io_service_thread_->join();
+//  if(io_service_thread_)
+//  {
+//    io_service_thread_->interrupt();
+//    io_service_thread_->join();
 
-    delete(io_service_thread_);
-    io_service_thread_ = 0;
-  }
+//    delete(io_service_thread_);
+//    io_service_thread_ = 0;
+//  }
+
+
+    if(io_service_thread_pool_)
+    {
+      io_service_thread_pool_->interrupt_all();
+      io_service_thread_pool_->join_all();
+
+      delete(io_service_thread_pool_);
+      io_service_thread_pool_ = 0;
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -128,12 +138,23 @@ void TCPServer::listen()
   acceptor_.listen();
   startAccept();
 
-  io_service_thread_ = new boost::thread(boost::bind(&boost::asio::io_service::run, &io_service_));
-  #ifdef WIN32
-    SetPriorityClass(io_service_thread_->native_handle(),  REALTIME_PRIORITY_CLASS);
-    SetThreadPriority(io_service_thread_->native_handle(), THREAD_PRIORITY_HIGHEST );
-    //NtSetTimerResolution(2, True, 0);
-  #endif
+
+
+  //io_service_thread_ = new boost::thread(boost::bind(&boost::asio::io_service::run, &io_service_));
+
+
+  io_service_thread_pool_ = new boost::thread_group();
+
+  unsigned int concurentThreadsSupported = std::thread::hardware_concurrency();
+  for(unsigned int n =0; n < concurentThreadsSupported; n++  )
+  {
+    boost::thread* th = io_service_thread_pool_->create_thread(boost::bind(&boost::asio::io_service::run, &io_service_));
+
+    #ifdef WIN32
+      SetPriorityClass(th->native_handle(),  REALTIME_PRIORITY_CLASS);
+      SetThreadPriority(th->native_handle(), THREAD_PRIORITY_HIGHEST );
+    #endif
+  }
 }
 
 //-----------------------------------------------------------------------------

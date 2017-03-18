@@ -75,7 +75,7 @@ class TimedTiDConnection : public TiDConnection
         recv_start_time_(boost::chrono::high_resolution_clock::now())
     {
       timed_input_stream_ =  new TimedInputStreamSocket(tcp_conn_handle->socket());
-      recv_diffs_.reserve(NR_TID_MESSAGES);
+      recv_diffs_.reserve(NR_TID_MESSAGES*2);
     }
 
     virtual void receive()

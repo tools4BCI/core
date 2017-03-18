@@ -39,7 +39,7 @@ class TimedTiDClient : public TiD::TiDClient
     TimedTiDClient()
       : send_start_time_(boost::chrono::high_resolution_clock::now()),
         recv_start_time_(boost::chrono::high_resolution_clock::now()),
-        nr_received_msgs_(0), last_frame_nr_(0), data_ready(0)
+        nr_received_msgs_(0), last_frame_nr_(0), data_ready_(0)
     {
       #ifdef DEBUG
         std::cout << BOOST_CURRENT_FUNCTION <<  std::endl;
@@ -115,7 +115,7 @@ class TimedTiDClient : public TiD::TiDClient
     {
       timing_mutex_.lock();
 
-      data_ready=false;
+      data_ready_=false;
       nr_received_msgs_ = 0;
 
       recv_diffs_.clear();
@@ -153,12 +153,23 @@ class TimedTiDClient : public TiD::TiDClient
 
     void waitForSHM()
     {
-      boost::mutex mut;
       boost::unique_lock<boost::mutex> lock(timing_mutex_);
 
-      while(!data_ready)
+      while(!data_ready_)
       {
         shm_cond_.wait(lock);
+      }
+    }
+
+    //---------------------------------
+
+    void waitForSocket()
+    {
+      boost::unique_lock<boost::mutex> lock(timing_mutex_);
+
+      while(!data_ready_)
+      {
+        socket_cond_.wait(lock);
       }
     }
 
@@ -215,7 +226,7 @@ class TimedTiDClient : public TiD::TiDClient
 
       boost::lock_guard<boost::mutex> lock(timing_mutex_);
       recv_timepoints_.push_back(recv_stop_time_);
-      data_ready=true;
+      data_ready_=true;
 
       shm_cond_.notify_all();
     }
@@ -270,6 +281,8 @@ class TimedTiDClient : public TiD::TiDClient
         recv_timepoints_.push_back(recv_stop_time_);
         timing_mutex_.unlock();
 
+        data_ready_ = true;
+        socket_cond_.notify_all();
         //std::cout << recv_diff_ << " -- " << recv_diffs_.size() << std::endl;
 
       }
@@ -297,7 +310,8 @@ class TimedTiDClient : public TiD::TiDClient
     unsigned int                                           last_frame_nr_;
 
     boost::condition_variable                              shm_cond_;
-    bool data_ready;
+    boost::condition_variable                              socket_cond_;
+    bool data_ready_;
 
 };
 

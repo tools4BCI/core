@@ -35,7 +35,7 @@ int main(int argc, const char* argv[])
   TiDClient* client = 0;
 
   std::string srv_addr("127.0.0.1");
-  int srv_port = 9500;
+  int srv_port = 9001;
 
   string queue ="";
 
@@ -63,17 +63,17 @@ int main(int argc, const char* argv[])
     std::vector<IDMessage> messages;
 
     IDMessage message1(IDMessage::TxtFamilyBiosig, 781);
-    message1.SetSource("S1");
+    message1.SetSource("s1");
     IDMessage message1_end(IDMessage::TxtFamilyBiosig, 781 + 0x8000);
-    message1_end.SetSource("S1");
+    message1_end.SetSource("s1");
 
     IDMessage message2(IDMessage::TxtFamilyBiosig, 782);
     IDMessage message2_end(IDMessage::TxtFamilyBiosig, 782+ 0x8000);
 
     IDMessage message3(IDMessage::TxtFamilyBiosig, 783);
-    message3.SetSource("S3");
+    message3.SetSource("s3");
     IDMessage message3_end(IDMessage::TxtFamilyBiosig, 783+ 0x8000);
-    message3_end.SetSource("S3");
+    message3_end.SetSource("s3");
 
 //    message1.SetDescription("feedback");
 //    message2.SetDescription("feedback");
@@ -146,7 +146,7 @@ int main(int argc, const char* argv[])
       client->createSHMMessageQueue(queue);
       client->startReceivingFromSHM();
     }
-
+    
     string str("a");
     cout << endl << ">>";
 
@@ -161,9 +161,12 @@ int main(int argc, const char* argv[])
       {
         messages[msg_count].absolute.Tic();
 
-        TCTimestamp stamp(messages[msg_count].absolute);
-        std::cout << stamp.timestamp.tv_sec << std::endl;
-        std::cout << stamp.timestamp.tv_usec << std::endl;
+        //TCTimestamp stamp(messages[msg_count].absolute);
+        //std::cout << stamp.timestamp.tv_sec << std::endl;
+        //std::cout << stamp.timestamp.tv_usec << std::endl;
+
+        //messages[msg_count].Dump();
+
 
         client->sendMessage( messages.at(msg_count) );
         if(++msg_count == messages.size())

@@ -25,12 +25,10 @@
 #include <ctime>
 #include <iostream>
 #include <boost/lexical_cast.hpp>
-//#include <boost/chrono.hpp>
-//#include <boost/date_time.hpp>
 #include "timing_values.h"
 
 unsigned int NR_TID_MESSAGES = 50;
-unsigned int NR_CLIENTS = 0;
+int NR_CLIENTS = 0;
 unsigned int STATISTICS_WINDOW_SIZE = 5000;
 
 #ifdef WIN32
@@ -50,6 +48,8 @@ unsigned int STATISTICS_WINDOW_SIZE = 5000;
 using std::cout;
 using std::cin;
 using std::endl;
+
+//-------------------------------------------------------------------------------------------------
 
 int setTimerResulution()
 {
@@ -100,6 +100,22 @@ int setTimerResulution()
   return -1;
 }
 
+//-------------------------------------------------------------------------------------------------
+
+void printCurrentTime()
+{
+  time_t rawtime;
+  struct tm * timeinfo;
+  char buffer[80];
+
+  time (&rawtime);
+  timeinfo = localtime(&rawtime);
+
+  strftime(buffer,80,"%d-%m-%Y %I:%M:%S",timeinfo);
+  std::string str(buffer);
+
+  std::cout << str << std::endl;
+}
 
 //-------------------------------------------------------------------------------------------------
 
@@ -127,6 +143,9 @@ int main( int argc, const char* argv[] )
   std::cout << std::endl << "Build on " << __DATE__ << " at " << __TIME__ << std::endl;
   std::cout << "  ...  running " << NR_TID_MESSAGES << " messages on " << NR_CLIENTS << " clients ";
   std::cout << "with " << SLEEP_TIME_BETWEEN_MSGS << " between the messages." << std::endl<< std::endl;
+
+  printCurrentTime();
+
 
   const UnitTest::TestList& allTests( UnitTest::Test::GetTestList() );
 
@@ -187,6 +206,10 @@ int main( int argc, const char* argv[] )
 
     return -1;
   }
+
+  cout << "Test finished: " << endl;
+  printCurrentTime();
+
 }
 
 //-------------------------------------------------------------------------------------------------

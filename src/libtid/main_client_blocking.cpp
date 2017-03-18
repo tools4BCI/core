@@ -22,7 +22,7 @@
 #include <sstream>
 #include <signal.h>
 
-#include "sdl_tid_client.h"
+#include "tid_client.h"
 #include "tid_exceptions.h"
 #include <boost/chrono.hpp>
 
@@ -54,7 +54,7 @@ int main(int argc, const char* argv[])
 
 
   std::string srv_addr("127.0.0.1");
-  int srv_port = 9500;
+  int srv_port = 9001;
 
   if(argc == 1)
   {
@@ -70,7 +70,7 @@ int main(int argc, const char* argv[])
 
   try
   {
-    client = new SDLTiDClient;
+    client = new TiDClient;
     client->connect(srv_addr, srv_port);
 
     while(forever)

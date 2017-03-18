@@ -230,7 +230,7 @@ void TiDClientBase::reserveNrOfMsgs (size_t expected_nr_of_msgs)
 
 //-----------------------------------------------------------------------------
 
-void TiDClientBase::AsyncSendMessage(std::string& tid_xml_context)
+void TiDClientBase::asyncSendMessage(std::string& tid_xml_context)
 {
   #ifdef DEBUG
     std::cout << std::this_thread::get_id() << BOOST_CURRENT_FUNCTION <<  std::endl;
@@ -257,7 +257,7 @@ void TiDClientBase::AsyncSendMessage(std::string& tid_xml_context)
 
 //-----------------------------------------------------------------------------
 
-void TiDClientBase::AsyncSendMessage(IDMessage& msg)
+void TiDClientBase::asyncSendMessage(IDMessage& msg)
 {
   #ifdef DEBUG
     std::cout << std::this_thread::get_id() << "  --> " << BOOST_CURRENT_FUNCTION  <<  std::endl;

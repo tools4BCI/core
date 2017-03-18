@@ -39,7 +39,7 @@
 
 extern unsigned int NR_TID_MESSAGES;
 extern unsigned int STATISTICS_WINDOW_SIZE;
-extern unsigned int NR_CLIENTS;
+extern int NR_CLIENTS;
 //extern boost::posix_time::milliseconds SLEEP_TIME_BETWEEN_MSGS;
 
 
@@ -121,10 +121,10 @@ TEST(libTiDServerDispatchTiming)
         stat.reset();
         server.clearConnectionDispatchTimings();
         server.clearMessages();
-        server.reserveNrOfMsgs(NR_TID_MESSAGES/10);
+        server.reserveNrOfMsgs(NR_TID_MESSAGES);
         boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 
-        filename = "libtid_server_dipatch_nr_clients_"
+        filename = "libtid_server_dispatch_nr_clients_"
             + boost::lexical_cast<std::string>(nr_clients[cl_ind])
             + "_desc_len_" + boost::lexical_cast<std::string>(description_str_lengths[k])
             + "nr_reps_" + boost::lexical_cast<std::string>(msgs_vec.size()) +".csv";
@@ -146,6 +146,7 @@ TEST(libTiDServerDispatchTiming)
         {
           send_client.sendMessage(msgs_vec[n]);
           boost::this_thread::sleep(SLEEP_TIME_BETWEEN_MSGS);
+          server.clearMessages();
         }
         boost::this_thread::sleep(boost::posix_time::milliseconds(10));
         io.stop();
@@ -169,7 +170,7 @@ TEST(libTiDServerDispatchTiming)
         file_stream << " ";
         file_stream.close();
 
-        filename = "libtid_server_dipatch_nr_clients_"
+        filename = "libtid_server_dispatch_nr_clients_"
             + boost::lexical_cast<std::string>(nr_clients[cl_ind])
             + "_desc_len_" + boost::lexical_cast<std::string>(description_str_lengths[k])
             + "nr_reps_" + boost::lexical_cast<std::string>(msgs_vec.size()) +".raw.csv";

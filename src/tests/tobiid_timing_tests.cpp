@@ -174,7 +174,7 @@ TEST(tobiidDeSerializeTiming)
   //  std::string tmp_str;
 
 
-  std::string start_tag("<tobiid version=\"0.3.0.0\">");
+  std::string start_tag("<tobiid version=\"0.3.0.0\" ");
 
   std::string end_tag("</tobiid>");
   std::string tmp_str;
@@ -218,7 +218,20 @@ TEST(tobiidDeSerializeTiming)
     for(unsigned int n = 0; n < NR_TID_MESSAGES; n++)
     {
       xml_str_to_serialize.clear();
-      xml_str_to_serialize += start_tag + "\n";
+      xml_str_to_serialize += start_tag;
+
+      tmp_str.clear();
+      tid_msg.absolute.Tic();
+      tid_msg.absolute.Get(&tmp_str);
+      xml_str_to_serialize +=  "absolute=\""+ tmp_str +"\" ";
+
+
+      tmp_str.clear();
+      tid_msg.relative.Tic();
+      tid_msg.relative.Get(&tmp_str);
+      xml_str_to_serialize +=  "relative=\""+ tmp_str +"\" ";
+      xml_str_to_serialize += "> \n";
+
 
 
       TiDHelpers::rand_alnum_str(description_str_lengths[k], tmp_str);
@@ -233,20 +246,20 @@ TEST(tobiidDeSerializeTiming)
       xml_str_to_serialize += std::string("<family> biosig </family>") + "\n";
       xml_str_to_serialize += "<event>" + boost::lexical_cast<std::string>(n) +"</event>" + "\n";
 
-      tmp_str.clear();
-      tid_msg.absolute.Tic();
-      tid_msg.absolute.Get(&tmp_str);
-      //      xml_str_to_serialize += str_4;
-      //      xml_str_to_serialize += tmp_str;
-      xml_str_to_serialize += "<absolute>"+ tmp_str +"</absolute>" + "\n";
+      //      tmp_str.clear();
+      //      tid_msg.absolute.Tic();
+      //      tid_msg.absolute.Get(&tmp_str);
+      //      //      xml_str_to_serialize += str_4;
+      //      //      xml_str_to_serialize += tmp_str;
+      //      xml_str_to_serialize += "<absolute>"+ tmp_str +"</absolute>" + "\n";
 
 
-      tmp_str.clear();
-      tid_msg.relative.Tic();
-      tid_msg.relative.Get(&tmp_str);
-      //      xml_str_to_serialize += str_5;
-      //      xml_str_to_serialize += tmp_str;
-      xml_str_to_serialize += "<relative>"+ tmp_str +"</relative>" + "\n";
+      //      tmp_str.clear();
+      //      tid_msg.relative.Tic();
+      //      tid_msg.relative.Get(&tmp_str);
+      //      //      xml_str_to_serialize += str_5;
+      //      //      xml_str_to_serialize += tmp_str;
+      //      xml_str_to_serialize += "<relative>"+ tmp_str +"</relative>" + "\n";
 
       //      xml_str_to_serialize += str_6;
       xml_str_to_serialize += end_tag;

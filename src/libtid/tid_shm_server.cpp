@@ -256,7 +256,7 @@ void TiDSHMServer::stopMessageQueueProcessing()
 
 void TiDSHMServer::receive(QueueMap::iterator it)
 {
-  #ifdef DEBUG
+  #ifdef DEBUG_2
     std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
@@ -278,7 +278,9 @@ void TiDSHMServer::receive(QueueMap::iterator it)
   size_t msg_size = 0;
   unsigned int msg_prio = 0;
 
-  boost::posix_time::millisec dur = boost::posix_time::milliseconds(100);
+  boost::posix_time::millisec dur = boost::posix_time::milliseconds(500);
+  //boost::posix_time::millisec dur = boost::posix_time::milliseconds(20);
+  boost::posix_time::ptime pt;
 
   while(1)
   {
@@ -292,16 +294,17 @@ void TiDSHMServer::receive(QueueMap::iterator it)
       }
       catch(interprocess_exception &ex)
       {
-        #ifdef DEBUG
+        #ifdef DEBUG_2
           std::cerr << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION  << " -- Exception: " << ex.what() << std::endl;
         #endif
-        boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+        //boost::this_thread::sleep(boost::posix_time::milliseconds(250));
+        boost::this_thread::sleep(boost::posix_time::milliseconds(50));
       }
     }
     else
     {
       buffer.resize(max_msg_size_);
-      boost::posix_time::ptime pt = boost::posix_time::microsec_clock::universal_time()+ dur;
+      pt = boost::posix_time::microsec_clock::universal_time()+ dur;
       try
       {
         //cerr << "trying to read from queue... "  <<  pt <<  endl;
@@ -348,11 +351,13 @@ void TiDSHMServer::dispatchMsgToOtherQueues(string& msg, const string& origin)
     std::cout << std::this_thread::get_id() << " -- " << BOOST_CURRENT_FUNCTION <<  std::endl;
   #endif
 
-  boost::mutex::scoped_lock(shm_dispatch_mutex_);
-  QueueMap::iterator it;
+  //boost::mutex::scoped_lock( shm_dispatch_mutex_);
+
+  QueueMap::iterator it = msg_queues_.begin();
   message_queue* mq = NULL;
 
-  for(it = msg_queues_.begin(); it != msg_queues_.end(); it++)
+  shm_dispatch_mutex_.lock();
+  for(; it != msg_queues_.end(); it++)
   {
     if(it->first != origin)
     {
@@ -365,7 +370,8 @@ void TiDSHMServer::dispatchMsgToOtherQueues(string& msg, const string& origin)
       }
     }
   }
-
+  shm_dispatch_mutex_.unlock();
+  
 }
 
 //-----------------------------------------------------------------------------
