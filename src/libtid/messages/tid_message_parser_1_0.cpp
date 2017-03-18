@@ -99,6 +99,10 @@ void TiDMessageParser10::parseMessage (IDMessage* msg, InputStream* stream)
     stream->readUntil(TiDMessageTags10::XML_END_STRING, xml_string_);
     serializer_->SetMessage(msg);
     serializer_->Deserialize(xml_string_);
+
+    #ifdef DEBUG
+      std::cout << *xml_string_ << std::endl;
+    #endif
   }
   catch(TCException& e)
   {

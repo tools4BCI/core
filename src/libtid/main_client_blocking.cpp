@@ -76,6 +76,7 @@ int main(int argc, const char* argv[])
     while(forever)
     {
       IDMessage msg = client->wait4NewTiDMessage();
+      std::cout << "Value: " << msg.GetValue() << std::endl;
       msg.Dump();
     }
 

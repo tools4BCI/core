@@ -146,7 +146,7 @@ int main(int argc, const char* argv[])
       client->createSHMMessageQueue(queue);
       client->startReceivingFromSHM();
     }
-    
+
     string str("a");
     cout << endl << ">>";
 
@@ -160,7 +160,7 @@ int main(int argc, const char* argv[])
       else if(str == "s" || str == "send")
       {
         messages[msg_count].absolute.Tic();
-
+        messages[msg_count].SetValue(msg_count);
         //TCTimestamp stamp(messages[msg_count].absolute);
         //std::cout << stamp.timestamp.tv_sec << std::endl;
         //std::cout << stamp.timestamp.tv_usec << std::endl;

@@ -174,7 +174,7 @@ void IDMessage::Dump(void) const {
       TCBlock::GetBlockIdx(), this->GetDescription().c_str());
   printf(" + Event family  %s\n", this->GetFamily().c_str());
   printf(" + Event code   %d\n", this->GetEvent());
-  printf(" + Event value   %d\n", this->GetValue());
+  printf(" + Event value   %f\n", this->GetValue());
   printf(" + Source    %s\n", this->GetSource().c_str());
 }
 
