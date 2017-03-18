@@ -4,6 +4,14 @@
 from libcpp.vector cimport vector
 from libcpp.string cimport string
 from libcpp cimport bool
+from libcpp cimport int
+import cython
+
+string_encoding = 'ascii'
+
+ctypedef fused numeric:
+    cython.int
+    cython.uint
 
 cdef extern from "tobicore/TCTimestamp.hpp":
     cdef cppclass TCTimestamp:
@@ -15,20 +23,18 @@ cdef extern from "tobicore/TCTimestamp.hpp":
 cdef extern from "tobiid/IDMessage.hpp":
     cdef cppclass IDMessage:
         IDMessage( )
-        IDMessage( int, int )
+        IDMessage( string, int )
         void Copy( IDMessage* othter )
         string GetDescription( )
         void SetDescription( string& )
         string GetSource( )
         void SetSource( string& )
         string GetFamily( )
-        void SetFamilyType( int )
-        void SetFamilyType( string& )
-        int GetFamilyType( )
         void SetEvent( int )
         int GetEvent( )
         void SetValue( float )
         float GetValue( )
+        void Dump()
         TCTimestamp absolute
 
 # TiD - C++ interface
@@ -49,15 +55,16 @@ cdef extern from "libtid/tid_client.h" namespace "TiD":
         bool newMessagesAvailable( )
         void getLastMessagesContexts( vector[IDMessage]& messages  )
         void clearMessages( )
+        IDMessage wait4NewTiDMessage()
 
 # IDMessage - Python wrapper
 cdef class PyIDMessage:
     cdef IDMessage *thisptr
-    def __cinit__( self, familyType=None, event=None ):
-        if( familyType==None and event==None ):
+    def __cinit__( self, family=None, event=None ):
+        if( family==None and event==None ):
             self.thisptr = new IDMessage( )
         else:
-            self.thisptr = new IDMessage( familyType, event )
+            self.thisptr = new IDMessage( family, event )
     def __dealloc__( self ):
         del self.thisptr
     def Copy( self, PyIDMessage other ):
@@ -71,29 +78,24 @@ cdef class PyIDMessage:
     def SetSource( self, source ):
         self.thisptr.SetSource( source )
     def GetFamily( self ):
-        return self.thisptr.GetFamily( )
-    def SetFamilyTypeInt( self, int type ):
-        self.thisptr.SetFamilyType( type )
-    def SetFamilyTypeString( self, string type ):
-        self.thisptr.SetFamilyType( type )
-    def GetFamilyType( self ):
-        return self.thisptr.GetFamilyType( )
+        return string(self.thisptr.GetFamily( ))
     def SetEvent( self, event ):
         self.thisptr.SetEvent( event )
     def GetEvent( self ):
-        return self.thisptr.GetEvent( )
+        return int(self.thisptr.GetEvent( ))
     def SetValue( self, value ):
         self.thisptr.SetValue( value )
     def GetValue( self ):
         return self.thisptr.GetValue( )
+    def Dump( self ):
+        self.thisptr.Dump()
     def __str__(self):
         family = self.thisptr.GetFamily().decode()
         source = self.thisptr.GetSource().decode()
-        family_type = self.thisptr.GetFamilyType()
         event = self.thisptr.GetEvent()
         value = self.thisptr.GetValue()
         description = self.thisptr.GetDescription().decode()
-        return "Family: "+family+", Source: "+source+", FType: "+str(family_type)+", Event: "+str(event)+", Value: "+str(value)+", Description: "+str(description)
+        return "Family: "+family+", Source: "+source+", Event: "+str(event)+", Value: "+str(value)+", Description: "+str(description)
 
 # TiD - Python wrapper
 cdef class PyTiDClient:
@@ -122,7 +124,7 @@ cdef class PyTiDClient:
         self.thisptr.sendMessage( msg )
     def sendMessage( self, PyIDMessage msg ):
         msg.thisptr.absolute.Tic( )
-        self.thisptr.sendMessage( msg.thisptr[0] )        
+        self.thisptr.sendMessage( msg.thisptr[0] )
     def AsyncSendMessageXML( self, string msg ):
         self.thisptr.AsyncSendMessage( msg )
     def AsyncSendMessage( self, PyIDMessage msg ):
@@ -140,3 +142,8 @@ cdef class PyTiDClient:
         return pymsg
     def clearMessages( self ):
         self.thisptr.clearMessages( )
+    def wait4NewTiDMessage( self ):
+        tmp = self.thisptr.wait4NewTiDMessage( )
+        msg = PyIDMessage( )
+        msg.thisptr.Copy( &tmp )
+        return msg

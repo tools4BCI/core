@@ -20,15 +20,15 @@ PRE_TARGETDEPS += .cython
 
 INCLUDEPATH += ../src
 
-GCC_4_7_VAR = $$[USE_GCC_4.7]
-
-contains(GCC_4_7_VAR, 1){
-    message( Using GCC 4.7 + optimizations)
-    unix:QMAKE_CXX = /usr/bin/g++-4.7
-    unix:QMAKE_CXXFLAGS_RELEASE = -O2 -mtune=core2
-}
+#GCC_4_7_VAR = $$[USE_GCC_4.7]
+#contains(GCC_4_7_VAR, 1){
+#    message( Using GCC 4.7 + optimizations)
+#    unix:QMAKE_CXX = /usr/bin/g++-4.7
+#    unix:QMAKE_CXXFLAGS_RELEASE = -O2 -mtune=core2
+#}
 
 # build and link against system's default python version
+
 QMAKE_CXXFLAGS += $$system(python-config --cflags)
 
 HARDWARE_PLATFORM = $$system(uname -m)
@@ -36,7 +36,7 @@ contains( HARDWARE_PLATFORM, x86_64 )::{
     message(Building 64 bit )
 
     OBJECTS_DIR = tmp/amd64
-    DESTDIR = lib/amd64
+    DESTDIR = .
 
     LIBS += \
         -L../qmake/lib/amd64 -ltid \
