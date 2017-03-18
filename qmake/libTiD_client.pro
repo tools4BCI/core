@@ -71,8 +71,5 @@ unix {
     contains( DEFINES, TIMING_TEST )::{
         LIBS += -lboost_chrono
       }
-    LIBS += -lboost_thread -lboost_system -lSDL -lpthread -lrt
+    LIBS += -lboost_thread -lboost_system -lSDL -lpthread -lrt -ltobiid
 }
-
-# Note: It is assumed that the boost libraries can be automatically detected by the linker
-# through #pragma comment(lib, xxx) declarations in boost.

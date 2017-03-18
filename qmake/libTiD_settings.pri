@@ -12,6 +12,8 @@ CONFIG( debug, debug|release ) {
     DEFINES += DEBUG
 } else {
 
+  DEFINES += NDEBUG
+
 #GCC_4_7_VAR = $$[USE_GCC_4.7]
 
 #contains(GCC_4_7_VAR, 1){

@@ -12,6 +12,10 @@ CONFIG( debug, debug|release ) {
     DEFINES += DEBUG
 }
 
+CONFIG(release) {
+    DEFINES += NDEBUG
+}
+
 #DEFINES += \
 #SKIP_TOBIID_SERIALIZE_TEST \
 #SKIP_TOBIID_DESERIALIZE_TEST \
@@ -52,6 +56,10 @@ unix:QMAKE_CXXFLAGS_WARN_ON += -Wall \
 QMAKE_CXXFLAGS_RELEASE -= -O1
 QMAKE_CXXFLAGS_RELEASE -= -O2
 QMAKE_CXXFLAGS_RELEASE *= -O3
+
+QMAKE_LFLAGS_RELEASE -= -O1
+QMAKE_LFLAGS_RELEASE -= -O2
+QMAKE_LFLAGS_RELEASE *= -O3 -Wall
 
 
 # -----------------------------------------------------------------------

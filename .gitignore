@@ -27,3 +27,15 @@
 *.exe
 *.out
 *.app
+
+
+#Misc
+*.in
+*.pro.user
+*.pro.user.*
+*.vcxproj.user
+*.suo
+Makefile.*
+*.m4
+*/tmp
+*/bin
