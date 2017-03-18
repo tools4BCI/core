@@ -25,6 +25,7 @@
     <ProjectGuid>{0AF3DA1B-72D0-481F-9BF1-7E12FE65AEC0}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>tid_client</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -71,33 +72,25 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)tmp\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>..\src;E:\local\boost_1_58_0;$(IncludePath)</IncludePath>
-    <ReferencePath>lib;$(ReferencePath)</ReferencePath>
-    <LibraryPath>E:\local\boost_1_58_0\lib32-msvc-11.0\;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)tmp\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>..\src;E:\local\boost_1_58_0;$(IncludePath)</IncludePath>
-    <ReferencePath>lib;$(ReferencePath)</ReferencePath>
-    <LibraryPath>E:\local\boost_1_58_0\lib64-msvc-11.0\;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)tmp\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>..\src;E:\local\boost_1_58_0;$(IncludePath)</IncludePath>
-    <ReferencePath>lib;$(ReferencePath)</ReferencePath>
-    <LibraryPath>E:\local\boost_1_58_0\lib32-msvc-11.0;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)tmp\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>..\src;E:\local\boost_1_58_0;$(IncludePath)</IncludePath>
-    <ReferencePath>lib;$(ReferencePath)</ReferencePath>
-    <LibraryPath>E:\local\boost_1_58_0\lib64-msvc-11.0\;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -111,6 +104,7 @@
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\tobicore\$(Platform)\$(Configuration)\;$(SolutionDir)lib\tobiid\$(Platform)\$(Configuration)\;$(SolutionDir)lib\libtid\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>tobicore.lib;tobiid.lib;libtid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -125,6 +119,7 @@
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\tobicore\$(Platform)\$(Configuration)\;$(SolutionDir)lib\tobiid\$(Platform)\$(Configuration)\;$(SolutionDir)lib\libtid\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>tobicore.lib;tobiid.lib;libtid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -162,7 +157,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\tobicore\$(Platform)\$(Configuration)\;$(SolutionDir)lib\tobiid\$(Platform)\$(Configuration)\;$(SolutionDir)lib\libtid\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tobicore.lib;tobiid.lib;libtid.lib%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>tobicore.lib;tobiid.lib;libtid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

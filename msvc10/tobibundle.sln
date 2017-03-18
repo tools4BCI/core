@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tobicore", "tobicore.vcxproj", "{871AD90B-DA76-9140-1949-8933F5D40C76}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tobiic", "tobiic.vcxproj", "{C5FC3D5D-395D-0316-2224-FC985E2CC4CA}"
@@ -41,6 +43,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tid_tests", "tid_tests.vcxp
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tid_lpt_client", "tid_lpt_client.vcxproj", "{A14EB8CB-B036-4693-9B5F-764593360784}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tid_client_blocking", "tid_client_blocking.vcxproj", "{BEB083BB-58CE-41EE-9E23-EDC59A360543}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -112,6 +116,14 @@ Global
 		{A14EB8CB-B036-4693-9B5F-764593360784}.Release|Win32.ActiveCfg = Release|Win32
 		{A14EB8CB-B036-4693-9B5F-764593360784}.Release|x64.ActiveCfg = Release|x64
 		{A14EB8CB-B036-4693-9B5F-764593360784}.Release|x64.Build.0 = Release|x64
+		{BEB083BB-58CE-41EE-9E23-EDC59A360543}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BEB083BB-58CE-41EE-9E23-EDC59A360543}.Debug|Win32.Build.0 = Debug|Win32
+		{BEB083BB-58CE-41EE-9E23-EDC59A360543}.Debug|x64.ActiveCfg = Debug|x64
+		{BEB083BB-58CE-41EE-9E23-EDC59A360543}.Debug|x64.Build.0 = Debug|x64
+		{BEB083BB-58CE-41EE-9E23-EDC59A360543}.Release|Win32.ActiveCfg = Release|Win32
+		{BEB083BB-58CE-41EE-9E23-EDC59A360543}.Release|Win32.Build.0 = Release|Win32
+		{BEB083BB-58CE-41EE-9E23-EDC59A360543}.Release|x64.ActiveCfg = Release|x64
+		{BEB083BB-58CE-41EE-9E23-EDC59A360543}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
