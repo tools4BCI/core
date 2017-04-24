@@ -15,7 +15,7 @@ matlab_tid_client('startReceiving', handle);
 disp(['Receiving: '  num2str( matlab_tid_client('isReceiving', handle)) ]);
 
 disp('Waiting for 1 second...');
-pause(1);
+pause(3);
 
 disp('Getting messages:');
 msgs = matlab_tid_client('GetLastMessagesContexts', handle);

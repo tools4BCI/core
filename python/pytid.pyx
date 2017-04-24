@@ -50,8 +50,8 @@ cdef extern from "libtid/tid_client.h" namespace "TiD":
         void reserveNrOfMsgs( unsigned int )
         void sendMessage( string& )
         void sendMessage( IDMessage& )
-        void AsyncSendMessage( string& )
-        void AsyncSendMessage( IDMessage& )
+        void asyncSendMessage( string& )
+        void asyncSendMessage( IDMessage& )
         bool newMessagesAvailable( )
         void getLastMessagesContexts( vector[IDMessage]& messages  )
         void clearMessages( )
@@ -72,11 +72,11 @@ cdef class PyIDMessage:
     def GetDescription( self ):
         return self.thisptr.GetDescription( )
     def SetDescription( self, description ):
-        self.thisptr.SetDescription( description )
+        self.thisptr.SetDescription( description.encode('utf8') )
     def GetSource( self ):
         return self.thisptr.GetSource( )
     def SetSource( self, source ):
-        self.thisptr.SetSource( source )
+        self.thisptr.SetSource( source.encode('utf8') )
     def GetFamily( self ):
         return string(self.thisptr.GetFamily( ))
     def SetEvent( self, event ):
@@ -105,7 +105,7 @@ cdef class PyTiDClient:
     def __dealloc__( self ):
         del self.thisptr
     def connect( self, ip, port ):
-        self.thisptr.connect( ip, port )
+        self.thisptr.connect( ip.encode('utf8'), port )
     def disconnect( self ):
         self.thisptr.disconnect( )
     def startReceiving( self ):
@@ -120,15 +120,19 @@ cdef class PyTiDClient:
         self.thisptr.setBufferSize( size )
     def reserveNrOfMsgs( self, nr ):
         self.thisptr.reserveNrOfMsgs( nr )
-    def sendMessageXML( self, string msg ):
-        self.thisptr.sendMessage( msg )
+    
+    #def sendMessageXML( self, string msg ):
+        #self.thisptr.sendMessage( msg.encode('utf8') )
+    
     def sendMessage( self, PyIDMessage msg ):
         msg.thisptr.absolute.Tic( )
-        self.thisptr.sendMessage( msg.thisptr[0] )
-    def AsyncSendMessageXML( self, string msg ):
-        self.thisptr.AsyncSendMessage( msg )
-    def AsyncSendMessage( self, PyIDMessage msg ):
-        self.thisptr.AsyncSendMessage( msg.thisptr[0] )
+        self.thisptr.sendMessage( msg.thisptr[0] )    
+    
+    #def asyncSendMessageXML( self, string msg ):
+        #self.thisptr.asyncSendMessage( msg.encode('utf8') )
+        
+    def asyncSendMessage( self, PyIDMessage msg ):
+        self.thisptr.asyncSendMessage( msg.thisptr[0] )
     def newMessagesAvailable( self ):
         return self.thisptr.newMessagesAvailable( )
     def getLastMessagesContexts( self ):
